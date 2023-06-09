@@ -8,6 +8,8 @@
     @routes
 </head>
 <body>
-@inertia
+<v-app app>
+    @inertia
+</v-app>
 </body>
 </html>
