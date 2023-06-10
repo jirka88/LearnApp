@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<v-container>
+<v-container class="pa-0">
     <slot>
 
     </slot>

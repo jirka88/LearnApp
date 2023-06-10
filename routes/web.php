@@ -14,4 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::inertia('/', 'app');
-Route::inertia('/register', 'register');
+Route::get('/register', function() {
+    return \Inertia\Inertia::render('register', ['value' => 0]);
+});
+Route::get('/login', function() {
+    return \Inertia\Inertia::render('register', ['value' => 1]);
+});
