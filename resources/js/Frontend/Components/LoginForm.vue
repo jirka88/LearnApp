@@ -39,7 +39,6 @@ const password = ref('');
 
 <style scoped lang="scss">
 .v-btn {
-    width: 12em !important;
-    margin: 0px auto;
+    margin: 0 auto;
 }
 </style>

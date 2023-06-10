@@ -16,3 +16,4 @@ class Roles extends Model
         return $this->belongsTo('users','role_id');
     }
 }
+

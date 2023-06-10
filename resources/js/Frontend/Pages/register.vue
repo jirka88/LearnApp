@@ -1,18 +1,21 @@
 <template>
     <Layout>
         <div class="justify-center align-center menu w-100">
-            <v-sheet :width="900" :class="{'w-100': $vuetify.display.mdAndDown}" :elevation="$vuetify.display.smAndDown ? '' : 15">
+            <v-sheet :width="900" :class="{'w-100': $vuetify.display.mdAndDown}"
+                     :elevation="$vuetify.display.smAndDown ? '' : 15">
                 <div class="d-flex" :class="{'justify-center': $vuetify.display.mdAndDown}">
                     <v-sheet class="flex-column justify-center align-center w-30 author pa-4"
                              :class="{'d-none': $vuetify.display.mdAndDown}">
-
-                        <div class="text-h4 pa-4 font-weight-thin" v-if="tab===1">
-                            Vítejte zpět
+                        <div v-if="tab===1">
+                            <div class="text-h4 pa-4 font-weight-thin" >
+                                Vítejte zpět
+                            </div>
+                            <v-divider class="border-opacity-50 pa-2" color="white"></v-divider>
                         </div>
                         <h2>LearnApp</h2>
                         <p>Created by:<br> Jiří Navrátil</p>
                     </v-sheet>
-                    <v-sheet class="w-75 authentication pa-4">
+                    <v-sheet class="w-75 authentication" :class="{'pa-0': $vuetify.display.smAndDown}">
                         <v-tabs
                             v-model="tab"
                             align-tabs="center"
@@ -54,16 +57,24 @@ const tab = ref(props.value);
 .w-30 {
     width: 30% !important;
 }
+.pa-0 {
+    padding: 0 !important;
+}
 .menu {
     height: 100vh;
     display: flex;
+
+    & .v-sheet {
+        min-height: 420px;
+    }
     .author {
         display: flex;
         background: #4398f0;
         color: white;
-        .authentication {
-            box-sizing: border-box;
-        }
+    }
+    .authentication {
+        box-sizing: border-box;
+        padding: 16px;
     }
 }
 
