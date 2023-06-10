@@ -14,8 +14,8 @@ const vuetify = createVuetify({
 
 createInertiaApp({
     resolve: name => {
-        const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
-        return pages[`./Pages/${name}.vue`]
+        const pages = import.meta.glob('./Frontend/Pages/**/*.vue', { eager: true })
+        return pages[`./Frontend/Pages/${name}.vue`]
     },
     setup({ el, App, props, plugin }) {
         createApp({ render: () => h(App, props) })

@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::inertia('/', 'app');
+Route::inertia('/register', 'register');
