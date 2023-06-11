@@ -1,9 +1,9 @@
 <template>
     <Layout>
         <div class="justify-center align-center menu w-100">
-            <v-sheet :width="900" :class="{'w-100': $vuetify.display.mdAndDown}"
+            <v-sheet :width="900" :class="{'w-100': $vuetify.display.mdAndDown, 'h-100': $vuetify.display.smAndDown}"
                      :elevation="$vuetify.display.smAndDown ? '' : 15">
-                <div class="d-flex" :class="{'justify-center': $vuetify.display.mdAndDown}">
+                <div class="d-flex" :class="{'justify-center': $vuetify.display.mdAndDown, 'align-center h-100': $vuetify.display.smAndDown}">
                     <v-sheet class="flex-column justify-center align-center w-30 author pa-4"
                              :class="{'d-none': $vuetify.display.mdAndDown}">
                         <div v-if="tab===1">
@@ -15,7 +15,7 @@
                         <h2>LearnApp</h2>
                         <p>Created by:<br> Jiří Navrátil</p>
                     </v-sheet>
-                    <v-sheet class="w-75 authentication" :class="{'pa-0': $vuetify.display.smAndDown}">
+                    <v-sheet class="authentication" :class="{'w-90 pa-8': $vuetify.display.smAndDown}"  :elevation="$vuetify.display.smAndDown ? '4' : ''">
                         <v-tabs
                             v-model="tab"
                             align-tabs="center"
@@ -54,8 +54,12 @@ const tab = ref(props.value);
 </script>
 
 <style lang="scss">
+
 .w-30 {
     width: 30% !important;
+}
+.w-90 {
+    width: 90% !important;
 }
 .pa-0 {
     padding: 0 !important;
@@ -63,7 +67,6 @@ const tab = ref(props.value);
 .menu {
     height: 100vh;
     display: flex;
-
     & .v-sheet {
         min-height: 420px;
     }
@@ -74,7 +77,18 @@ const tab = ref(props.value);
     }
     .authentication {
         box-sizing: border-box;
+        width: 75%;
         padding: 16px;
+    }
+}
+@media only screen and (max-width: 959px) {
+    .v-sheet:first-child {
+        background: unset !important;
+    }
+}
+@media only screen and (max-height: 640px) {
+    .menu {
+        height: 640px;
     }
 }
 

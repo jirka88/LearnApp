@@ -4,7 +4,6 @@
             <h1 class="pa-5 text-center">Přihlášení</h1>
             <v-text-field
                 v-model="email"
-                :rules="emailRules"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
@@ -33,6 +32,7 @@
 </template>
 <script setup>
 import {ref} from "vue";
+const show = ref(false);
 const email = ref('');
 const password = ref('');
 </script>
