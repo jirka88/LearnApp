@@ -1,16 +1,16 @@
 <template>
-    <v-form>
+    <v-form @submit.prevent="login">
         <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
             <h1 class="pa-5 text-center">Přihlášení</h1>
             <v-text-field
-                v-model="email"
+                v-model="form.email"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
                 required
             ></v-text-field>
             <v-text-field
-                v-model="password"
+                v-model="form.password"
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
@@ -32,9 +32,17 @@
 </template>
 <script setup>
 import {ref} from "vue";
+
 const show = ref(false);
-const email = ref('');
-const password = ref('');
+
+/*const form = useForm({
+    email: '',
+    password: '',
+})*/
+
+const login = () => {
+    //console.log(form)
+}
 </script>
 
 <style scoped lang="scss">

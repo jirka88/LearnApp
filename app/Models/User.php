@@ -27,6 +27,6 @@ class User extends Model
         return $this->hasMany(Roles::class, 'id');
     }
     public function Patritions() : BelongsToMany {
-        return $this->belongsToMany(Partition::class, '', '','');
+        return $this->belongsToMany(Partition::class, 'userPartition', 'user_id','partition_id');
     }
 }

@@ -8,18 +8,18 @@
             <Dialog v-if="dialog" @close="dialog = false" @disagree="confirm = false" @agree="confirm = true"></Dialog>
         </v-dialog>
     </v-row>
-    <v-form>
+    <v-form @submit.prevent="register">
         <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
             <h1 class="pa-5 text-center">Registrace</h1>
             <v-text-field
-                v-model="firstnameR"
+                v-model="firstname"
                 prepend-inner-icon="mdi-account"
                 variant="outlined"
                 :counter="15"
                 label="Jméno"
                 required/>
             <v-text-field
-                v-model="emailR"
+                v-model="email"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
@@ -68,8 +68,8 @@ import {defineAsyncComponent} from "vue";
 const show = ref('');
 const show1 = ref('');
 const confirm = ref(false);
-const firstnameR = ref('');
-const emailR = ref('');
+const firstname = ref('');
+const email = ref('');
 const passwordR = ref('');
 const passwordRc = ref('');
 const dialog = ref(false);
@@ -77,6 +77,9 @@ const dialog = ref(false);
 const Dialog = defineAsyncComponent(() => import('./Dialog.vue'));
 const setDialog = () =>{
     dialog.value = !dialog.value;
+}
+const register = () => {
+
 }
 </script>
 
