@@ -32,13 +32,14 @@
 </template>
 <script setup>
 import {ref} from "vue";
+import {useForm} from "@inertiajs/inertia-vue3";
 
 const show = ref(false);
 
-/*const form = useForm({
+const form = useForm({
     email: '',
     password: '',
-})*/
+})
 
 const login = () => {
     //console.log(form)

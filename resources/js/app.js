@@ -1,6 +1,6 @@
 import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/vue3'
-import { ZiggyVue } from 'ziggy';
+import { createInertiaApp } from '@inertiajs/inertia-vue3'
+import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'

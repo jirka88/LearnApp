@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::inertia('/', 'app');
-Route::get('/register', function() {
-    return \Inertia\Inertia::render('register', ['value' => 0]);
-});
+Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
 Route::get('/login', function() {
     return \Inertia\Inertia::render('register', ['value' => 1]);
 });
+Route::post('register', [RegisterController::class, 'store'])->name('register');
