@@ -9,23 +9,21 @@
         </v-dialog>
     </v-row>
     <v-form @submit.prevent="register">
-        <v-container class="d-flex flex-column pa-3 w-75 gap-2" :class="{'w-100': $vuetify.display.mdAndDown}">
+        <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
             <h1 class="pa-5 text-center">Registrace</h1>
             <v-text-field
                 v-model="form.firstname"
                 prepend-inner-icon="mdi-account"
                 variant="outlined"
-                :counter="15"
                 label="Jméno"
-                :rules="[rules.required]"
-                :error="form.errors.firstname"
+                :rules="[rules.required, rules.firstnameLength]"
                 required/>
             <v-text-field
                 v-model="form.email"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
-                :rules="[rules.required]"
+                :rules="[rules.email, rules.required]"
                 required
             ></v-text-field>
             <v-text-field
@@ -36,33 +34,34 @@
                 variant="outlined"
                 name="input-10-1"
                 label="Heslo"
-                :rules="[rules.required]"
-                :error="form.errors.password"
+                :rules="[rules.required, rules.password]"
                 @click:append="show = !show"
             ></v-text-field>
             <v-text-field
-                v-model="passwordRc"
+                v-model="form.password_confirm"
                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show1 ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 variant="outlined"
                 name="input-10-1"
                 label="Potvrzení hesla"
-                :rules="[rules.required]"
-                :error="form.errors.password_confirm"
+                :rules="[rules.required, rules.passwordConfirm]"
                 @click:append="show1 = !show1"
             ></v-text-field>
             <div class="d-flex">
-            <v-checkbox :rules="[rules.required]" v-model="confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů"></v-checkbox>
+            <v-checkbox :rules="[() => !!confirm || 'Nutno potvrdit!']" v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů"></v-checkbox>
+                {{form.errors.confirm}}
             </div>
             <v-btn
                 type="submit"
                 color="blue"
                 class="mt-2"
+                :disabled="off"
                 :class="{'w-100': $vuetify.display.smAndDown}"
             >
                 Registrovat!
             </v-btn>
+            {{form.errors.firstname}}
         </v-container>
     </v-form>
 
@@ -73,10 +72,10 @@
 import {ref} from "vue";
 import {defineAsyncComponent} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
+const off = ref(false);
 const show = ref('');
 const show1 = ref('');
 const confirm = ref(false);
-const passwordRc = ref('');
 const dialog = ref(false);
 const Dialog = defineAsyncComponent(() => import('./Dialog.vue'));
 
@@ -86,23 +85,53 @@ const form = useForm({
     firstname: '',
     email: '',
     password: '',
-    password_confirm: ''
+    password_confirm: '',
+    confirm: ''
 });
 
 const rules = {
-    required: value => !!value || 'Požadované!'
+    required: value => !!value || 'Nutné vyplnit!',
+    firstnameLength: v => v.length < 25 || 'Jméno je příliš dlouhé!',
+    email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail musí být validní!',
+    password: v => {
+        const missingElements = [];
+        if(v.length < 8) {
+            missingElements.push('více než 8 znaků');
+        }
+        if (!/(?=.*\d)/.test(v)) {
+            missingElements.push('číslici');
+        }
+        if (!/[!@#$%^&*]/.test(v)) {
+            missingElements.push('speciální znak');
+        }
+        if (!/(?=.*[a-z])/.test(v)) {
+            missingElements.push('malé písmeno');
+        }
+        if (!/(?=.*[A-Z])/.test(v)) {
+            missingElements.push('velké písmeno');
+        }
+        if (missingElements.length > 0) {
+            return `Heslo musí obsahovat ${missingElements.join(', ')}!`;
+        }
+    },
+    passwordConfirm: v => v === form.password || "Hesla se neshodují!"
 }
 const setDialog = () =>{
-    dialog.value = !dialog.value;
+        dialog.value = !dialog.value;
 }
 const register = () => {
-    console.log(form)
-    form.post(route('register'));
+    off.value = true
+        form.post(route('register'));
+    off.value = false
 }
 </script>
 
 <style scoped lang="scss">
 .v-btn {
     margin: 0 auto;
+}
+:deep(.v-messages__message)  {
+    padding-bottom: 1.2em !important;
+    transition: 0.3s;
 }
 </style>

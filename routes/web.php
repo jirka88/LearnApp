@@ -19,4 +19,4 @@ Route::get('/register', [RegisterController::class, 'create'])->name('register.c
 Route::get('/login', function() {
     return \Inertia\Inertia::render('register', ['value' => 1]);
 });
-Route::post('register', [RegisterController::class, 'store'])->name('register');
+Route::post('/register', [RegisterController::class, 'store'])->name('register');
