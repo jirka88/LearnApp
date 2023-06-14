@@ -49,9 +49,9 @@
                 @click:append="show1 = !show1"
             ></v-text-field>
             <div class="d-flex">
-            <v-checkbox :rules="[() => !!confirm || 'Nutno potvrdit!']" v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů"></v-checkbox>
-                {{form.errors.confirm}}
+            <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
+            <span class="text-center text-red">{{form.errors.confirm}}</span>
             <v-btn
                 type="submit"
                 color="blue"
@@ -61,7 +61,6 @@
             >
                 Registrovat!
             </v-btn>
-            {{form.errors.firstname}}
         </v-container>
     </v-form>
 

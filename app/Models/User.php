@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-class User extends Model
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -23,7 +23,11 @@ class User extends Model
     protected $hidden = [
         'password',
     ];
-    public function Roles() : HasMany {
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+    public function roles() : HasMany {
         return $this->hasMany(Roles::class, 'id');
     }
     public function Patritions() : BelongsToMany {
