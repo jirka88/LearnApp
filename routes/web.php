@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
@@ -26,6 +27,7 @@ Route::group(['middleware' => ['guest']], function() {
 });
 Route::group(['middleware' => ['auth']], function() {
     Route::inertia('/dashboard', 'dashboard');
+    Route::get('/dashboard/user', [DashboardController::class, 'view'])->name('user.info');
     Route::post("logout", [LogoutController::class, 'logout'])->name('logout');
 });
 
