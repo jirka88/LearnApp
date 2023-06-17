@@ -1,10 +1,3 @@
-<script setup>
-import {Link} from "@inertiajs/inertia-vue3"
-import {ref} from "vue";
-const drawer = ref(true);
-const rail = ref(false);
-</script>
-
 <template>
     <v-layout>
         <v-navigation-drawer
@@ -17,12 +10,12 @@ const rail = ref(false);
                 <Link :href="route('user.info')" class="text-decoration-none text-black">
                     <v-list-item
                         prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
-                        :title="$page.props.user.firstname"
+                        :title="this.$page.props.user.firstname"
                         nav
                         height="64"
                         class=" d-flex align-center"
                     >
-                        <div class="text-subtitle-2">{{$page.props.user.email}}</div>
+                        <div class="text-subtitle-2">{{this.$page.props.user.email}}</div>
                     </v-list-item>
                 </Link>
             </div>
@@ -36,18 +29,22 @@ const rail = ref(false);
             <v-btn :icon="!rail ? 'mdi-chevron-left' : 'mdi-chevron-right'" @click.stop="rail = !rail"></v-btn>
             <v-spacer></v-spacer>
             <v-btn icon>
-                <Link :href="route('logout')" @click="((e) => e.prevent.default())" method="post"><v-icon>mdi-export</v-icon></Link>
+                <Link :href="route('logout')" method="post"><v-icon>mdi-export</v-icon></Link>
             </v-btn>
         </v-app-bar>
         <v-main>
-            <v-card-text>
                 <slot>
 
                 </slot>
-            </v-card-text>
         </v-main>
     </v-layout>
 </template>
+<script setup>
+import {Link} from "@inertiajs/inertia-vue3"
+import {ref} from "vue";
+const drawer = ref(true);
+const rail = ref(false);
+</script>
 
 <style lang="scss">
 .usr {

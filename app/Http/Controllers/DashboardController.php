@@ -10,7 +10,8 @@ class DashboardController extends Controller
 {
     //return user info
     public function view() {
-        $user = User::with('roles')->find(auth()->user()->id);
-        return Inertia::render('user', compact('user'));
+        $id = auth()->user()->id;
+        $usr =  User::with('roles')->find($id);
+        return Inertia::render('user', compact('usr'));
     }
 }

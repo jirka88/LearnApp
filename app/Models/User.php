@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -27,8 +28,8 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
-    public function roles() : HasMany {
-        return $this->hasMany(Roles::class, 'id');
+    public function roles() : BelongsTo {
+        return $this->belongsTo(Roles::class, 'role_id');
     }
     public function Patritions() : BelongsToMany {
         return $this->belongsToMany(Partition::class, 'userPartition', 'user_id','partition_id');
