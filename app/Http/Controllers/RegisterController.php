@@ -16,6 +16,6 @@ class RegisterController extends Controller
         $usr = $request->only(['firstname', 'email', 'password']);
         $user = User::create($usr);
         auth()->login($user);
-        return redirect('/dashboard')->with('success', "Account successfully registered.");
+        return redirect('/dashboard');
     }
 }
