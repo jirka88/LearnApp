@@ -54,7 +54,7 @@
                 </fieldset>
                 <fieldset class="password pa-8">
                     <legend class="text-h5">Resetování hesla:</legend>
-                    <v-form @submit.prevent="changePassword">
+                    <v-form ref="formResetPassword" @submit.prevent="changePassword">
                         <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.required]"
                                       variant="outlined"></v-text-field>
                         <v-text-field v-model="formPassword.newPassword" label="Nové heslo"
@@ -72,6 +72,7 @@
                                       @click:append="show2 = !show2"
                                       variant="outlined"></v-text-field>
                         <p class="text-center text-red">{{props.errors.msg}}</p>
+                        <p v-if="$page.props.flash.messagePasswordReset" class="text-center text-green">{{$page.props.flash.messagePasswordReset}}</p>
                         <v-btn type="submit"
                                color="blue"
                                class="btn d-flex"
@@ -86,6 +87,8 @@
     </AdminLayout>
 
 </template>
+<script>
+</script>
 <script setup>
 import {markRaw, ref} from "vue";
 import AdminLayout from "./../layouts/AdminLayout.vue";
@@ -93,7 +96,6 @@ import {useForm} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({'usr': Object, 'roles': Array, errors: Object});
 const select = markRaw({state: props.usr.roles.role, id: props.usr.roles.id});
-const successReset = ref('');
 const show1 = ref('');
 const show2 = ref('');
 const items = markRaw(
@@ -112,7 +114,8 @@ const formPassword = useForm({
     againNewPassword: '',
 })
 
-const changePassword = async() => {
+const changePassword = async(e) => {
+    e.preventDefault();
     formPassword.post('/dashboard/user/changePassword', {
         onSuccess: (data) => {
             formPassword.reset();

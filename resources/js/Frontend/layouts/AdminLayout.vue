@@ -2,9 +2,8 @@
     <v-layout>
         <v-navigation-drawer
             v-model="drawer"
-            :rail="rail"
-            permanent="false"
-            @click="rail = false"
+            :permanent="permanent"
+            location="left"
         >
             <div class="usr">
                 <Link :href="route('user.info')" class="text-decoration-none text-black">
@@ -25,11 +24,11 @@
                 <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
             </v-list>
         </v-navigation-drawer>
-        <v-app-bar>
-            <v-btn :icon="!rail ? 'mdi-chevron-left' : 'mdi-chevron-right'" @click.stop="rail = !rail"></v-btn>
+        <v-app-bar  clipped-left>
+            <v-btn :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'" @click.stop="drawer = !drawer"></v-btn>
             <v-spacer></v-spacer>
-            <v-btn icon>
-                <Link :href="route('logout')" method="post"><v-icon>mdi-export</v-icon></Link>
+            <v-btn icon >
+                <Link :href="route('logout')"><v-icon>mdi-export</v-icon></Link>
             </v-btn>
         </v-app-bar>
         <v-main>
@@ -43,7 +42,6 @@
 import {Link} from "@inertiajs/inertia-vue3"
 import {ref} from "vue";
 const drawer = ref(true);
-const rail = ref(false);
 </script>
 
 <style lang="scss">

@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,15 +22,20 @@ Route::inertia('/', 'app');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');
-    Route::post('/login', [LoginController::class, 'login'])->name('login');
+    Route::post('login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
-    Route::post('/register', [RegisterController::class, 'store'])->name('register');
+    Route::post('register', [RegisterController::class, 'store'])->name('register');
 });
 Route::group(['middleware' => ['auth']], function() {
-    Route::inertia('/dashboard', 'dashboard');
+    Route::inertia('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/dashboard/user', [DashboardUserController::class, 'view'])->name('user.info');
+    Route::get('/dashboard/user/changePassword', function () {
+        return redirect()->route('user.info');
+    });
     Route::post('/dashboard/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
-    Route::post("logout", [LogoutController::class, 'logout'])->name('logout');
+    Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
+    //redirect
+    //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);
 });
 
 
