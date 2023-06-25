@@ -25,7 +25,8 @@
             </v-list>
         </v-navigation-drawer>
         <v-app-bar  clipped-left>
-            <v-btn :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'" @click.stop="drawer = !drawer"></v-btn>
+            <v-btn v-if="$vuetify.display.lgAndUp" :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'" @click.stop="drawer = !drawer"></v-btn>
+            <v-btn v-if="$vuetify.display.mdAndDown" icon="mdi-format-list-bulleted" @click.stop="drawer = !drawer"></v-btn>
             <v-spacer></v-spacer>
             <v-btn icon >
                 <Link :href="route('logout')"><v-icon>mdi-export</v-icon></Link>

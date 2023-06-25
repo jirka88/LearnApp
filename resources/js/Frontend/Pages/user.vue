@@ -1,27 +1,34 @@
 <template>
     <AdminLayout>
         <v-container>
-            <div class="mt-10 user-info d-grid align-center justify-center">
-                <v-avatar class="avatar" color="surface-variant" size="180"></v-avatar>
-                <div class="info d-flex justify-center flex-column">
+            <div class="mt-10 user-info d-grid align-center justify-center"
+                 :class="{'gp-4 mobile-variant': $vuetify.display.smAndDown}">
+                <v-avatar class="avatar" :class="{'margin-center': $vuetify.display.smAndDown}"  size="180">
+                    <v-img
+                    height="100%"
+                    cover
+                    src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg"
+                /></v-avatar>
+                <div class="info d-flex justify-center flex-column" :class="{'min-width-vw-65 align-center': $vuetify.display.smAndDown,
+                                                                            'min-width-vw-85':$vuetify.display.xs } ">
                     <div class="text-h4">{{ usr.firstname }}</div>
                     <div class="text-subtitle-1">{{ usr.email }}</div>
                     <div class="text-subtitle-2">{{ usr.created_at }}</div>
                 </div>
-                <fieldset class="account pa-8">
-                    <legend class="text-h5">Informace o účtě:</legend>
+                <fieldset class="account pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
+                    <legend align="center" class="text-h5">Informace o účtě:</legend>
                     <table class="w-100">
                         <tbody>
                         <tr>
                             <td class="w-50">Jméno:</td>
                             <td class="w-50">
-                                <v-text-field v-model="form.firstname" label="Label" variant="outlined"></v-text-field>
+                                <v-text-field v-model="form.firstname" variant="outlined"></v-text-field>
                             </td>
                         </tr>
                         <tr>
                             <td class="w-50">Email:</td>
                             <td class="w-50">
-                                <v-text-field v-model="form.email" label="Label" :disabled="true"
+                                <v-text-field v-model="form.email" :disabled="true"
                                               variant="outlined"></v-text-field>
                             </td>
                         </tr>
@@ -52,8 +59,8 @@
                         Upravit!
                     </v-btn>
                 </fieldset>
-                <fieldset class="password pa-8">
-                    <legend class="text-h5">Resetování hesla:</legend>
+                <fieldset class="password pa-8"  :class="{'w-100': $vuetify.display.smAndDown}">
+                    <legend align="center" class="text-h5">Resetování hesla:</legend>
                     <v-form ref="formResetPassword" @submit.prevent="changePassword">
                         <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.required]"
                                       variant="outlined"></v-text-field>
@@ -71,8 +78,9 @@
                                       :type="show2 ? 'text' : 'password'"
                                       @click:append="show2 = !show2"
                                       variant="outlined"></v-text-field>
-                        <p class="text-center text-red">{{props.errors.msg}}</p>
-                        <p v-if="$page.props.flash.messagePasswordReset" class="text-center text-green">{{$page.props.flash.messagePasswordReset}}</p>
+                        <p class="text-center text-red">{{ props.errors.msg }}</p>
+                        <p v-if="$page.props.flash.messagePasswordReset" class="text-center text-green">
+                            {{ $page.props.flash.messagePasswordReset }}</p>
                         <v-btn type="submit"
                                color="blue"
                                class="btn d-flex"
@@ -91,7 +99,7 @@
 </script>
 <script setup>
 import {markRaw, ref} from "vue";
-import AdminLayout from "./../layouts/AdminLayout.vue";
+import AdminLayout from "../layouts/DashboardLayout.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({'usr': Object, 'roles': Array, errors: Object});
@@ -114,7 +122,7 @@ const formPassword = useForm({
     againNewPassword: '',
 })
 
-const changePassword = async(e) => {
+const changePassword = async (e) => {
     e.preventDefault();
     formPassword.post('/dashboard/user/changePassword', {
         onSuccess: (data) => {
@@ -179,6 +187,18 @@ const rules = {
     gap: 4em;
     min-width: 320px;
 }
+
+.gp-4 {
+    gap: 2em;
+}
+
+.mobile-variant {
+    grid-template-areas: 'avatar'
+                        'info'
+                            'account'
+                            'password' !important;
+}
+
 
 fieldset {
     border-radius: 1em;
