@@ -13,7 +13,9 @@ class RegisterController extends Controller
     }
     public function store(RegisterRequest $request)
     {
+        $typeAccount = $request->type['value'];
         $usr = $request->only(['firstname', 'email', 'password']);
+        $usr['type_id'] = $typeAccount;
         $user = User::create($usr);
         auth()->login($user);
         return redirect('/dashboard');

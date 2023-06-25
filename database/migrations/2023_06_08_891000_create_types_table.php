@@ -13,15 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('account_types', function (Blueprint $table) {
             $table->id();
-            $table->string('firstname', 25);
-            $table->string('email', 320)->unique();
-            $table->string('password');
-            $table->foreignId('role_id')->default(4)
-                ->constrained('roles', 'id');
-            $table->foreignId('type_id')->default(1)
-                ->constrained('account_types', 'id');
+            $table->string('type', 25);
             $table->timestamps();
         });
     }
@@ -33,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('accountTypes');
     }
 };

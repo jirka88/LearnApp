@@ -18,6 +18,7 @@ class User extends Authenticatable
         'firstname',
         'email',
         'role_id',
+        'type_id',
         'password',
     ];
 
@@ -31,7 +32,10 @@ class User extends Authenticatable
     public function roles() : BelongsTo {
         return $this->belongsTo(Roles::class, 'role_id');
     }
-    public function Patritions() : BelongsToMany {
+    public function accountTypes() :BelongsTo {
+        return $this->belongsTo(AccountTypes::class, 'type_id');
+    }
+    public function patritions() : BelongsToMany {
         return $this->belongsToMany(Partition::class, 'userPartition', 'user_id','partition_id');
     }
 }

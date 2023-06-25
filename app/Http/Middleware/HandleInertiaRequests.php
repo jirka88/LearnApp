@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
                 'user' => [
                     'firstname' => auth()->user()->firstname ?? '',
                     'email' => auth()->user()->email ?? '',
+                    'typeAccount' =>auth()->user()->accountTypes->type ?? ''
                 ]
 
         ]);

@@ -48,6 +48,17 @@
                 :rules="[rules.required, rules.passwordConfirm]"
                 @click:append="show1 = !show1"
             ></v-text-field>
+            <v-select
+                v-model="form.type"
+                label="Typ účtu"
+                :items="items"
+                item-title="state"
+                item-value="value"
+                variant="outlined"
+                persistent-hint
+                return-object
+                single-line
+            ></v-select>
             <div class="d-flex">
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
@@ -68,7 +79,7 @@
 
 <script setup>
 
-import {ref} from "vue";
+import {markRaw, ref} from "vue";
 import {defineAsyncComponent} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 const off = ref(false);
@@ -78,12 +89,19 @@ const confirm = ref(false);
 const dialog = ref(false);
 const Dialog = defineAsyncComponent(() => import('./Dialog.vue'));
 
+const items = markRaw([
+    {state: 'Osobní účet', value: '1'},
+    {state: 'Školní účet', value: '2'}]
+);
+
+
 defineProps({ errors: Object })
 
 const form = useForm({
     firstname: '',
     email: '',
     password: '',
+    type: {state: 'Osobní účet', value: '1'},
     password_confirm: '',
     confirm: ''
 });

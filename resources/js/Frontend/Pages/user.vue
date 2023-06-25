@@ -13,7 +13,7 @@
                                                                             'min-width-vw-85':$vuetify.display.xs } ">
                     <div class="text-h4">{{ usr.firstname }}</div>
                     <div class="text-subtitle-1">{{ usr.email }}</div>
-                    <div class="text-subtitle-2">{{ usr.created_at }}</div>
+                    <div class="text-subtitle-2">{{ this.$page.props.user.typeAccount }} účet</div>
                 </div>
                 <fieldset class="account pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
                     <legend align="center" class="text-h5">Informace o účtě:</legend>
@@ -36,7 +36,7 @@
                             <td class="w-50">Role:</td>
                             <td class="w-50">
                                 <v-select
-                                    v-model="select"
+                                    v-model="form.role"
                                     :items="items"
                                     :disabled="usr.role_id !== 4 ? false : true"
                                     item-title="state"
@@ -103,7 +103,6 @@ import AdminLayout from "../layouts/DashboardLayout.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 
 const props = defineProps({'usr': Object, 'roles': Array, errors: Object});
-const select = markRaw({state: props.usr.roles.role, id: props.usr.roles.id});
 const show1 = ref('');
 const show2 = ref('');
 const items = markRaw(
@@ -114,6 +113,7 @@ const items = markRaw(
 const form = useForm({
     firstname: props.usr.firstname,
     email: props.usr.email,
+    role: {state: props.usr.roles.role, id: props.usr.roles.id},
 })
 
 const formPassword = useForm({
@@ -125,7 +125,7 @@ const formPassword = useForm({
 const changePassword = async (e) => {
     e.preventDefault();
     formPassword.post('/dashboard/user/changePassword', {
-        onSuccess: (data) => {
+        onSuccess: () => {
             formPassword.reset();
         }
     });
