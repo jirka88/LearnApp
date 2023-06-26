@@ -29,6 +29,7 @@ Route::group(['middleware' => ['guest']], function() {
 Route::group(['middleware' => ['auth']], function() {
     Route::inertia('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/dashboard/user', [DashboardUserController::class, 'view'])->name('user.info');
+    Route::post('/dashboard/user', [DashboardUserController::class, 'update'])->name('user.update');
     Route::get('/dashboard/user/changePassword', function () {
         return redirect()->route('user.info');
     });

@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Roles extends Model
 {
     use HasFactory;
-
     protected $fillable = ["role"];
+    public $timestamps = false;
 
     public function users(): HasMany {
         return $this->HasMany(User::class);

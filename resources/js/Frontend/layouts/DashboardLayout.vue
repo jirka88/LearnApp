@@ -22,6 +22,7 @@
 
             <v-list density="compact" nav>
                 <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
+                <v-list-item prepend-icon="mdi-account-settings"  :href="route('user.info')" title="Nastavení profilu" value="Nastavení profilu"></v-list-item>
             </v-list>
         </v-navigation-drawer>
         <v-app-bar  clipped-left>

@@ -38,7 +38,8 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
                 'flash' => [
-                    'messagePasswordReset' => session('successReset')
+                    'messagePasswordReset' => session('successReset'),
+                    'messageUpdate' => session('successUpdate'),
                 ],
                 'user' => [
                     'firstname' => auth()->user()->firstname ?? '',

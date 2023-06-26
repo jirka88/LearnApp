@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::create('account_types', function (Blueprint $table) {
             $table->id();
             $table->string('type', 25);
-            $table->timestamps();
         });
     }
 
