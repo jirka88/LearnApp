@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SubjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/dashboard/user/changePassword', function () {
         return redirect()->route('user.info');
     });
+    Route::resource('/dashboard/manager/subject', SubjectController::class);
     Route::post('/dashboard/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
     //redirect

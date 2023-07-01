@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Partition extends Model
 {
     use HasFactory;
-    protected $fillable = ["Name"];
+    protected $fillable = ["name", 'created_by', "icon"];
 
     public function Users() : BelongsToMany {
         return $this->belongsToMany(User::class, 'userPartition', 'partition_id','user_id');

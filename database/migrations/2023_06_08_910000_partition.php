@@ -15,8 +15,10 @@ return new class extends Migration
     {
         Schema::create('partitions', function (Blueprint $table) {
             $table->id();
-            $table->string('Name', 25);
-            $table->string('created_by',30);
+            $table->string('name', 25);
+            $table->string('icon', 255)
+                ->default('mdi-text-long');
+            $table->integer('created_by');
             $table->timestamps();
         });
     }

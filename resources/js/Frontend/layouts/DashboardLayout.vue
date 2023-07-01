@@ -22,7 +22,29 @@
 
             <v-list density="compact" nav>
                 <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-                <v-list-item prepend-icon="mdi-account-settings"  :href="route('user.info')" title="Nastavení profilu" value="Nastavení profilu"></v-list-item>
+                    <v-list-group id="group">
+                        <template v-slot:activator="{ props }">
+                            <v-list-item
+                                v-bind="props"
+                                prepend-icon="mdi-account-circle"
+                                :title="this.$page.props.user.type_id === '1' ? 'Sekce' : 'Předměty'"
+                            >
+                            </v-list-item>
+                        </template>
+                        <Link :href="route('subject.index')">
+                        <v-list-item
+                            class="subItem"
+                            prepend-icon="mdi-folder-edit"
+                            title="Organizace">
+                        </v-list-item>
+                        </Link>
+                        <v-list-item v-for="subject in this.$page.props.user.subjects" :key="subject.id"
+                                     class="subItem"
+                                     :prepend-icon="subject.icon"
+                                    :title="subject.name">
+                        </v-list-item>
+                    </v-list-group>
+                    <Link :href="route('user.info')"><v-list-item prepend-icon="mdi-account-cog"  title="Nastavení profilu" value="Nastavení profilu"></v-list-item></Link>
             </v-list>
         </v-navigation-drawer>
         <v-app-bar  clipped-left>
@@ -57,4 +79,14 @@ const drawer = ref(true);
             color: black !important;
         }
     }
+
+#group {
+    .subItem:first-child {
+        padding-inline-start: 8px !important;
+    }
+   .subItem {
+       padding-inline-start: 16px !important;
+   }
+}
+
 </style>

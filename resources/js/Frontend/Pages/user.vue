@@ -40,7 +40,7 @@
                                     <v-select
                                         v-model="form.role"
                                         :items="items"
-                                        :disabled="usr.role_id !== 4 ? false : true"
+                                        :disabled="usr.role_id == 4 ? true : false"
                                         item-title="state"
                                         item-value="id"
                                         label="Select"
