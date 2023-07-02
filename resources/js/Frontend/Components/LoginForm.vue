@@ -21,6 +21,11 @@
                 label="Heslo"
                 @click:append="show = !show"
             ></v-text-field>
+            <v-checkbox
+                v-model="form.remember"
+                label="Zapamatovat si mě">
+
+            </v-checkbox>
             <span class="text-center text-red">{{form.errors.msg}}</span>
             <v-btn
                 type="submit"
@@ -50,6 +55,7 @@ const rules = {
 const form = useForm({
     email: '',
     password: '',
+    remember: '',
 })
 
 const login = () => {

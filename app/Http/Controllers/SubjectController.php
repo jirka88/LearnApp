@@ -23,14 +23,20 @@ class SubjectController extends Controller
     public function store(SubjectRequest $subjectRequest) {
         $subject = $subjectRequest->only('name');
         $subject['created_by'] = auth()->user()->id;
-
         $subject['icon'] = $subjectRequest->icon;
         $subjectT = Partition::create($subject);
 
         $user = User::find(auth()->user()->id);
         $user->patritions()->attach($subjectT->id);
+        return to_route('subject.index');
     }
     public function edit(Partition $subject) {
-        return Inertia::render('editSubjects', compact('subject'));
+        if(auth()->user()->id == $subject->created_by) {
+            return Inertia::render('editSubjects', compact('subject'));
+        }
+        else {
+            abort(401);
+        }
+
     }
 }

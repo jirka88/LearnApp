@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class LoginController extends Controller
 {
     public function edit() {
-        return Inertia::render('register', ['value' => 1]);
+            return Inertia::render('register', ['value' => 1]);
     }
     public function login(LoginRequest $request) {
         $credentials = $request->only('email', 'password');
@@ -18,7 +18,7 @@ class LoginController extends Controller
             return redirect()->back()->withErrors(['msg' => 'Email nebo heslo není v pořádku!']);
         }
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
-        Auth::login($user);
+        Auth::login($user, $request->get('remember'));
         return redirect()->intended("/dashboard");
     }
 }

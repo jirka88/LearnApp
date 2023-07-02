@@ -19,7 +19,7 @@
                             <th>Nastavení:</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody v-if="this.$page.props.user.subjects.length !== 0">
                             <tr v-for="subjectData in this.$page.props.user.subjects" :key="subjectData.id">
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
@@ -35,6 +35,11 @@
                                     ></v-btn>
                                     </div>
                                 </td>
+                            </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                                <td class="text-center" colspan="4">Předměty nebyly vytvořeny!</td>
                             </tr>
                         </tbody>
                     </v-table>
