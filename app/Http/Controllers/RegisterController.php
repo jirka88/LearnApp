@@ -18,6 +18,6 @@ class RegisterController extends Controller
         $usr['type_id'] = $typeAccount;
         $user = User::create($usr);
         auth()->login($user);
-        return redirect('/dashboard');
+        return redirect()->intended("/dashboard");
     }
 }

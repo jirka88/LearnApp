@@ -33,22 +33,14 @@
         </SubjectManagerLayout>
 </template>
 <script setup>
-import AdminLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
+import icons from "./../../itemsIcons";
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
-import {markRaw} from "vue";
 
 const form = useForm({
     name: '',
     icon: {iconName: 'mdi-text-long'}
 })
-
-const icons = markRaw([
-        {iconName: 'mdi-text-long'},
-        {iconName: 'mdi-abacus'},
-        {iconName: 'mdi-alert'}
-    ]);
-
 
 const createSubject = async() =>{
     form.post("/dashboard/manager/subject/", {

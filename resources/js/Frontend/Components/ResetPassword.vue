@@ -1,7 +1,7 @@
 
 
 <template>
-    <fieldset class="password pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
+    <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Resetování hesla:</legend>
         <v-form ref="formResetPassword" @submit.prevent="changePassword">
             <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.required]"
@@ -78,7 +78,7 @@ const rules = {
     passwordConfirm: v => v === formPassword.newPassword || "Hesla se neshodují!",
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .v-btn {
     margin: 1em auto;
 }

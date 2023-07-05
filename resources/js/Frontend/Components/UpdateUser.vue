@@ -1,6 +1,6 @@
 
 <template>
-    <fieldset class="account pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
+    <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Informace o účtě:</legend>
         <v-form ref="formResetPassword" @submit.prevent="updateUser">
             <table class="w-100">
@@ -98,7 +98,7 @@ const rules = {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .v-btn {
     margin: 1em auto;
 }

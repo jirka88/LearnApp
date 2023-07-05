@@ -23,7 +23,7 @@ class SubjectController extends Controller
     public function store(SubjectRequest $subjectRequest) {
         $subject = $subjectRequest->only('name');
         $subject['created_by'] = auth()->user()->id;
-        $subject['icon'] = $subjectRequest->icon;
+        $subject['icon'] = $subjectRequest->icon["iconName"];
         $subjectT = Partition::create($subject);
 
         $user = User::find(auth()->user()->id);
@@ -37,6 +37,12 @@ class SubjectController extends Controller
         else {
             abort(401);
         }
-
+    }
+    public function update(Partition $subject, SubjectRequest $subjectRequest) {
+        $subject->update($subjectRequest->validated());
+        return to_route('subject.index');
+    }
+    public function destroy(Partition $subject) {
+        $subject->delete();
     }
 }
