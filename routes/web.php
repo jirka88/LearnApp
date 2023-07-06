@@ -27,16 +27,21 @@ Route::group(['middleware' => ['guest']], function() {
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
     Route::post('register', [RegisterController::class, 'store'])->name('register');
 });
-Route::group(['middleware' => ['auth']], function() {
-    Route::inertia('/dashboard', 'dashboard')->name('dashboard');
-    Route::get('/dashboard/user', [DashboardUserController::class, 'view'])->name('user.info');
-    Route::post('/dashboard/user', [DashboardUserController::class, 'update'])->name('user.update');
-    Route::get('/dashboard/user/changePassword', function () {
+Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
+    Route::inertia('', 'dashboard')->name('dashboard');
+    Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
+    Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
+    Route::post('/user', [DashboardUserController::class, 'update'])->name('user.update');
+    Route::get('/user/changePassword', function () {
         return redirect()->route('user.info');
     });
-    Route::resource('/dashboard/manager/subject', SubjectController::class);
-    Route::post('/dashboard/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
+    Route::resource('/manager/subject', SubjectController::class);
+    Route::post('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
+
+    Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
+
+    });
     //redirect
     //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);
 });

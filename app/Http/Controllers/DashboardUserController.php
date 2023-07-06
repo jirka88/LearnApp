@@ -44,4 +44,8 @@ class DashboardUserController extends Controller
         ]);
         return redirect()->back()->with('successReset', 'Heslo bylo úspěšně změněno!');
     }
+
+    public function report() {
+        return inertia::render('Report');
+    }
 }

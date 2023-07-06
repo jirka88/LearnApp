@@ -46,7 +46,10 @@ class HandleInertiaRequests extends Middleware
                     'email' => auth()->user()->email ?? '',
                     'typeAccount' =>auth()->user()->accountTypes->type ?? '',
                     'subjects' => auth()->user()->patritions ?? '',
-                ]
+                ],
+            'permission' => [
+                'view' => in_array(auth()->user()?->role_id, [1,2]),
+            ]
 
         ]);
     }

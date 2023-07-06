@@ -11,6 +11,11 @@ class Roles extends Model
 {
     use HasFactory;
     protected $fillable = ["role"];
+    public const BASIC_USER = 4;
+    public const TESTER = 3;
+    public const ADMIN = 1;
+
+
     public $timestamps = false;
 
     public function users(): HasMany {

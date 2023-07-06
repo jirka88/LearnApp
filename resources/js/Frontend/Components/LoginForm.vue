@@ -23,6 +23,7 @@
             ></v-text-field>
             <v-checkbox
                 v-model="form.remember"
+                hide-details
                 label="Zapamatovat si mě">
 
             </v-checkbox>

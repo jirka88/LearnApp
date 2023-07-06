@@ -6,6 +6,7 @@ use App\Http\Requests\SubjectRequest;
 use App\Models\Partition;
 use App\Models\User;
 use App\Models\UserPartition;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -31,15 +32,14 @@ class SubjectController extends Controller
         return to_route('subject.index');
     }
     public function edit(Partition $subject) {
-        if(auth()->user()->id == $subject->created_by) {
-            return Inertia::render('editSubjects', compact('subject'));
-        }
-        else {
-            abort(401);
-        }
+
+        $this->authorize('update', $subject);
+
+        return Inertia::render('editSubjects', compact('subject'));
     }
     public function update(Partition $subject, SubjectRequest $subjectRequest) {
         $subject->update($subjectRequest->validated());
+        notify()->success('Welcome to Laravel Notify ⚡️');
         return to_route('subject.index');
     }
     public function destroy(Partition $subject) {
