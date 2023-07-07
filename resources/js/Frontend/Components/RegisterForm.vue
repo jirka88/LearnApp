@@ -32,7 +32,6 @@
                 :type="show ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 variant="outlined"
-                name="input-10-1"
                 label="Heslo"
                 :rules="[rules.required, rules.password]"
                 @click:append="show = !show"
@@ -43,7 +42,6 @@
                 :type="show1 ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 variant="outlined"
-                name="input-10-1"
                 label="Potvrzení hesla"
                 :rules="[rules.required, rules.passwordConfirm]"
                 @click:append="show1 = !show1"
@@ -63,6 +61,7 @@
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
             <span class="text-center text-red">{{form.errors.confirm}}</span>
+            <span class="text-center text-red">{{form.errors.email}}</span>
             <v-btn
                 type="submit"
                 color="blue"
@@ -130,6 +129,9 @@ const rules = {
         if (missingElements.length > 0) {
             return `Heslo musí obsahovat ${missingElements.join(', ')}!`;
         }
+        else {
+            return true;
+        }
     },
     passwordConfirm: v => v === form.password || "Hesla se neshodují!"
 }
@@ -138,7 +140,7 @@ const setDialog = () =>{
 }
 const register = () => {
     off.value = true
-        form.post(route('register'));
+    form.post(route('register'));
     off.value = false
 }
 </script>

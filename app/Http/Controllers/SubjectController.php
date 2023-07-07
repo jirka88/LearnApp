@@ -34,12 +34,10 @@ class SubjectController extends Controller
     public function edit(Partition $subject) {
 
         $this->authorize('update', $subject);
-
         return Inertia::render('editSubjects', compact('subject'));
     }
     public function update(Partition $subject, SubjectRequest $subjectRequest) {
         $subject->update($subjectRequest->validated());
-        notify()->success('Welcome to Laravel Notify ⚡️');
         return to_route('subject.index');
     }
     public function destroy(Partition $subject) {

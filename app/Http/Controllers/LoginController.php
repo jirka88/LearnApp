@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class LoginController extends Controller
 {
     public function edit() {
-            return Inertia::render('register', ['value' => 1]);
+        return Inertia::render('register', ['value' => 1]);
     }
     public function login(LoginRequest $request) {
         $credentials = $request->only('email', 'password');

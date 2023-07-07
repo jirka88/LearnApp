@@ -22,6 +22,7 @@ return new class extends Migration
                 ->constrained('roles', 'id');
             $table->foreignId('type_id')->default(1)
                 ->constrained('account_types', 'id');
+            $table->boolean('active')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });

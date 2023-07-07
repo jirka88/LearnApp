@@ -6,7 +6,6 @@
             location="left"
         >
             <div class="usr">
-
                 <Link :href="route('user.info')" class="text-decoration-none text-black">
                     <v-list-item
                         prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
@@ -22,7 +21,7 @@
             <v-divider></v-divider>
             <v-list density="compact" nav>
                 <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-                <Link v-if="this.$page.props.permission.view" :href="route('user.info')">
+                <Link v-if="this.$page.props.permission.view" :href="route('admincontroll.index')">
                     <v-list-item prepend-icon="mdi-account-cog" title="Všichni uživatelé"
                                  value="Všichni uživatelé"></v-list-item>
                 </Link>

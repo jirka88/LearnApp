@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminSetUsers;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
@@ -23,9 +24,9 @@ Route::inertia('/', 'app');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');
-    Route::post('login', [LoginController::class, 'login'])->name('login');
+    Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
-    Route::post('register', [RegisterController::class, 'store'])->name('register');
+    Route::post('/register', [RegisterController::class, 'store'])->name('register');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::inertia('', 'dashboard')->name('dashboard');
@@ -40,7 +41,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
-
+        route::resource('/controll', AdminSetUsers::class);
+        route::get('/controll/{user}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
     });
     //redirect
     //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);

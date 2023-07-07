@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Partition;
+use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -53,7 +54,7 @@ class PartitionPolicy
      */
     public function update(User $user, Partition $partition)
     {
-        return $user->id_admin || (auth()->check() && auth()->user()->id == $partition->created_by);
+        return $user->id == Roles::ADMIN || (auth()->check() && auth()->user()->id == $partition->created_by);
     }
 
     /**
