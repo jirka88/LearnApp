@@ -19,16 +19,14 @@ class DashboardUserController extends Controller
         $usr =  User::with(['roles', 'accountTypes'])->find($id);
         $roles = Roles::all();
         $accountTypes = AccountTypes::all();
-        return Inertia::render('user', compact('usr', 'roles', 'accountTypes'));
+        return Inertia::render('user/user', compact('usr', 'roles', 'accountTypes'));
     }
     public function update(UpdateRequest $updateRequest) {
 
-        $role = $updateRequest->role['id'];
         $typeAccount = $updateRequest->type['id'];
         User::find(auth()->user()->id)->update([
             'firstname' => $updateRequest->firstname,
             'type_id' => $typeAccount,
-            'role_id' => $role,
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
     }

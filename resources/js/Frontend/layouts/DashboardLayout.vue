@@ -21,7 +21,7 @@
             <v-divider></v-divider>
             <v-list density="compact" nav>
                 <v-list-item prepend-icon="mdi-home-city" title="Home" value="home"></v-list-item>
-                <Link v-if="this.$page.props.permission.view" :href="route('admincontroll.index')">
+                <Link v-if="this.$page.props.permission.view" :href="route('admin')">
                     <v-list-item prepend-icon="mdi-account-cog" title="Všichni uživatelé"
                                  value="Všichni uživatelé"></v-list-item>
                 </Link>

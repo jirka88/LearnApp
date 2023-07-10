@@ -87,7 +87,7 @@
 </template>
 <script setup>
 import {Link, useForm} from "@inertiajs/inertia-vue3";
-import AdminLayout from "../layouts/DashboardLayout.vue";
+import AdminLayout from "../../layouts/DashboardLayout.vue";
 import {ref} from "vue";
 const form = useForm();
 const dialog = ref(false);

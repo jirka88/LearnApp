@@ -41,7 +41,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
-        route::resource('/controll', AdminSetUsers::class);
+        route::get('/controll', [AdminSetUsers::class, 'index']);
+        route::get('/controll/{user}', [AdminSetUsers::class, 'edit'])->name('user.edit');
+        route::put('/controll/{user}', [AdminSetUsers::class, 'update'])->name('user.update');
         route::get('/controll/{user}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
     });
     //redirect

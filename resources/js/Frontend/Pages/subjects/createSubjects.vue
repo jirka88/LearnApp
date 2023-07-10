@@ -34,7 +34,7 @@
 </template>
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
-import icons from "./../../itemsIcons";
+import icons from "../../../itemsIcons";
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 
 const form = useForm({

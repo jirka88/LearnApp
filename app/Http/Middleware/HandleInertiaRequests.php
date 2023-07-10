@@ -42,6 +42,7 @@ class HandleInertiaRequests extends Middleware
                     'messageUpdate' => session('successUpdate'),
                 ],
                 'user' => [
+                    'id' => auth()->user()->id ?? '',
                     'firstname' => auth()->user()->firstname ?? '',
                     'email' => auth()->user()->email ?? '',
                     'typeAccount' =>auth()->user()->accountTypes->type ?? '',

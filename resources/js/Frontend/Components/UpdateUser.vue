@@ -2,7 +2,7 @@
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Informace o účtě:</legend>
-        <v-form ref="formResetPassword" @submit.prevent="updateUser">
+        <v-form ref="formResetPassword" @submit.prevent="this.$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
             <table class="w-100">
                 <tbody>
                 <tr>
@@ -14,7 +14,7 @@
                 <tr>
                     <td class="w-50">Email:</td>
                     <td class="w-50">
-                        <v-text-field v-model="form.email" :disabled="true"
+                        <v-text-field v-model="form.email" :disabled="this.$page.props.permission.view ? false : true"
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
@@ -24,7 +24,7 @@
                         <v-select
                             v-model="form.role"
                             :items="items"
-                            :disabled="usr.role_id == 4 ? true : false"
+                            :disabled="this.$page.props.permission.view ? false : true"
                             item-title="state"
                             item-value="id"
                             label="Select"
@@ -41,7 +41,6 @@
                         <v-select
                             v-model="form.type"
                             :items="types"
-                            :disabled="usr.role_id !== 4 ? false : true"
                             item-title="state"
                             item-value="id"
                             label="Select"
@@ -86,11 +85,14 @@ const types = markRaw(
         state: type.type, id: type.id
     })));
 
-const updateUser = async () => {
+const updateUser = async (id) => {
     form.post('/dashboard/user'), {
         onSuccess: () => {
         }
     }
+}
+const updateAdminUser = async(id) => {
+    form.put(route('adminuser.update', id));
 }
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',

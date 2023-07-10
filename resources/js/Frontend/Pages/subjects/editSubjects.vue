@@ -35,7 +35,7 @@
 <script setup>
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
-import icons from "./../../itemsIcons";
+import icons from "../../../itemsIcons";
 const props = defineProps({subject: Object})
 
 const form = useForm({

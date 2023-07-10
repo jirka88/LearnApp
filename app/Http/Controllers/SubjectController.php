@@ -15,11 +15,11 @@ class SubjectController extends Controller
 
     public function index()
     {
-        return Inertia::render('subjects');
+        return Inertia::render('subjects/subjects');
     }
     public function create()
     {
-        return Inertia::render('createSubjects');
+        return Inertia::render('subjects/createSubjects');
     }
     public function store(SubjectRequest $subjectRequest) {
         $subject = $subjectRequest->only('name');
@@ -34,7 +34,7 @@ class SubjectController extends Controller
     public function edit(Partition $subject) {
 
         $this->authorize('update', $subject);
-        return Inertia::render('editSubjects', compact('subject'));
+        return Inertia::render('subjects/editSubjects', compact('subject'));
     }
     public function update(Partition $subject, SubjectRequest $subjectRequest) {
         $subject->update($subjectRequest->validated());

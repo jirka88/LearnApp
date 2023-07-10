@@ -15,7 +15,7 @@
                 <div class="info d-flex justify-center flex-column" :class="{'align-center': $vuetify.display.smAndDown}">
                     <div class="text-h4">{{ usr.firstname }}</div>
                     <div class="text-subtitle-1">{{ usr.email }}</div>
-                    <div class="text-subtitle-2">{{ this.$page.props.user.typeAccount }} účet</div>
+                    <div class="text-subtitle-2">{{ usr.account_types.type}} účet</div>
                 </div>
 
                 <v-tabs
@@ -42,9 +42,9 @@
 <script>
 </script>
 <script setup>
-import AdminLayout from "../layouts/DashboardLayout.vue";
-import UpdateUser from "./../Components/UpdateUser.vue";
-import ResetPassword from "./../Components/ResetPassword.vue";
+import AdminLayout from "../../layouts/DashboardLayout.vue";
+import UpdateUser from "../../Components/UpdateUser.vue";
+import ResetPassword from "../../Components/ResetPassword.vue";
 import {ref} from "vue";
 const tab = ref(null);
 defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Object});
