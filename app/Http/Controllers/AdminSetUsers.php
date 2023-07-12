@@ -16,8 +16,15 @@ class AdminSetUsers extends Controller
         return Inertia::render('admin/listUsers', compact('users'));
     }
     public function edit(User $user) {
+        $roles = '';
         $usr = User::with(['roles', 'accountTypes'])->find($user->id);
-        $roles = Roles::all();
+        $isAdmin = auth()->user()->role_id == 1 ? true : false;
+        if($isAdmin) {
+            $roles = Roles::all();
+        }
+        else {
+            $roles = Roles::all()->whereNotIn('id', 1);
+        }
         $accountTypes = AccountTypes::all();
         return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes']));
     }
@@ -30,6 +37,10 @@ class AdminSetUsers extends Controller
             'role_id' => $role,
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
+    }
+    public function destroy(User $user) {
+        $user->patritions()->detach();
+        User::destroy($user->id);
     }
     public function getUserSubjects(User $user) {
         $subjects = User::with('patritions')->find($user->id);

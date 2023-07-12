@@ -50,6 +50,7 @@ class HandleInertiaRequests extends Middleware
                 ],
             'permission' => [
                 'view' => in_array(auth()->user()?->role_id, [1,2]),
+                'administrator_view' => auth()->user()?->role_id == 1,
             ]
 
         ]);

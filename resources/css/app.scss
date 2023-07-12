@@ -34,4 +34,13 @@ a {
 .v-navigation-drawer__scrim {
     position: fixed !important;
 }
+//dialog
+.v-dialog  {
+    max-width: 800px;
+    .v-card {
+        padding: 1.5em !important;
+        white-space: unset;
+        text-wrap: balance;
+    }
+}
 

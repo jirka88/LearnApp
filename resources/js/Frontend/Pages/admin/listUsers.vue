@@ -1,6 +1,13 @@
 <template>
     <DashboardLayout>
         <v-container>
+            <v-dialog
+                v-model="status"
+                persistent
+                width="auto"
+            >
+                <DialogDelete :Obj='activeUser' Path='adminuser.destroy' Type="uživatele" Description="Se smazáním uživatele dojde i k smazání jeho vytvořených předmětů a kapitol" @close="status = false"></DialogDelete>
+            </v-dialog>
             <v-table class="text-left">
                 <thead>
                 <tr>
@@ -20,7 +27,7 @@
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.account_types.type }}</td>
                     <td>{{ user.active == 1 ? "ANO" : "NE" }}</td>
-                    <td v-if="user.id != this.$page.props.user.id">
+                    <td v-if="user.id != this.$page.props.user.id || user.role_id !== 1">
                         <Link :href="route('adminuser.subjects', user.id)">
                             <v-btn class="bg-green">
                                 Zobrazit
@@ -28,14 +35,13 @@
                         </Link>
                     </td>
                     <td v-else></td>
-                    <td class="d-flex gp-em-05">
+                    <td v-if="user.roles.id !== 1" class="d-flex gp-em-05">
                         <Link :href="route('adminuser.edit', user.id)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
-                        <Link v-if="user.id != this.$page.props.user.id">
-                            <v-btn class="bg-red" icon="mdi-trash-can"></v-btn>
-                        </Link>
+                            <v-btn v-if="user.id != this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
                     </td>
+                    <td v-else></td>
                 </tr>
                 </tbody>
             </v-table>
@@ -46,8 +52,15 @@
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
-
+import {ref} from "vue";
+import DialogDelete from "@/Frontend/Components/UI/Dialog-delete.vue";
+const activeUser = ref('');
+const status = ref(false);
 defineProps({users: Object});
+const enableDialog = (user) => {
+    activeUser.value = user;
+    status.value = true;
+}
 </script>
 
 <style lang="scss">
