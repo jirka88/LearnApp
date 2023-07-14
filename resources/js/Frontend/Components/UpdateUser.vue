@@ -69,13 +69,14 @@
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
 import {markRaw} from "vue";
-const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Object});
+const props = defineProps({'usr': Object, 'roles': Object, 'accountTypes': Array, errors: Object});
 const form = useForm({
     firstname: props.usr.firstname,
     email: props.usr.email,
     role: {state: props.usr.roles.role, id: props.usr.roles.id},
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
-})
+});
+console.log(props.roles)
 const items = markRaw(
     props.roles.map(role => ({
         state: role.role, id: role.id

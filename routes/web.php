@@ -29,7 +29,7 @@ Route::group(['middleware' => ['guest']], function() {
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
-    Route::inertia('', 'dashboard')->name('dashboard');
+    Route::inertia('/','dashboard')->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
     Route::post('/user', [DashboardUserController::class, 'update'])->name('user.update');

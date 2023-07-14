@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Partition;
+use App\Models\User;
+use App\Policies\AdminPolicy;
 use App\Policies\PartitionPolicy;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,9 +15,9 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected $policies = [
-        Partition::class => PartitionPolicy::class
-    ];
+    public function register() {
+
+    }
 
     /**
      * Bootstrap any application services.

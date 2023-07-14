@@ -16,14 +16,15 @@ class AdminSetUsers extends Controller
         return Inertia::render('admin/listUsers', compact('users'));
     }
     public function edit(User $user) {
-        $roles = '';
+        $this->authorize('view', $user);
+
         $usr = User::with(['roles', 'accountTypes'])->find($user->id);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if($isAdmin) {
             $roles = Roles::all();
         }
         else {
-            $roles = Roles::all()->whereNotIn('id', 1);
+            $roles = Roles::all()->whereNotIn('id', [1,2])->values();
         }
         $accountTypes = AccountTypes::all();
         return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes']));
@@ -43,6 +44,7 @@ class AdminSetUsers extends Controller
         User::destroy($user->id);
     }
     public function getUserSubjects(User $user) {
+        $this->authorize('view', $user);
         $subjects = User::with('patritions')->find($user->id);
         return Inertia::render('admin/listSubjects', compact('subjects'));
     }

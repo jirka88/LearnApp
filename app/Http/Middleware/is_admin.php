@@ -21,7 +21,7 @@ class is_admin
             return $next($request);
         }
         else {
-            to_route('dashboard');
+            return to_route('dashboard');
         }
     }
 }
