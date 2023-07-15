@@ -28,6 +28,7 @@
                     >
                         vytvořit!
                     </v-btn>
+                    {{console.log(url)}}
                 </v-form>
             </div>
         </SubjectManagerLayout>
@@ -37,17 +38,28 @@ import {useForm} from "@inertiajs/inertia-vue3";
 import icons from "../../../itemsIcons";
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 
+const props = defineProps({usr: Object, url: String});
+
 const form = useForm({
     name: '',
     icon: {iconName: 'mdi-text-long'}
 })
 
 const createSubject = async() =>{
-    form.post("/dashboard/manager/subject/", {
+    if(props.url === undefined) {
+        form.post("/dashboard/manager/subject/", {
+            onSuccess: () => {
+                form.reset();
+            }
+        });
+        return;
+    }
+    form.post((props.url),{
         onSuccess: () => {
             form.reset();
         }
     });
+
 }
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',

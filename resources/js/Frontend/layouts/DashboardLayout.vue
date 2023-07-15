@@ -30,7 +30,7 @@
                         <v-list-item
                             v-bind="props"
                             prepend-icon="mdi-account-circle"
-                            :title="this.$page.props.user.type_id === '1' ? 'Sekce' : 'Předměty'"
+                            :title="this.$page.props.user.typeAccount == 'Osobní' ? 'Sekce' : 'Předměty'"
                         >
                         </v-list-item>
                     </template>

@@ -46,6 +46,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::put('/controll/{user}', [AdminSetUsers::class, 'update'])->name('user.update');
         route::delete('/controll/{user}', [AdminSetUsers::class, 'destroy'])->name('user.destroy');
         route::get('/controll/{user}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
+        route::get('/controll/{user}/subject/create', [AdminSetUsers::class, 'createUserSubject'])->name('user.createSubject');
+        route::post('/controll/{user}/subject/create', [AdminSetUsers::class, 'storeUserSubject'])->name('user.storeSubject');
     });
     //redirect
     //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);
