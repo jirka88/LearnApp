@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminSetUsers;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         return redirect()->route('user.info');
     });
     Route::resource('/manager/subject', SubjectController::class);
+    Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::post('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
 

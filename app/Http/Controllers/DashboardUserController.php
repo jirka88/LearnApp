@@ -13,7 +13,11 @@ use Inertia\Inertia;
 
 class DashboardUserController extends Controller
 {
-    //return user info
+
+    /**
+     * Vrátí informace o uživateli
+     * @return \Inertia\Response
+     */
     public function view() {
         $id = auth()->user()->id;
         $usr =  User::with(['roles', 'accountTypes'])->find($id);
@@ -21,6 +25,12 @@ class DashboardUserController extends Controller
         $accountTypes = AccountTypes::all();
         return Inertia::render('user/user', compact('usr', 'roles', 'accountTypes'));
     }
+
+    /**
+     * Aktualizace uživatele
+     * @param UpdateRequest $updateRequest
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(UpdateRequest $updateRequest) {
 
         $typeAccount = $updateRequest->type['id'];
@@ -30,6 +40,12 @@ class DashboardUserController extends Controller
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
     }
+
+    /**
+     * Resetování hesla
+     * @param PasswordResetRequest $passwordResetRequest
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function passwordReset(PasswordResetRequest $passwordResetRequest) {
         if(!Hash::check($passwordResetRequest->oldPassword, auth()->user()->password)) {
             return back()->withErrors(['msg' => 'Staré heslo se liší!']);
@@ -43,6 +59,10 @@ class DashboardUserController extends Controller
         return redirect()->back()->with('successReset', 'Heslo bylo úspěšně změněno!');
     }
 
+    /**
+     * Redirect k formuláři k nahlášení chyby
+     * @return \Inertia\Response
+     */
     public function report() {
         return inertia::render('Report');
     }

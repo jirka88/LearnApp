@@ -27,7 +27,7 @@
                 label="Zapamatovat si mě">
 
             </v-checkbox>
-            <span class="text-center text-red">{{form.errors.msg}}</span>
+            <span class="text-center text-red pa-2">{{form.errors.msg}}</span>
             <v-btn
                 type="submit"
                 color="blue"

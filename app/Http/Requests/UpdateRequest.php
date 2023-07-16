@@ -25,6 +25,9 @@ class UpdateRequest extends FormRequest
     {
         return [
                  'firstname' => 'required|min:3|max:25',
+                'active' => 'required',
+                'role' => 'required',
+                'type' => 'required',
         ];
     }
 }

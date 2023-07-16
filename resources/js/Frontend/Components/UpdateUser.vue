@@ -51,6 +51,22 @@
                         ></v-select>
                     </td>
                 </tr>
+                <tr>
+                    <td class="w-50">Aktivní:</td>
+                    <td v-if="this.$page.props.permission.view" class="w-50">
+                        <v-select
+                            v-model="form.active"
+                            :items="status"
+                            item-title="state"
+                            item-value="id"
+                            label="Select"
+                            persistent-hint
+                            return-object
+                            single-line
+                            variant="outlined"
+                        ></v-select>
+                    </td>
+                </tr>
                 </tbody>
             </table>
             <p v-if="$page.props.flash.messageUpdate" class="text-center text-green">
@@ -75,6 +91,7 @@ const form = useForm({
     email: props.usr.email,
     role: {state: props.usr.roles.role, id: props.usr.roles.id},
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
+    active: props.usr.active == 1 ? {state: 'ANO', id: '1'} : {state: 'NE', id: '0'}
 });
 console.log(props.roles)
 const items = markRaw(
@@ -85,6 +102,10 @@ const types = markRaw(
     props.accountTypes.map(type => ({
         state: type.type, id: type.id
     })));
+const status = markRaw([
+    {state: 'ANO', id: '1'},
+    {state: 'NE', id: '0'}]
+);
 
 const updateUser = async (id) => {
     form.post('/dashboard/user'), {

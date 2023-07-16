@@ -50,12 +50,15 @@ class AdminSetUsers extends Controller
      * @return \Illuminate\Http\RedirectResponse**
      */
     public function update(User $user, UpdateRequest $updateRequest) {
+
         $role = $updateRequest->role['id'];
         $typeAccount = $updateRequest->type['id'];
+        $active = $updateRequest->active['id'];
         User::find($user->id)->update([
             'firstname' => $updateRequest->firstname,
             'type_id' => $typeAccount,
             'role_id' => $role,
+            'active' => $active,
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
     }
