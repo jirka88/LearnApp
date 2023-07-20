@@ -15,7 +15,7 @@ class Partition extends Model
     public function Users() : BelongsToMany {
         return $this->belongsToMany(User::class, 'userPartition', 'partition_id','user_id');
     }
-    public function Chapters() :HasMany {
-        return $this->HasMany(Chapter::class, 'partition_id');
+    public function Chapter() :HasMany {
+        return $this->HasMany(Chapter::class);
     }
 }

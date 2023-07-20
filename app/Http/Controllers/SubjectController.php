@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectRequest;
+use App\Models\Chapter;
 use App\Models\Partition;
 use App\Models\User;
 use App\Models\UserPartition;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,6 +23,19 @@ class SubjectController extends Controller
     {
         $subjects = Partition::all()->where('created_by', auth()->user()->id);
         return Inertia::render('subjects/subjects', compact('subjects'));
+    }
+
+    /**
+     * Vrácení předmětu s kapitolamy
+     * @param Partition $subject
+     * @return \Inertia\Response
+     */
+    public function show(Partition $subject) {
+        $chapters = Chapter::with('Partition')
+            ->whereHas('Partition', function ($query) {
+            $query->where('created_by', auth()->user()->id);
+        })->where('partition_id', $subject->id)->get(['name', 'perex']);
+        return Inertia::render('chapter/chapter', compact('chapters'));
     }
 
     /**

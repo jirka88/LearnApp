@@ -35,11 +35,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
     Route::post('/user', [DashboardUserController::class, 'update'])->name('user.update');
     Route::get('/user/changePassword', function () {
-        return redirect()->route('user.info');
+        return to_route('user.info');
     });
+    Route::post('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
     Route::resource('/manager/subject', SubjectController::class);
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
-    Route::post('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {

@@ -13,7 +13,6 @@
                             @update:modelValue="filtred"
                             v-model="filtr"
                             :items="items"
-                            :disabled="this.$page.props.permission.view ? false : true"
                             item-title="state"
                             item-value="id"
                             label="Select"

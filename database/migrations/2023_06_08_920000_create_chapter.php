@@ -13,9 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('chapter', function (Blueprint $table) {
+        Schema::create('chapters', function (Blueprint $table) {
             $table->id();
             $table->string('name',20);
+            $table->string('perex', 50);
             $table->string('context');
             $table->string('slug')
                 ->unique()
@@ -34,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chapter');
+        Schema::dropIfExists('chapters');
     }
 };

@@ -36,7 +36,7 @@ class RegisterRequest extends FormRequest
             'firstname.required' => "Jméno je povinné pole.",
             'firstname.min' => 'Vaše jméno je příliš krátké.',
             'firstname.max' => 'Jméno je příliš dlouhé.',
-            'email.required' => 'E-mail je povinné pole.',
+            'email.required' => '0',
             'email.email' => 'E-mail musí být platný.',
             'email.unique' => 'E-mail je již registrován.',
             'email.max' => 'E-mail může mít maximálně 320 znaků.',

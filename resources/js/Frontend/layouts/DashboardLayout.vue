@@ -41,11 +41,13 @@
                             title="Organizace">
                         </v-list-item>
                     </Link>
-                    <v-list-item v-for="subject in this.$page.props.user.subjects" :key="subject.id"
+                    <Link v-for="subject in this.$page.props.user.subjects" :key="subject.id" :href="route('subject.show', subject.id)">
+                    <v-list-item
                                  class="subItem"
                                  :prepend-icon="subject.icon"
                                  :title="subject.name">
                     </v-list-item>
+                    </Link>
                 </v-list-group>
                 <Link :href="route('user.info')">
                     <v-list-item prepend-icon="mdi-account-cog" title="Nastavení profilu"

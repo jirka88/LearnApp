@@ -11,9 +11,10 @@ class Chapter extends Model
     use HasFactory;
     protected $fillable = [
         'name',
+        'perex',
         'context',
     ];
     public function Partition() :BelongsTo {
-        return $this->BelongsTo(Partition::class, 'id');
+        return $this->BelongsTo(Partition::class, 'partition_id');
     }
 }

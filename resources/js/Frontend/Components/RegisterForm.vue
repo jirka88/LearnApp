@@ -55,13 +55,14 @@
                 variant="outlined"
                 persistent-hint
                 return-object
+                hide-details
                 single-line
             ></v-select>
             <div class="d-flex">
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
             <span class="text-center text-red">{{form.errors.confirm}}</span>
-            <span class="text-center text-red">{{form.errors.email}}</span>
+            <span class="text-center text-red">{{form.errors.email !== "0" ? form.errors.email : ''}}</span>
             <v-btn
                 type="submit"
                 color="blue"

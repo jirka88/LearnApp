@@ -51,9 +51,9 @@
                         ></v-select>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="this.$page.props.permission.view">
                     <td class="w-50">Aktivní:</td>
-                    <td v-if="this.$page.props.permission.view" class="w-50">
+                    <td  class="w-50">
                         <v-select
                             v-model="form.active"
                             :items="status"
