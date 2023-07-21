@@ -18,20 +18,19 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      */
     public function index() {
-        $users = User::orderBy('role_id', 'ASC')->orderby('firstname', 'ASC')->with(['roles', 'accountTypes'])->get();
+        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'accountTypes'])->get();
         return Inertia::render('admin/listUsers', compact('users'));
     }
 
     /**
-     *  ADMIN - Získáné informace o uživateli
-     * @param User $user
+     * ADMIN - Získáné informace o uživateli
+     * @param $slug
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(User $user) {
-        $this->authorize('view', $user);
-
-        $usr = User::with(['roles', 'accountTypes'])->find($user->id);
+    public function edit($slug) {
+        $usr = User::with(['roles', 'accountTypes'])->where('slug', $slug)->first();
+        $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if($isAdmin) {
             $roles = Roles::all();
@@ -75,11 +74,12 @@ class AdminSetUsers extends Controller
 
     /**
      * ADMIN - Získání předmětů od uživatele v administraci
-     * @param User $user
+     * @param $slug
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function getUserSubjects(User $user) {
+    public function getUserSubjects($slug) {
+        $user = User::where('slug', $slug)->first();
         $this->authorize('view', $user);
         $subjects = User::with('patritions')->find($user->id);
         return Inertia::render('admin/listSubjects', compact('subjects'));
@@ -87,30 +87,31 @@ class AdminSetUsers extends Controller
 
     /**
      * ADMIN - Odkázání na vytvoření předmětu u uživatele
-     * @param User $user
+     * @param $slug
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function createUserSubject(User $user) {
+    public function createUserSubject($slug) {
+        $user = User::where('slug', $slug)->first();
         $this->authorize('view', $user);
-        $url = "/dashboard/admin/controll/" . $user->id ."/subject/create";
+        $url = "/dashboard/admin/controll/" . $user->slug ."/subject/create";
         return Inertia::render('subjects/createSubjects', compact( 'url'));
     }
 
     /**
      * ADMIN - vytvoření nového předmětu pod uživatelem
-     * @param User $user
+     * @param $slug
      * @param SubjectRequest $subjectRequest
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeUserSubject(User $user,  SubjectRequest $subjectRequest) {
-
+    public function storeUserSubject($slug,  SubjectRequest $subjectRequest) {
+        $user = User::where('slug', $slug)->first();
         $subject = $subjectRequest->only("name");
         $subject["icon"] = $subjectRequest->icon["iconName"];
         $subject["created_by"] = $user->id;
         $subjectT = Partition::create($subject);
 
         $user->patritions()->attach($subjectT->id);
-        return to_route('adminuser.subjects', $user->id);
+        return to_route('adminuser.subjects', $user->slug);
     }
 }

@@ -12,6 +12,12 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    /***
+     * Sortování (provizorní)
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sort(Request $request) {
         $sort = $request->input('sort', 'default');
         if($sort !== 'default') {

@@ -6,10 +6,8 @@ use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Partition;
 use App\Models\User;
-use App\Models\UserPartition;
-use Illuminate\Database\Query\Builder;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SubjectController extends Controller
@@ -30,7 +28,8 @@ class SubjectController extends Controller
      * @param Partition $subject
      * @return \Inertia\Response
      */
-    public function show(Partition $subject) {
+    public function show($slug) {
+        $subject = Partition::where('slug', $slug)->first();
         $chapters = Chapter::with('Partition')
             ->whereHas('Partition', function ($query) {
             $query->where('created_by', auth()->user()->id);
@@ -56,6 +55,7 @@ class SubjectController extends Controller
         $subject = $subjectRequest->only('name');
         $subject['created_by'] = auth()->user()->id;
         $subject['icon'] = $subjectRequest->icon["iconName"];
+        $subject['slug'] = SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name);
         $subjectT = Partition::create($subject);
 
         $user = User::find(auth()->user()->id);
@@ -69,8 +69,8 @@ class SubjectController extends Controller
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit(Partition $subject) {
-
+    public function edit($slug) {
+        $subject = Partition::where('slug', $slug)->first();
         $this->authorize('update', $subject);
         return Inertia::render('subjects/editSubjects', compact('subject'));
     }
@@ -82,7 +82,11 @@ class SubjectController extends Controller
      * @return RedirectResponse
      */
     public function update(Partition $subject, SubjectRequest $subjectRequest) {
-        $subject->update($subjectRequest->validated());
+        $subject->update([
+            'name' => $subjectRequest->name,
+            'icon' => $subjectRequest->icon,
+            'slug' => SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name)
+        ]);
         return to_route('subject.index');
     }
 
@@ -92,6 +96,7 @@ class SubjectController extends Controller
      * @return void
      */
     public function destroy(Partition $subject) {
+
         $subject->delete();
     }
 }

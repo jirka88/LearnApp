@@ -24,6 +24,7 @@
                         type="submit"
                         color="blue"
                         class="d-flex justify-center margin-center"
+                        :disabled="creating"
                         :class="{'w-100': $vuetify.display.smAndDown}"
                     >
                         vytvořit!
@@ -37,19 +38,24 @@
 import {useForm} from "@inertiajs/inertia-vue3";
 import icons from "../../../itemsIcons";
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
+import {ref} from "vue";
 
 const props = defineProps({usr: Object, url: String});
-
+const creating = ref(false);
 const form = useForm({
     name: '',
     icon: {iconName: 'mdi-text-long'}
 })
 
 const createSubject = async() =>{
+    creating.value= true;
     if(props.url === undefined) {
         form.post("/dashboard/manager/subject/", {
             onSuccess: () => {
                 form.reset();
+            },
+            onError: () => {
+                creating.value = false;
             }
         });
         return;
@@ -57,9 +63,11 @@ const createSubject = async() =>{
     form.post((props.url),{
         onSuccess: () => {
             form.reset();
+        },
+        onError: () => {
+            creating.value = false;
         }
     });
-
 }
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',

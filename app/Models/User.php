@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, Sluggable;
 
     protected $fillable = [
         'firstname',
@@ -20,12 +21,21 @@ class User extends Authenticatable
         'role_id',
         'type_id',
         'password',
-        'active'
+        'active',
+        'slug'
     ];
 
     protected $hidden = [
         'password',
     ];
+    public function sluggable() : array
+    {
+        return [
+            'slug' => [
+                'source' => 'firstname'
+            ]
+        ];
+    }
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);

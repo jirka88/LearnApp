@@ -44,12 +44,12 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [AdminSetUsers::class, 'index']);
-        route::get('/controll/{user}', [AdminSetUsers::class, 'edit'])->name('user.edit');
+        route::get('/controll/{slug}', [AdminSetUsers::class, 'edit'])->name('user.edit');
         route::put('/controll/{user}', [AdminSetUsers::class, 'update'])->name('user.update');
         route::delete('/controll/{user}', [AdminSetUsers::class, 'destroy'])->name('user.destroy');
-        route::get('/controll/{user}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
-        route::get('/controll/{user}/subject/create', [AdminSetUsers::class, 'createUserSubject'])->name('user.createSubject');
-        route::post('/controll/{user}/subject/create', [AdminSetUsers::class, 'storeUserSubject'])->name('user.storeSubject');
+        route::get('/controll/{slug}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
+        route::get('/controll/{slug}/subject/create', [AdminSetUsers::class, 'createUserSubject'])->name('user.createSubject');
+        route::post('/controll/{slug}/subject/create', [AdminSetUsers::class, 'storeUserSubject'])->name('user.storeSubject');
     });
     //redirect
     //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);

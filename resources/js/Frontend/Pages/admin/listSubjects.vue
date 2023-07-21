@@ -6,7 +6,7 @@
                 <p class="text-h5">Předměty uživatele: {{subjects.firstname}} - {{subjects.email}}</p>
                 <v-divider></v-divider>
                 </div>
-                <Link :href="route('adminuser.createSubject', subjects.id)">
+                <Link :href="route('adminuser.createSubject', subjects.slug)">
                     <div class="btns">
                         <v-btn
                         class="bg-green">
@@ -17,6 +17,7 @@
                     <v-table class="text-left">
                         <thead>
                         <tr>
+                            <th class="font-weight-bold">ID:</th>
                             <th class="font-weight-bold">Název:</th>
                             <th class="font-weight-bold">Ikona:</th>
                             <th class="font-weight-bold">Počet kapitol:</th>
@@ -26,11 +27,12 @@
                         </thead>
                         <tbody v-if=" subjects.patritions.length !== 0">
                             <tr v-for="subjectData in subjects.patritions" :key="subjectData.id">
+                                <td class="font-weight-bold">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
                                 <td>0</td>
                                 <td>
-                                    <Link :href="route('subject.edit',[subjectData.id])">
+                                    <Link :href="route('subject.edit', subjectData.slug)">
                                         <v-btn
                                     color="green"
                                     append-icon="mdi-pencil"
@@ -47,7 +49,7 @@
                         </tbody>
                         <tbody v-else>
                             <tr>
-                                <td class="text-center" colspan="5">Předměty nebyly vytvořeny!</td>
+                                <td class="text-center" colspan="6">Předměty nebyly vytvořeny!</td>
                             </tr>
                         </tbody>
                     </v-table>

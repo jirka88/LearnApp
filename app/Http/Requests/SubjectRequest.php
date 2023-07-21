@@ -25,7 +25,7 @@ class SubjectRequest extends FormRequest
     {
         return [
             'name' => 'required|min:3|max:25',
-            'icon' => 'required'
+            'icon' => 'required',
         ];
     }
 }

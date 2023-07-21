@@ -41,7 +41,7 @@
                             title="Organizace">
                         </v-list-item>
                     </Link>
-                    <Link v-for="subject in this.$page.props.user.subjects" :key="subject.id" :href="route('subject.show', subject.id)">
+                    <Link v-for="subject in this.$page.props.user.subjects" :key="subject.id" :href="route('subject.show', subject.slug)">
                     <v-list-item
                                  class="subItem"
                                  :prepend-icon="subject.icon"

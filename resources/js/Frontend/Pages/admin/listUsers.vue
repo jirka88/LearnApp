@@ -11,6 +11,7 @@
             <v-table class="text-left">
                 <thead>
                 <tr>
+                    <th class="font-weight-bold">ID:</th>
                     <th class="font-weight-bold">Jméno:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Role:</th>
@@ -22,13 +23,14 @@
                 </thead>
                 <tbody>
                 <tr class="pa-2" v-for="user in users" :key="user.id">
+                    <td>{{user.id}}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.account_types.type }}</td>
                     <td>{{ user.active == 1 ? "ANO" : "NE" }}</td>
                     <td v-if="user.id != this.$page.props.user.id || user.roles.id !== 1">
-                        <Link :href="route('adminuser.subjects', user.id)">
+                        <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">
                                 Zobrazit
                             </v-btn>
@@ -36,7 +38,7 @@
                     </td>
                     <td v-else></td>
                     <td v-if="user.roles.id !== 1" class="d-flex gp-em-05">
-                        <Link :href="route('adminuser.edit', user.id)">
+                        <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
                             <v-btn v-if="user.id != this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>

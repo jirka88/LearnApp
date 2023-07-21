@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name', 25);
             $table->string('icon', 255)
                 ->default('mdi-text-long');
+            $table->string('slug')
+                ->unique();
             $table->integer('created_by');
             $table->timestamps();
         });

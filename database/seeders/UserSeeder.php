@@ -20,17 +20,20 @@ class UserSeeder extends Seeder
                 'role_id' => 1,
                 'email' => 'navratil.jiri@atlas.cz',
                 'type_id' => 1,
-                'password' => 'Aa123456#'],
+                'password' => 'Aa123456#',
+                'slug' => 'jirka'],
             ['firstname' => 'Test',
                 'role_id' => 2,
                 'email' => 'laval@centrum.cz',
                 'type_id' => 1,
-                'password' => 'Aa123456#'],
+                'password' => 'Aa123456#',
+                'slug' => 'test'],
             ['firstname' => 'Test2',
                 'role_id' => 4,
                 'email' => 'test@test.cz',
                 'type_id' => 1,
-                'password' => 'Aa123456#']
+                'password' => 'Aa123456#',
+                'slug' => 'test2']
         ];
         foreach ($users as $user) {
             User::create($user);
