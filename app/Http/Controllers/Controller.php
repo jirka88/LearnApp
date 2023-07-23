@@ -21,13 +21,11 @@ class Controller extends BaseController
     public function sort(Request $request) {
         $sort = $request->input('sort', 'default');
         if($sort !== 'default') {
-            $subjects = Partition::orderBy('name',$sort)->where('created_by', auth()->user()->id)->get();
+            $subjects = Partition::orderBy('name',$sort)->where('created_by', auth()->user()->id)->paginate(20);
             return response()->json($subjects);
-            //return redirect()->route('subject.index',['sort'=>$sort]);
         }
         else {
-            $subjects = Partition::all()->where('created_by', auth()->user()->id);
-            //return redirect()->route('subject.index',['sort'=>$sort]);
+            $subjects = Partition::where('created_by', auth()->user()->id)->paginate(20);
             return response()->json($subjects);
         }
     }

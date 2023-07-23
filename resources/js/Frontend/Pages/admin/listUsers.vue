@@ -22,7 +22,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="pa-2" v-for="user in users" :key="user.id">
+                <tr class="pa-2" v-for="user in users.data" :key="user.id">
                     <td>{{user.id}}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.email }}</td>
@@ -47,6 +47,14 @@
                 </tr>
                 </tbody>
             </v-table>
+            <v-pagination
+                v-model="page"
+                :length="pages"
+
+                prev-icon="mdi-menu-left"
+                next-icon="mdi-menu-right"
+                @update:modelValue="fetchData"
+            ></v-pagination>
         </v-container>
     </DashboardLayout>
 </template>
@@ -56,12 +64,19 @@ import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
 import {ref} from "vue";
 import DialogDelete from "@/Frontend/Components/UI/Dialog-delete.vue";
+import inertia from "@inertiajs/inertia";
 const activeUser = ref('');
 const status = ref(false);
-defineProps({users: Object});
+const page = ref(1);
+const props = defineProps({users: Object, pages: Object});
 const enableDialog = (user) => {
     activeUser.value = user;
     status.value = true;
+}
+const fetchData = () => {
+    inertia.Inertia.get(route('admin'),{page: page.value}, {preserveState: true, onSuccess: (response) => {
+            props.users = response.props.users;
+        }});
 }
 </script>
 

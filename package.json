@@ -24,6 +24,7 @@
         "@mdi/font": "^7.2.96",
         "@mdi/js": "^7.2.96",
         "@vitejs/plugin-vue": "^4.2.3",
+        "vue-router": "^4.2.4",
         "vuetify": "^3.3.3",
         "ziggy": "^2.4.0"
     }

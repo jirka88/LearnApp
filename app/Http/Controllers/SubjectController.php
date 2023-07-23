@@ -19,8 +19,9 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subjects = Partition::all()->where('created_by', auth()->user()->id);
-        return Inertia::render('subjects/subjects', compact('subjects'));
+        $subjects = Partition::paginate(20)->where('created_by', auth()->user()->id);
+        $pages = ceil(count(Partition::all()) / 20);
+        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages]);
     }
 
     /**
@@ -96,7 +97,6 @@ class SubjectController extends Controller
      * @return void
      */
     public function destroy(Partition $subject) {
-
         $subject->delete();
     }
 }

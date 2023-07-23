@@ -29,7 +29,6 @@
                     >
                         vytvořit!
                     </v-btn>
-                    {{console.log(url)}}
                 </v-form>
             </div>
         </SubjectManagerLayout>

@@ -9,7 +9,11 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import "@mdi/font/css/materialdesignicons.css";
 import {InertiaProgress} from "@inertiajs/progress"; // Ensure you are using css-loader
+import { createRouter, createWebHistory } from 'vue-router';
 
+const routes = [
+    {}
+];
 const vuetify= createVuetify({
     icons: {
         defaultSet: "mdi",
@@ -21,7 +25,10 @@ const vuetify= createVuetify({
     components,
     directives,
 })
-
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
 createInertiaApp({
     resolve: name => {
         const pages = import.meta.glob('./Frontend/Pages/**/*.vue', { eager: true })
@@ -32,6 +39,7 @@ createInertiaApp({
             .use(plugin)
             .use(vuetify)
             .use(ZiggyVue)
+            .use(router)
             .mount(el)
     },
 }).then(() => {

@@ -18,8 +18,9 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      */
     public function index() {
-        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'accountTypes'])->get();
-        return Inertia::render('admin/listUsers', compact('users'));
+        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'accountTypes'])->paginate(20);
+        $pages = ceil(count(User::all()) / 20);
+        return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
     }
 
     /**

@@ -80,7 +80,6 @@
 <script setup>
 import {Link} from "@inertiajs/inertia-vue3"
 import {ref} from "vue";
-
 const drawer = ref(true);
 </script>
 
@@ -96,7 +95,9 @@ const drawer = ref(true);
         color: black !important;
     }
 }
-
+.v-list-item {
+    padding: 0.7em !important;
+}
 #group {
     .subItem:first-child {
         padding-inline-start: 8px !important;
@@ -106,5 +107,7 @@ const drawer = ref(true);
         padding-inline-start: 16px !important;
     }
 }
-
+.v-list-item--active {
+    background: gray;
+}
 </style>

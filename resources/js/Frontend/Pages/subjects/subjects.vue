@@ -42,7 +42,7 @@
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
                                 <td>0</td>
                                 <td>
-                                    <Link :href="route('subject.edit', subjectData.slug)">
+                                    <Link :href="route('subject.edit', [subjectData.slug])">
                                         <v-btn
                                     color="green"
                                     append-icon="mdi-pencil"
@@ -64,6 +64,16 @@
                             </tr>
                         </tbody>
                     </v-table>
+                <div class="text-center">
+                    <v-pagination
+                        v-model="page"
+                        :length="pages"
+
+                        prev-icon="mdi-menu-left"
+                        next-icon="mdi-menu-right"
+                        @update:modelValue="fetchData"
+                    ></v-pagination>
+                </div>
             </div>
         </v-container>
         <v-row justify="center">
@@ -106,15 +116,19 @@
 import {Link, useForm} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import AdminLayout from "../../layouts/DashboardLayout.vue";
+import inertia from "@inertiajs/inertia";
 import {markRaw, ref} from "vue";
+import { useRouter } from 'vue-router';
+const router = useRouter()
 const form = useForm();
 const dialog = ref(false);
 const subjectId = ref();
 const subjectName = ref();
 const filtr = ref({state: 'Výchozí', id: 'default'});
-
-const props = defineProps({subjects: Object});
+const page = ref(1);
+const props = defineProps({subjects: Object, pages: Object});
 const subjectsShow = ref(props.subjects);
+console.log(page);
 const setId = (id, name) => {
     dialog.value = true;
     subjectId.value = id;
@@ -125,6 +139,11 @@ const destroySubject = (id) => {
     dialog.value = false;
 }
 
+const fetchData = () => {
+    inertia.Inertia.get(route('subject.index'),{page: page.value}, {preserveState: true, onSuccess: (response) => {
+        subjectsShow.value = response.props.subjects;
+    }});
+}
 const filtred = () => {
     const sort = filtr.value.id;
 
@@ -132,6 +151,7 @@ const filtred = () => {
         .then(response => {
             console.log(response.data)
             subjectsShow.value = response.data;
+            router.push(`?sort=${sort}`);
         })
         .catch(error => {
             console.error(error);
