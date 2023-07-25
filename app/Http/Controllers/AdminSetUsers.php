@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Models\AccountTypes;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -61,6 +63,29 @@ class AdminSetUsers extends Controller
             'active' => $active,
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
+    }
+
+    /**
+     * ADMIN - odkazázání na stránku, kde se dá vytvořit uživatel
+     * @return \Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function create() {
+        $this->authorize('viewAny', auth()->user());
+        $accountTypes = AccountTypes::all();
+        $roles = Roles::all();
+        return Inertia::render('admin/createUser', compact('accountTypes', 'roles'));
+    }
+    public function store(AdminCreateUser $adminCreateUser) {
+        User::create([
+           "firstname" => $adminCreateUser->firstname,
+           "email" => $adminCreateUser->email,
+           "password" => $adminCreateUser->password,
+           "role_id" => $adminCreateUser->role["id"],
+           "type_id" => $adminCreateUser->type["id"],
+           "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
+        ]);
+        return to_route('admin')->with('successUpdate', 'Uživatel byl úspěšně vytvořen!');
     }
 
     /**

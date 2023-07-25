@@ -1,6 +1,15 @@
 <template>
     <DashboardLayout>
         <v-container>
+            <div v-if="this.$page.props.permission.view" class="btns d-flex align-center py-8">
+                <Link :href="route('adminuser.create')">
+                    <v-btn
+                        class="bg-green">
+                        Vytvořit Uživatele
+                    </v-btn>
+                </Link>
+
+            </div>
             <v-dialog
                 v-model="status"
                 persistent

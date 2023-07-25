@@ -50,6 +50,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::get('/controll/{slug}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
         route::get('/controll/{slug}/subject/create', [AdminSetUsers::class, 'createUserSubject'])->name('user.createSubject');
         route::post('/controll/{slug}/subject/create', [AdminSetUsers::class, 'storeUserSubject'])->name('user.storeSubject');
+        route::get('controll/user/create', [AdminSetUsers::class, 'create'])->name('user.create');
+        route::post('controll/user/create', [AdminSetUsers::class, 'store'])->name('user.store');
     });
     //redirect
     //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);
