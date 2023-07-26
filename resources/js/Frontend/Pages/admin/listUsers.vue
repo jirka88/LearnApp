@@ -38,7 +38,7 @@
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.account_types.type }}</td>
                     <td>{{ user.active == 1 ? "ANO" : "NE" }}</td>
-                    <td v-if="user.id != this.$page.props.user.id || user.roles.id !== 1">
+                    <td v-if="user.id == this.$page.props.user.id || user.roles.id !== 1">
                         <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">
                                 Zobrazit

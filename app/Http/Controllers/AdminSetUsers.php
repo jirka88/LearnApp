@@ -73,7 +73,12 @@ class AdminSetUsers extends Controller
     public function create() {
         $this->authorize('viewAny', auth()->user());
         $accountTypes = AccountTypes::all();
-        $roles = Roles::all();
+        if(auth()->user()->role_id == 1) {
+            $roles = Roles::all();
+        }
+        else {
+            $roles = Roles::all()->whereNotIn("id", [1,2])->values();
+        }
         return Inertia::render('admin/createUser', compact('accountTypes', 'roles'));
     }
     public function store(AdminCreateUser $adminCreateUser) {

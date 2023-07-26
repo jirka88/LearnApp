@@ -20,7 +20,7 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Partition::paginate(20)->where('created_by', auth()->user()->id);
-        $pages = ceil(count(Partition::all()) / 20);
+        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / 20);
         return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages]);
     }
 

@@ -1,9 +1,9 @@
 <template>
     <DashboardLayout>
             <div class="creatingUser d-flex justify-center align-center flex-column">
-                <v-container class="d-flex justify-center flex-column px-4">
+                <v-container class="d-flex justify-center flex-column pa-8">
             <h1>Vytvoření uživatele</h1>
-            <form class="py-8  w-100 d-flex flex-column gp-em-05"  @submit.prevent="createUser">
+            <form class="py-8 w-100 d-flex flex-column gp-em-05"  @submit.prevent="createUser">
                 <v-text-field
                     v-model="form.firstname"
                     variant="outlined"
@@ -58,7 +58,7 @@
                 >
                     Vytvořit!
                 </v-btn>
-                <span class="text-center text-red py-4">{{errors.email === "0" ? "" : errors.email}}</span>
+                <span class="text-center text-red py-4" v-if="errors.email">{{errors.email === "0" ? "" : errors.email}}</span>
             </form>
                 </v-container>
             </div>
@@ -142,8 +142,7 @@ const createUser = () => {
     }
 .v-container {
     max-width: 540px !important;
-    max-height: 100vh;
-    height: 100vh;
     background: white;
+    border-radius: 24px;
 }
  </style>

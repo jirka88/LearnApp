@@ -19,10 +19,10 @@
                 </v-select>
             </div>
         </div>
-        <main class="pa-8 d-flex">
+        <main class="pa-5 d-flex flex-wrap">
         <v-card
             v-for="chapter in chapters" :key="chapter.id"
-            class="pa-2"
+            class="pa-2 d-flex"
             max-width="344"
         >
             <v-card-text>
@@ -68,14 +68,20 @@ import {Link} from "@inertiajs/inertia-vue3";
 defineProps({chapters: Object});
 </script>
 <style scoped lang="scss">
-.v-card {
-    flex: 1 1 auto;
-    .v-card-actions {
-        .v-btn {
-            border-radius: 0.5em !important;
+main {
+    gap: 1em;
+    .v-card {
+        flex: 1 1 auto;
+        width: 350px !important;
+        min-height: 14em !important;
+        .v-card-actions {
+            .v-btn {
+                border-radius: 0.5em !important;
+            }
         }
     }
 }
+
 .v-select {
     max-width: 150px;
 }
