@@ -1,5 +1,5 @@
 <template>
-        <SubjectManagerLayout>
+        <component :is="SubjectManagerLayout">
             <div class="create-subject d-flex justify-center align-center"
                  :class="{'w-85': $vuetify.display.smAndDown,
                             'w-95': $vuetify.display.xs}">
@@ -31,7 +31,7 @@
                     </v-btn>
                 </v-form>
             </div>
-        </SubjectManagerLayout>
+        </component>
 </template>
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";

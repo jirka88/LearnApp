@@ -1,5 +1,5 @@
 <template>
-    <DashboardLayout>
+    <component :is="DashboardLayout">
         <v-container>
             <div v-if="this.$page.props.permission.view" class="btns d-flex align-center py-8">
                 <Link :href="route('adminuser.create')">
@@ -65,7 +65,7 @@
                 @update:modelValue="fetchData"
             ></v-pagination>
         </v-container>
-    </DashboardLayout>
+    </component>
 </template>
 
 <script setup>

@@ -1,5 +1,5 @@
 <template>
-    <DashboardLayout>
+    <component :is="DashboardLayout">
             <div class="creatingUser d-flex justify-center align-center flex-column">
                 <v-container class="d-flex justify-center flex-column pa-8">
             <h1>Vytvoření uživatele</h1>
@@ -62,7 +62,7 @@
             </form>
                 </v-container>
             </div>
-    </DashboardLayout>
+    </component>
 </template>
 
 <script setup>

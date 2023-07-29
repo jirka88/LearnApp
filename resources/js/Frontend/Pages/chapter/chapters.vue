@@ -1,9 +1,9 @@
 <template>
-    <DashboardLayout>
+    <component :is="DashboardLayout">
         <v-container>
         <div class="d-flex flex-column pa-5 gp-em-4">
             <div class="btns d-flex align-center">
-                <Link :href="route('subject.create')">
+                <Link :href="route('chapter.create', subject.slug )">
                     <v-btn
                         class="bg-green">
                         Vytvořit kapitolu
@@ -22,15 +22,15 @@
         <main class="pa-5 d-flex flex-wrap">
         <v-card
             v-for="chapter in chapters" :key="chapter.id"
-            class="pa-2 d-flex"
+            class="pa-2 d-flex flex-column"
             max-width="344"
         >
             <v-card-text>
                 <p class="text-h4 font-weight-bold text--primary py-4">
-                    {{chapter.name}}
+                    {{ chapter.name }}
                 </p>
                 <div class="text--primary">
-                    {{chapter.perex}}<br>
+                    {{ chapter.perex }}<br>
                 </div>
             </v-card-text>
             <v-card-actions class="justify-end align-center">
@@ -57,7 +57,7 @@
         </v-card>
         </main>
         </v-container>
-    </DashboardLayout>
+    </component>
 </template>
 
 <script setup>
@@ -65,7 +65,7 @@
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
 
-defineProps({chapters: Object});
+defineProps({chapters: Object, subject: Object});
 </script>
 <style scoped lang="scss">
 main {

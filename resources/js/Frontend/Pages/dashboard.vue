@@ -1,11 +1,11 @@
 <script setup>
-import AdminLayout from "../layouts/DashboardLayout.vue";
+import DashboardLayout from "../layouts/DashboardLayout.vue";
 </script>
 
 <template>
-    <AdminLayout>
+    <component :is="DashboardLayout">
 
-    </AdminLayout>
+    </component>
 </template>
 
 <style lang="scss">

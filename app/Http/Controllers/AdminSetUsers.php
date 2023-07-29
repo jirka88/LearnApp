@@ -81,6 +81,12 @@ class AdminSetUsers extends Controller
         }
         return Inertia::render('admin/createUser', compact('accountTypes', 'roles'));
     }
+
+    /**
+     * ADMIN - vytvoření uživatele
+     * @param AdminCreateUser $adminCreateUser
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(AdminCreateUser $adminCreateUser) {
         User::create([
            "firstname" => $adminCreateUser->firstname,

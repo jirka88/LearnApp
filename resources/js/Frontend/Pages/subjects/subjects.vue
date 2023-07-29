@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout>
+    <component :is="DashboardLayout">
         <v-container>
             <div class="d-flex flex-column pa-5 gp-em-4">
                     <div class="btns d-flex align-center">
@@ -107,15 +107,12 @@
                 </v-card>
             </v-dialog>
         </v-row>
-    </AdminLayout>
-
-
-
+    </component>
 </template>
 <script setup>
 import {Link, useForm} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
-import AdminLayout from "../../layouts/DashboardLayout.vue";
+import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import inertia from "@inertiajs/inertia";
 import {markRaw, ref} from "vue";
 import { useRouter } from 'vue-router';
@@ -126,9 +123,8 @@ const subjectId = ref();
 const subjectName = ref();
 const filtr = ref({state: 'Výchozí', id: 'default'});
 const page = ref(1);
-const props = defineProps({subjects: Object, pages: Object});
+const props = defineProps({subjects: Object, pages: Number});
 const subjectsShow = ref(props.subjects);
-console.log(page);
 const setId = (id, name) => {
     dialog.value = true;
     subjectId.value = id;

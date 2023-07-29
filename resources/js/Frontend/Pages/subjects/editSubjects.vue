@@ -1,5 +1,5 @@
 <template>
-<SubjectManagerLayout>
+<component :is="SubjectManagerLayout">
     <div class="create-subject d-flex justify-center align-center"
          :class="{'w-85': $vuetify.display.smAndDown,
                             'w-95': $vuetify.display.xs}">
@@ -30,12 +30,13 @@
             </v-btn>
         </v-form>
     </div>
-</SubjectManagerLayout>
+</component>
 </template>
 <script setup>
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import icons from "../../../itemsIcons";
+import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 const props = defineProps({subject: Object})
 
 const form = useForm({

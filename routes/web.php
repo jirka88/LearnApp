@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminSetUsers;
+use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\LoginController;
@@ -41,6 +42,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::resource('/manager/subject', SubjectController::class);
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
+    Route::get("/manager/subject/{slug}/chapter/create", [ChapterController::class, 'create'])->name('chapter.create');
+    Route::post("/manager/subject/{slug}/chapter/create", [ChapterController::class, 'store'])->name('chapter.store');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [AdminSetUsers::class, 'index']);

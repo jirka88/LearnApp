@@ -35,7 +35,7 @@ class SubjectController extends Controller
             ->whereHas('Partition', function ($query) {
             $query->where('created_by', auth()->user()->id);
         })->where('partition_id', $subject->id)->get(['name', 'perex']);
-        return Inertia::render('chapter/chapter', compact('chapters'));
+        return Inertia::render('chapter/chapters', compact('chapters','subject'));
     }
 
     /**

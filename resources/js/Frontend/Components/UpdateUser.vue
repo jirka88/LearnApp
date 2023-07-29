@@ -93,7 +93,6 @@ const form = useForm({
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
     active: props.usr.active == 1 ? {state: 'ANO', id: '1'} : {state: 'NE', id: '0'}
 });
-console.log(props.roles)
 const items = markRaw(
     props.roles.map(role => ({
         state: role.role, id: role.id

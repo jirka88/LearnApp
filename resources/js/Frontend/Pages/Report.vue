@@ -1,5 +1,5 @@
 <template>
-<DashboardLayout>
+<component :is="DashboardLayout">
     <div class="report d-flex justify-center align-center" >
         <v-form class="pa-6 d-flex flex-column overflow-auto" @submit.prevent="report" :class="{'w-85': $vuetify.display.smAndDown
                           }">
@@ -21,7 +21,7 @@
             </v-btn>
         </v-form>
     </div>
-</DashboardLayout>
+</component>
 </template>
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";

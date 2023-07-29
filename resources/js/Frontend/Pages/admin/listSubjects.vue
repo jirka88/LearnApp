@@ -1,5 +1,5 @@
 <template>
-    <AdminLayout>
+    <component :is="DashboardLayout">
         <v-container>
             <div class="d-flex flex-column pa-4 gp-em-2">
                 <div>
@@ -86,14 +86,11 @@
                 </v-card>
             </v-dialog>
         </v-row>
-    </AdminLayout>
-
-
-
+    </component>
 </template>
 <script setup>
 import {Link, useForm} from "@inertiajs/inertia-vue3";
-import AdminLayout from "../../layouts/DashboardLayout.vue";
+import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import {ref} from "vue";
 const form = useForm();
 const dialog = ref(false);
