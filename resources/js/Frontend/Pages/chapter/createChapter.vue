@@ -4,7 +4,7 @@
         <div class="creatingUser">
             <v-container class="pa-8">
                 <h1>Vytvoření Kapitoly</h1>
-                <form class="py-8 w-100 d-flex flex-column gp-em-05"  @submit.prevent="createChapter">
+                <form class="py-8 w-100 d-flex flex-column"  @submit.prevent="createChapter">
                     <v-text-field
                         v-model="form.name"
                         variant="outlined"
@@ -71,12 +71,13 @@ const createChapter = () => {
     }
     .v-btn {
         margin: 0px auto;
+        padding: 2em;
     }
-}
-:deep(.ql-video){
-    width: 100% !important;
 }
 :deep(.ql-container) {
     height: 50vh !important;
+}
+:deep(.ql-snow) {
+    border: 1px solid black;
 }
 </style>

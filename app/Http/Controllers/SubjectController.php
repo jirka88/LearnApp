@@ -34,7 +34,7 @@ class SubjectController extends Controller
         $chapters = Chapter::with('Partition')
             ->whereHas('Partition', function ($query) {
             $query->where('created_by', auth()->user()->id);
-        })->where('partition_id', $subject->id)->get(['name', 'perex']);
+        })->where('partition_id', $subject->id)->get(['name', 'perex', 'id', 'slug']);
         return Inertia::render('chapter/chapters', compact('chapters','subject'));
     }
 

@@ -36,6 +36,7 @@ const close = () => {
 const destroy = (id) =>{
     form.delete(route(props.Path, id));
     emit('close');
+    this.$forceUpdate();
 }
 </script>
 

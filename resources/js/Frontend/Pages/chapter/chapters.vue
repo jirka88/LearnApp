@@ -20,7 +20,36 @@
             </div>
         </div>
         <main class="pa-5 d-flex flex-wrap">
-        <v-card
+            <v-dialog
+                v-model="status"
+                persistent
+                width="auto"
+            >
+                <v-card>
+                    <v-card-title class="text-h5 text-center">
+                        Opravdu si přejete smazat kapitolu <strong>{{activeChapter.name}}</strong>
+                    </v-card-title>
+                    <v-card-text class="text-center">Tato akce je nenávratná!</v-card-text>
+                    <v-card-actions class="margin-center">
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            class="bg-white"
+                            @click="status = false"
+                            size="x-large"
+                        >
+                            Zřušit
+                        </v-btn>
+                        <v-btn
+                            class="bg-red"
+                            @click="destroy()"
+                            size="x-large"
+                        >
+                            Smazat!
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+                <v-card
             v-for="chapter in chapters" :key="chapter.id"
             class="pa-2 d-flex flex-column"
             max-width="344"
@@ -38,6 +67,7 @@
                     icon="mdi-trash-can"
                     variant="flat"
                     color="red"
+                    @click="enableDialog(chapter)"
                 >
                 </v-btn>
                 <v-btn
@@ -64,8 +94,20 @@
 
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
+import {ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
+const status = ref(false);
+const activeChapter = ref("");
+const props = defineProps({chapters: Object, subject: Object});
 
-defineProps({chapters: Object, subject: Object});
+const enableDialog = (chapter) => {
+    activeChapter.value = chapter;
+    status.value = true;
+}
+const destroy = () => {
+    Inertia.delete(route('chapter.destroy', {slug: props.subject.slug, chapter: activeChapter.value.slug}));
+    status.value = false;
+}
 </script>
 <style scoped lang="scss">
 main {
@@ -87,5 +129,10 @@ main {
 }
 .btns {
     justify-content: space-between;
+}
+.v-dialog {
+    .v-card-title {
+        white-space: unset;
+    }
 }
 </style>

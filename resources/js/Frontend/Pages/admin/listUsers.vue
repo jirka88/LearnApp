@@ -31,7 +31,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="pa-2" v-for="user in users.data" :key="user.id">
+                <tr class="pa-8" v-for="user in users.data" :key="user.id">
                     <td>{{user.id}}</td>
                     <td>{{ user.firstname }}</td>
                     <td>{{ user.email }}</td>
@@ -46,7 +46,7 @@
                         </Link>
                     </td>
                     <td v-else></td>
-                    <td v-if="user.roles.id !== 1" class="d-flex gp-em-05">
+                    <td v-if="user.roles.id !== 1" class="d-flex align-center gp-em-05">
                         <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
@@ -89,6 +89,14 @@ const fetchData = () => {
 }
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
+table {
+    tr {
+        height: 4em !important;
+        td:last-child {
+            height: inherit !important;
+        }
+    }
+}
 
 </style>
