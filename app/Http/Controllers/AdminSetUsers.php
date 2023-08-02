@@ -105,6 +105,7 @@ class AdminSetUsers extends Controller
      * @return void
      */
     public function destroy(User $user) {
+        $this->authorize('view', $user);
         $user->patritions()->detach();
         User::destroy($user->id);
     }
@@ -118,7 +119,7 @@ class AdminSetUsers extends Controller
     public function getUserSubjects($slug) {
         $user = User::where('slug', $slug)->first();
         $this->authorize('view', $user);
-        $subjects = User::with('patritions')->find($user->id);
+        $subjects = User::with(['patritions' => function ($query) {$query->withCount('chapter');}])->find($user->id);
         return Inertia::render('admin/listSubjects', compact('subjects'));
     }
 

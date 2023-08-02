@@ -6,7 +6,7 @@
                         <Link :href="route('subject.create')">
                             <v-btn
                             class="bg-green">
-                            Vytvořit {{this.$page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět'}}
+                            Vytvořit {{this.$page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět'}}
                             </v-btn>
                         </Link>
                         <v-select
@@ -40,7 +40,7 @@
                                 <td class="font-weight-bold"  v-if="$page.props.permission.view">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
-                                <td>0</td>
+                                <td>{{subjectData.chapter_count}}</td>
                                 <td>
                                     <Link :href="route('subject.edit', [subjectData.slug])">
                                         <v-btn
@@ -176,7 +176,6 @@ const items = markRaw(
     .v-card {
         padding: 1.5em !important;
         white-space: unset;
-        text-wrap: balance;
     }
 }
 </style>

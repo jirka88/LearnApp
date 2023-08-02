@@ -76,7 +76,6 @@ class AdminPolicy
      */
     public function delete(User $user, User $model)
     {
-        //
     }
 
 

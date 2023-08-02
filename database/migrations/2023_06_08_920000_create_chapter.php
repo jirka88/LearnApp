@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('name',20);
             $table->string('perex', 50);
-            $table->string('context');
+            $table->longText('context');
             $table->string('slug')
                 ->unique()
                 ->after('name');

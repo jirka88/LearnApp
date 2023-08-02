@@ -19,7 +19,7 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subjects = Partition::paginate(20)->where('created_by', auth()->user()->id);
+        $subjects = Partition::withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
         $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / 20);
         return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages]);
     }
@@ -31,6 +31,7 @@ class SubjectController extends Controller
      */
     public function show($slug) {
         $subject = Partition::where('slug', $slug)->first();
+        $this->authorize("view", $subject);
         $chapters = Chapter::with('Partition')
             ->whereHas('Partition', function ($query) {
             $query->where('created_by', auth()->user()->id);

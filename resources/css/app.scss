@@ -1,3 +1,10 @@
+//colors
+@use "colors" as color;
+.primary-bg {
+    background: color.$primary-bg !important;
+}
+
+//classes
 
 .width-vw-85 {
     width: 85vw !important;
@@ -26,9 +33,8 @@
 .app-vh-100 {
     height: 100vh;
 }
-a {
-    text-decoration: none;
-    color: black;
+.vh-calc {
+    min-height: calc(100vh - 64px);
 }
 //vuetify
 .v-navigation-drawer__scrim {
@@ -42,5 +48,10 @@ a {
         white-space: unset;
         text-wrap: balance;
     }
+}
+//global
+a {
+    text-decoration: none;
+    color: black;
 }
 

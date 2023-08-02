@@ -30,7 +30,7 @@
                                 <td class="font-weight-bold">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
-                                <td>0</td>
+                                <td>{{subjectData.chapter_count}}</td>
                                 <td>
                                     <Link :href="route('subject.edit', subjectData.slug)">
                                         <v-btn

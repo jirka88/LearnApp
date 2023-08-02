@@ -31,7 +31,18 @@ class PartitionPolicy
      */
     public function view(User $user, Partition $partition)
     {
-        //
+        //majitel nebo ADMIN mají přístup
+        if($partition->created_by == auth()->user()->id || $user->role_id == Roles::ADMIN) {
+            return true;
+        }
+        //operátor pokud není správcová mí přístup
+        else if($user->role_id == Roles::OPERATOR) {
+            return (int)$partition->Users[0]->role_id !== Roles::ADMIN && (int)$partition->Users[0]->role_id !== Roles::OPERATOR;
+        }
+        //nemá přístup
+        else {
+            return false;
+        }
     }
 
     /**
@@ -52,9 +63,19 @@ class PartitionPolicy
      * @param  \App\Models\Partition  $partition
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Partition $partition)
-    {
-        return $user->id == Roles::ADMIN || (auth()->check() && auth()->user()->id == $partition->created_by);
+    public function update(User $user, Partition $partition) {
+        $adminSubject = User::where('id', $partition->created_by)->first();
+        //zobrazení admin nebo majitel předmětu
+         if($user->role_id == Roles::ADMIN || (auth()->check() && auth()->user()->id == $partition->created_by)) {
+             return true;
+         }
+         //zobrazení operátora --> nemůže zobrazit správcův předmět a jiný operátorův
+         else if($user->role_id == Roles::OPERATOR) {
+             return (int)$adminSubject->role_id !== Roles::ADMIN && (int)$adminSubject->role_id !== Roles::OPERATOR;
+         }
+         else {
+             return false;
+         }
     }
 
     /**

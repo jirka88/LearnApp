@@ -130,14 +130,14 @@ const createUser = () => {
     .creatingUser {
         height: calc(100vh - 64px);
         max-height: 100vh;
-        background: gray !important;
+        background: #4398f0 !important;
         overflow: auto;
         :deep(.v-messages__message){
             padding-bottom: 1.2em;
             text-align: left !important;
         }
         .v-btn {
-            margin: 0px auto;
+            margin: 0 auto;
         }
     }
 .v-container {
