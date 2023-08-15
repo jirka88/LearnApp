@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import './vue.config'
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 

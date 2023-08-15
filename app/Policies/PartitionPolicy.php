@@ -35,7 +35,7 @@ class PartitionPolicy
         if($partition->created_by == auth()->user()->id || $user->role_id == Roles::ADMIN) {
             return true;
         }
-        //operátor pokud není správcová mí přístup
+        //operátor pokud není správcová má přístup
         else if($user->role_id == Roles::OPERATOR) {
             return (int)$partition->Users[0]->role_id !== Roles::ADMIN && (int)$partition->Users[0]->role_id !== Roles::OPERATOR;
         }

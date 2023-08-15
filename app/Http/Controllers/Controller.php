@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partition;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -28,5 +29,25 @@ class Controller extends BaseController
             $subjects = Partition::where('created_by', auth()->user()->id)->paginate(20);
             return response()->json($subjects);
         }
+    }
+
+    /**
+     * Slouží ke získání všech aktivních uživatelů v aplikaci
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showUsersForSharing() {
+        $users = User::where("active", true)->get(['email', 'firstname']);
+        return response()->json($users);
+    }
+
+    public function share(Request $request) {
+        $customMessages = [
+            'users.required' => 'Je nutné vyplnit uživatele.',
+        ];
+        $validated = $request->validate([
+            'users' => 'required',
+        ], $customMessages);
+
+
     }
 }

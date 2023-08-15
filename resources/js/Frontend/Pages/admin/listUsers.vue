@@ -53,11 +53,17 @@
                         </Link>
                     </td>
                     <td v-else></td>
-                    <td v-if="user.roles.id !== 1" class="d-flex align-center gp-em-05">
+                    <td v-if="this.$page.props.permission.administrator_view || user.id == this.$page.props.user.id" class="d-flex align-center gp-em-05">
                         <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
                             <v-btn v-if="user.id !== this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
+                    </td>
+                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && this.$page.props.permission.operator_view" class="d-flex align-center gp-em-05">
+                        <Link :href="route('adminuser.edit', user.slug)">
+                            <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
+                        </Link>
+                        <v-btn v-if="user.id !== this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
                     </td>
                     <td v-else></td>
                 </tr>
