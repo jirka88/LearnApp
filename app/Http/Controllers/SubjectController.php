@@ -59,9 +59,9 @@ class SubjectController extends Controller
         $subject['icon'] = $subjectRequest->icon["iconName"];
         $subject['slug'] = SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name);
         $subjectT = Partition::create($subject);
-
         $user = User::find(auth()->user()->id);
-        $user->patritions()->attach($subjectT->id);
+
+        $user->patritions()->attach($subjectT->id, ['owner' => true]);
         return to_route('subject.index');
     }
 

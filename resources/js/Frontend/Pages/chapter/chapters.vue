@@ -13,6 +13,7 @@
                             </v-btn>
                         </Link>
                         <v-btn
+                            v-if="subject.created_by == this.$page.props.user.id"
                             class="bg-orange text-white"
                             @click="enableSharing">
                             Nasdílet {{ this.$page.props.user.typeAccount == 'Osobní' ? 'Sekci' : 'Předmět' }}
@@ -25,8 +26,8 @@
                             :items="selectedChapters"
                             item-title="name"
                             item-value="id"
+                            class="search"
                             prepend-inner-icon="mdi-folder-search-outline">
-
                         </v-autocomplete>
                     </div>
                 </div>
@@ -61,6 +62,7 @@
                         </v-card>
                     </v-dialog>
                     <v-dialog
+                        v-if="subject.created_by == this.$page.props.user.id"
                         v-model="sharing"
                         persistent
                         width="auto"
@@ -81,10 +83,31 @@
                                     class="pa-2"
                                 >
                                 </v-autocomplete>
-                                <p class="text-center pa-2 text-red">{{ errors.users }}</p>
+                                <p class="text-center pa-1 text-red">{{ errors.users }}</p>
+                                <p class="text-center pa-1 text-red">{{ errors.permission }}</p>
+                                <div class="d-flex">
+                                    <v-checkbox
+                                        v-model="permission"
+                                        label="Pouze k přečtení"
+                                        value="1">
+                                    </v-checkbox>
+                                    <v-checkbox
+                                        v-model="permission"
+                                        label="K přečtení a úpravě"
+                                        value="2">
+                                    </v-checkbox>
+                                    <v-checkbox
+                                        v-model="permission"
+                                        label="Plná kontrola"
+                                        value="3">
+                                    </v-checkbox>
+                                </div>
+
                                 <v-card-text class="text-center pa-1">Až uživatel příjme nasdílení dostane k ní
                                     přístup!
                                 </v-card-text>
+                                <p v-if="$page.props.flash.messageUpdate" class="text-center text-green pa-2 font-weight-bold">
+                                    {{ $page.props.flash.messageUpdate }}</p>
                                 <v-card-actions class="margin-center d-flex justify-center">
                                     <v-btn
                                         class="bg-white"
@@ -118,7 +141,7 @@
                                 {{ chapter.perex }}<br>
                             </div>
                         </v-card-text>
-                        <v-card-actions class="justify-end align-center gp-em-05">
+                        <v-card-actions class="flex-wrap justify-end align-center gp-em-05">
                             <v-btn
                                 icon="mdi-trash-can"
                                 variant="flat"
@@ -149,7 +172,6 @@
                         class="pa-2 d-flex flex-column elevation-20"
                         max-width="344"
                     >
-
                         <v-card-text>
                             <p class="text-h4 font-weight-bold text--primary py-4">
                                 {{ selectedChapterShow.name }}
@@ -166,7 +188,8 @@
                                 @click="enableDialog(selectedChapterShow)"
                             >
                             </v-btn>
-                            <Link :href="route('chapter.edit', {slug: subject.slug, chapter: selectedChapterShow.slug})">
+                            <Link
+                                :href="route('chapter.edit', {slug: subject.slug, chapter: selectedChapterShow.slug})">
                                 <v-btn
                                     icon="mdi-pencil"
                                     variant="flat"
@@ -206,19 +229,21 @@ const users = ref();
 const selectedUsers = ref();
 const props = defineProps({chapters: Object, subject: Object, users: Object, errors: Object});
 const selectedChapters = props.chapters;
+const permission = ref();
 
 const selectedChapter = ref();
 const selectedChapterShow = ref();
 
 watch(selectedChapter, () => {
     selectedChapterShow.value = props.chapters.find(x => x.id === selectedChapter.value);
-    if(selectedChapterShow.value === undefined) {
+    if (selectedChapterShow.value === undefined) {
         selectedChapter.value = undefined;
-        console.log(selectedChapter);
     }
 })
 const form = useForm({
     users: selectedUsers,
+    permission: permission,
+    subject: props.subject.id
 });
 
 const rules = {
@@ -256,7 +281,9 @@ main {
         flex: 1 1 auto;
         width: 350px !important;
         min-height: 14em !important;
-
+        .text-h4 {
+            text-wrap: balance;
+        }
         .v-card-actions {
             .v-btn {
                 border-radius: 0.5em !important;
@@ -274,8 +301,16 @@ main {
         white-space: unset;
     }
 }
-
-.v-autocomplete {
+.search {
     max-width: 200px !important;
+}
+.v-autocomplete {
+    max-width: 500px;
+}
+
+:deep(.v-selection-control) {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: unset !important;
 }
 </style>

@@ -23,6 +23,12 @@ return new class extends Migration
                 ->constrained('partitions', 'id')
                 ->cascadeOnUpdate()
                 ->cascadeOnDelete();
+            $table->foreignId('permission_id')
+                ->nullable()
+                ->constrained('permissions', 'id');
+            $table->boolean('owner');
+            $table->boolean('accepted')
+                ->nullable();
         });
     }
 

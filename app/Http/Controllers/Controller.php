@@ -35,19 +35,34 @@ class Controller extends BaseController
      * Slouží ke získání všech aktivních uživatelů v aplikaci
      * @return \Illuminate\Http\JsonResponse
      */
+    //TO DO
     public function showUsersForSharing() {
-        $users = User::where("active", true)->get(['email', 'firstname']);
+        /*dd(Partition::with('Users')->whereHas('Users', function ($query) {
+            $query->where('user_id', )
+        }));*/
+        $users = User::where("active", true)->whereNot('id', auth()->user()->id)->get(['email', 'firstname']);
         return response()->json($users);
     }
 
+    /**
+     * Slouží ke vytvoření sdílení
+     * @param Request $request
+     * @return void
+     */
     public function share(Request $request) {
         $customMessages = [
             'users.required' => 'Je nutné vyplnit uživatele.',
+            'permission.required' => 'Musíte vyplnit oprávnění'
         ];
         $validated = $request->validate([
             'users' => 'required',
+            'permission' => 'required',
+            'subject' => 'required'
         ], $customMessages);
-
-
+        foreach($validated['users'] as $email) {
+            $user = User::where('email', $email)->first();
+            $user->patritions()->attach($validated['subject'], ['owner' => false, 'permission_id' => (int)$validated['permission'], 'accepted' => false]);
+        }
+        return redirect()->back()->with('successUpdate', 'Žádost o sdílení byla zaslána!');
     }
 }

@@ -4,7 +4,7 @@
                  :class="{'w-85': $vuetify.display.smAndDown,
                             'w-95': $vuetify.display.xs}">
                 <v-form class="pa-6 bg-white" @submit.prevent="createSubject" >
-                    <p class="text-h1 font-weight-bold">Vytvořit předmět</p>
+                    <p class="text-h1 font-weight-bold">Vytvořit {{this.$page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět'}}</p>
                     <v-text-field
                         v-model="form.name"
                         prepend-inner-icon="mdi-email"

@@ -47,6 +47,7 @@ class User extends Authenticatable
         return $this->belongsTo(AccountTypes::class, 'type_id');
     }
     public function patritions() : BelongsToMany {
-        return $this->belongsToMany(Partition::class, 'userPartition', 'user_id','partition_id');
+        return $this->belongsToMany(Partition::class, 'userPartition', 'user_id','partition_id')
+            ->withPivot(['accepted']);
     }
 }

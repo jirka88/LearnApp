@@ -41,14 +41,19 @@
                             title="Organizace">
                         </v-list-item>
                     </Link>
-                    <Link v-for="subject in this.$page.props.user.subjects" :key="subject.id" :href="route('subject.show', subject.slug)">
+                    <Link v-for="subject in this.$page.props.user.subjects"  :key="subject.id" :href="route('subject.show', subject.slug)">
                     <v-list-item
+                                v-if="subject.pivot.accepted != 0"
                                  class="subItem"
                                  :prepend-icon="subject.icon"
                                  :title="subject.name">
                     </v-list-item>
                     </Link>
                 </v-list-group>
+                <Link href="lol" v-if="this.$page.props.user.subjects.some(subject => subject.pivot.accepted == 0)">
+                    <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"
+                                 value="Povolit sdílení"></v-list-item>
+                </Link>
                 <Link :href="route('user.info')">
                     <v-list-item prepend-icon="mdi-account-cog" title="Nastavení profilu"
                                  value="Nastavení profilu"></v-list-item>

@@ -51,7 +51,7 @@
                         ></v-select>
                     </td>
                 </tr>
-                <tr v-if="this.$page.props.permission.view">
+                <tr v-if="this.$page.props.permission.view && this.$page.props.user.id !== usr.id">
                     <td class="w-50">Aktivní:</td>
                     <td  class="w-50">
                         <v-select

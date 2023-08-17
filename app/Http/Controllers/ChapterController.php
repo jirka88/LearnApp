@@ -13,7 +13,7 @@ class ChapterController extends Controller
 {
     public function show(Request $request, $slug, $chapter) {
         $chapter = Chapter::where('id', $chapter)->first();
-        return Inertia::render('chapter/chapter', compact('chapter'));
+        return Inertia::render('chapter/chapter', ['chapter' => $chapter, 'slug' => $slug]);
     }
     /**
      * Odkázání na formulář k vytvoření kapitoly
