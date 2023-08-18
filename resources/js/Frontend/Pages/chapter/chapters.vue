@@ -111,7 +111,7 @@
                                 <v-card-actions class="margin-center d-flex justify-center">
                                     <v-btn
                                         class="bg-white"
-                                        @click="sharing = false"
+                                        @click="sharing = false; $page.props.flash.messageUpdate = ''"
                                         size="x-large"
                                     >
                                         Zřušit
@@ -269,6 +269,7 @@ const sharingToUsers = () => {
     form.post(route('share'), {
         onSuccess: () => {
             status.value = false;
+            selectedUsers.value = null;
         }
     })
 }

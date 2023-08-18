@@ -26,7 +26,6 @@ return new class extends Migration
             $table->foreignId('permission_id')
                 ->nullable()
                 ->constrained('permissions', 'id');
-            $table->boolean('owner');
             $table->boolean('accepted')
                 ->nullable();
         });

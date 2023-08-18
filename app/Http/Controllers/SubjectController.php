@@ -61,7 +61,7 @@ class SubjectController extends Controller
         $subjectT = Partition::create($subject);
         $user = User::find(auth()->user()->id);
 
-        $user->patritions()->attach($subjectT->id, ['owner' => true]);
+        $user->patritions()->attach($subjectT->id);
         return to_route('subject.index');
     }
 

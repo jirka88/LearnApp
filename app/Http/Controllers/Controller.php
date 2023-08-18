@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Partition;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Inertia\Inertia;
 
 class Controller extends BaseController
 {
@@ -61,8 +63,17 @@ class Controller extends BaseController
         ], $customMessages);
         foreach($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
-            $user->patritions()->attach($validated['subject'], ['owner' => false, 'permission_id' => (int)$validated['permission'], 'accepted' => false]);
+            $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
         }
         return redirect()->back()->with('successUpdate', 'Žádost o sdílení byla zaslána!');
+    }
+    public function acceptShare() {
+        $subjects = User::with(['patritions' => function ($query) {
+           $query->where('accepted', false);
+           $query->with(['Users' => function ($query2) {
+               $query2->select('email', 'firstname');
+           }]);
+        }])->find(auth()->user()->id);
+        return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
 }

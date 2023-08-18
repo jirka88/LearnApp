@@ -50,7 +50,7 @@
                     </v-list-item>
                     </Link>
                 </v-list-group>
-                <Link href="lol" v-if="this.$page.props.user.subjects.some(subject => subject.pivot.accepted == 0)">
+                <Link :href="route('user.accept')" v-if="this.$page.props.user.subjects.some(subject => subject.pivot.accepted == 0)">
                     <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"
                                  value="Povolit sdílení"></v-list-item>
                 </Link>
