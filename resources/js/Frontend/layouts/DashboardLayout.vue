@@ -50,9 +50,17 @@
                     </v-list-item>
                     </Link>
                 </v-list-group>
-                <Link :href="route('user.accept')" v-if="this.$page.props.user.subjects.some(subject => subject.pivot.accepted == 0)">
+                <Link :href="route('share.view')" v-if="this.$page.props.user.subjects.some(subject => subject.pivot.accepted == 0)">
                     <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"
-                                 value="Povolit sdílení"></v-list-item>
+                                 value="Povolit sdílení">
+                        <template v-slot:append>
+                            <v-badge
+                                color="info"
+                                :content="this.$page.props.user.subjects.filter(item => item.pivot.accepted == 0).length"
+                                inline
+                            ></v-badge>
+                        </template>
+                    </v-list-item>
                 </Link>
                 <Link :href="route('user.info')">
                     <v-list-item prepend-icon="mdi-account-cog" title="Nastavení profilu"

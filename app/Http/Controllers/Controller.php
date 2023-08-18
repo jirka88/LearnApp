@@ -67,7 +67,12 @@ class Controller extends BaseController
         }
         return redirect()->back()->with('successUpdate', 'Žádost o sdílení byla zaslána!');
     }
-    public function acceptShare() {
+
+    /**
+     * Zorbrazení všech nabídek ke sdílení předmětu
+     * @return \Inertia\Response
+     */
+    public function showShare() {
         $subjects = User::with(['patritions' => function ($query) {
            $query->where('accepted', false);
            $query->with(['Users' => function ($query2) {
@@ -76,4 +81,17 @@ class Controller extends BaseController
         }])->find(auth()->user()->id);
         return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
+
+    /**
+     * Odmítnutí sdílení
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteShare(Request $request) {
+        $subject = Partition::where('slug', $request->slug)->first();
+        $user = User::find(auth()->user()->id);
+        $user->patritions()->detach($subject->id);
+        return redirect()->back();
+    }
+
 }

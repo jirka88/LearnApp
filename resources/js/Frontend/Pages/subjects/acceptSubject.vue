@@ -28,8 +28,10 @@
                         <v-btn
                             variant="flat"
                             color="red"
+                            @click="shareDelete(subject.slug)"
                         >
-                        zrušit</v-btn>
+                        zrušit
+                        </v-btn>
                         <Link>
                             <v-btn
                                 variant="flat"
@@ -47,8 +49,13 @@
 
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
-import {Link} from "@inertiajs/inertia-vue3";
-defineProps({subjects: Object})
+import {Link, useForm} from "@inertiajs/inertia-vue3";
+const props = defineProps({subjects: Object})
+const form = useForm();
+
+const shareDelete = (slug) =>{
+    form.delete(route('share.delete',slug))
+}
 </script>
 
 <style scoped lang="scss">

@@ -22,6 +22,9 @@ class LoginController extends Controller
     public function login(LoginRequest $request) {
         $credentials = $request->only('email', 'password');
         $isActive = User::where('email', $credentials['email'])->first();
+        if($isActive == null) {
+            return redirect()->back()->withErrors(['msg' => 'Účet pod daným emailem neexistuje!']);
+        }
         if($isActive['active']) {
             if(!Auth::validate($credentials)) {
                 return redirect()->back()->withErrors(['msg' => 'Email nebo heslo není v pořádku!']);

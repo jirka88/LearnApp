@@ -45,7 +45,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::resource("/manager/subject/{slug}/chapter", ChapterController::class);
     Route::get("/sharing/users", [Controller::class, 'showUsersForSharing'])->name('sharing');
     Route::post("/sharing/users", [Controller::class, 'share'])->name('share');
-    Route::get("/sharing/subjects", [Controller::class, 'acceptShare'])->name('user.accept');
+    Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
+    Route::post("/sharing/subjects", [Controller::class, 'acceptShare'])->name('share.accept');
+    Route::delete("/sharing/subjects/{slug}", [Controller::class, 'deleteShare'])->name('share.delete');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [AdminSetUsers::class, 'index']);
