@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChapterRequest;
 use App\Models\Chapter;
 use App\Models\Partition;
+use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -21,7 +22,10 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function create($slug) {
-        //$this->authorize('create');
+        $user = User::with(['patritions' => function ($query) use ($slug) {
+            $query->where('slug', $slug)->first();
+        }])->find(auth()->user()->id);
+        $this->authorize("create", $user);
         return Inertia::render('chapter/createChapter', ['slug' => $slug]);
     }
 
@@ -50,7 +54,12 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function edit(Request $request, $slug, $chapter) {
-        $chapter = Chapter::where("slug", $chapter)->with("partition")->first();
+        $chapter = Chapter::where("slug", $chapter)->with(["partition" => function ($query) {
+            $query->with(['Users' => function ($query2) {
+                $query2->find(auth()->user()->id);
+            }])->first();
+        }])->first();
+
         $this->authorize('update', $chapter);
         return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $slug]);
     }

@@ -6,7 +6,7 @@
                      :class="{'flex-column-reverse': $vuetify.display.xs}">
                     <div class="d-flex flex-1-1-100 flex-wrap gp-em-05"
                          :class="{'justify-center': $vuetify.display.xs}">
-                        <Link :href="route('chapter.create', subject.slug )">
+                        <Link v-if="subject.permission.permission_id != 1" :href="route('chapter.create', subject.slug )">
                             <v-btn
                                 class="bg-green">
                                 Vytvořit kapitolu
@@ -143,13 +143,14 @@
                         </v-card-text>
                         <v-card-actions class="flex-wrap justify-end align-center gp-em-05">
                             <v-btn
+                                v-if="Number(subject.permission.permission_id) !== 1"
                                 icon="mdi-trash-can"
                                 variant="flat"
                                 color="red"
                                 @click="enableDialog(chapter)"
                             >
                             </v-btn>
-                            <Link :href="route('chapter.edit', {slug: subject.slug, chapter: chapter.slug})">
+                            <Link v-if="Number(subject.permission.permission_id) !== 1" :href="route('chapter.edit', {slug: subject.slug, chapter: chapter.slug})">
                                 <v-btn
                                     icon="mdi-pencil"
                                     variant="flat"
@@ -182,6 +183,7 @@
                         </v-card-text>
                         <v-card-actions class="justify-end align-center gp-em-05">
                             <v-btn
+                                v-if="Number(subject.permission.permission_id) !== 1"
                                 icon="mdi-trash-can"
                                 variant="flat"
                                 color="red"
@@ -189,6 +191,7 @@
                             >
                             </v-btn>
                             <Link
+                                v-if="Number(subject.permission.permission_id) !== 1"
                                 :href="route('chapter.edit', {slug: subject.slug, chapter: selectedChapterShow.slug})">
                                 <v-btn
                                     icon="mdi-pencil"
@@ -207,7 +210,9 @@
                             </Link>
                         </v-card-actions>
                     </v-card>
+
                 </main>
+                {{subject}}
             </v-container>
         </div>
     </component>

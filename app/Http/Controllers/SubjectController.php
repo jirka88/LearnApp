@@ -31,11 +31,13 @@ class SubjectController extends Controller
      */
     public function show($slug) {
         $subject = Partition::where('slug', $slug)->first();
+        $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
+        $subject["permission"] = $pShare;
+
         $this->authorize("view", $subject);
+
         $chapters = Chapter::with('Partition')
-            ->whereHas('Partition', function ($query) {
-            $query->where('created_by', auth()->user()->id);
-        })->where('partition_id', $subject->id)->get(['name', 'perex', 'id', 'slug']);
+        ->where('partition_id', $subject->id)->get(['name', 'perex', 'id', 'slug']);
         return Inertia::render('chapter/chapters', compact('chapters','subject'));
     }
 

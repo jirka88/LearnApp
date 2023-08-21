@@ -43,20 +43,20 @@
                     </Link>
                     <Link v-for="subject in this.$page.props.user.subjects"  :key="subject.id" :href="route('subject.show', subject.slug)">
                     <v-list-item
-                                v-if="subject.pivot.accepted != 0"
+                                v-if="subject.permission.accepted != 0"
                                  class="subItem"
                                  :prepend-icon="subject.icon"
                                  :title="subject.name">
                     </v-list-item>
                     </Link>
                 </v-list-group>
-                <Link :href="route('share.view')" v-if="this.$page.props.user.subjects.some(subject => subject.pivot.accepted == 0)">
+                <Link :href="route('share.view')" v-if="this.$page.props.user.subjects.some(subject => subject.permission.accepted == 0)">
                     <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"
                                  value="Povolit sdílení">
                         <template v-slot:append>
                             <v-badge
                                 color="info"
-                                :content="this.$page.props.user.subjects.filter(item => item.pivot.accepted == 0).length"
+                                :content="this.$page.props.user.subjects.filter(item => item.permission.accepted == 0).length"
                                 inline
                             ></v-badge>
                         </template>

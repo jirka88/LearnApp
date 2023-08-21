@@ -94,4 +94,16 @@ class Controller extends BaseController
         return redirect()->back();
     }
 
+    /**
+     * Přijmutí sdílení
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function acceptShare(Request $request) {
+        $subject = Partition::where('slug', $request->slug)->first();
+        $user = User::find(auth()->user()->id);
+        $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
+        return redirect()->back();
+    }
+
 }

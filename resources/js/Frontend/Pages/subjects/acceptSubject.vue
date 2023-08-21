@@ -9,10 +9,12 @@
                 >
                     <v-card-text>
                         <p class="text-h4 font-weight-bold text--primary py-4">
-                            {{subject.name}}
+                            {{ subject.name }}
                         </p>
                         <div class="text--primary">
-                            Žádost o sdílení od uživalele: <div class="font-weight-bold">{{subject.users[0].email}}</div><br>
+                            Žádost o sdílení od uživalele:
+                            <div class="font-weight-bold">{{ subject.users[0].email }}</div>
+                            <br>
                         </div>
                         <div class="text--primary font-weight-bold" v-if="subject.pivot.permission_id == 1">
                             S právem ke čtení<br>
@@ -28,21 +30,23 @@
                         <v-btn
                             variant="flat"
                             color="red"
+                            :disabled="btnDisabled"
                             @click="shareDelete(subject.slug)"
                         >
-                        zrušit
+                            zrušit
                         </v-btn>
-                        <Link>
-                            <v-btn
-                                variant="flat"
-                                color="green"
-                            >
-                            Příjmout</v-btn>
-                        </Link>
+                        <v-btn
+                            variant="flat"
+                            color="green"
+                            :disabled="btnDisabled"
+                            @click="shareAccept(subject.slug)"
+                        >
+                            Příjmout
+                        </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-main>
-            {{subjects}}
+            {{ subjects }}
         </div>
     </component>
 </template>
@@ -50,21 +54,47 @@
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link, useForm} from "@inertiajs/inertia-vue3";
+import {ref} from "vue";
+
 const props = defineProps({subjects: Object})
 const form = useForm();
-
-const shareDelete = (slug) =>{
-    form.delete(route('share.delete',slug))
+const btnDisabled = ref(false);
+const disabledbtn = () => {
+    btnDisabled.value = true;
 }
+
+const shareDelete = (slug) => {
+    disabledbtn();
+    form.delete(route('share.delete', slug), {
+        onSuccess: () => {
+            btnDisabled.value = false;
+        }
+    });
+}
+
+const shareAccept = (slug) => {
+    disabledbtn();
+    const form2 = useForm({
+        slug: slug,
+    })
+    form2.post(route('share.accept'), {
+        onSuccess: () => {
+            btnDisabled.value = false;
+        }
+    });
+}
+
 </script>
 
 <style scoped lang="scss">
 .v-main {
     gap: 1em;
+
     .v-card {
         flex: 1 1 auto;
         width: 300px !important;
         min-height: 14em !important;
+
         .text-h4 {
             text-wrap: balance;
         }

@@ -27,7 +27,6 @@ class User extends Authenticatable
 
     protected $hidden = [
         'password',
-        'pivot'
     ];
     public function sluggable() : array
     {
@@ -49,6 +48,7 @@ class User extends Authenticatable
     }
     public function patritions() : BelongsToMany {
         return $this->belongsToMany(Partition::class, 'userPartition', 'user_id','partition_id')
+            ->as('permission')
             ->withPivot(['accepted', 'permission_id']);
     }
 }

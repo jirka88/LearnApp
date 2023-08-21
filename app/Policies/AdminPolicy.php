@@ -51,9 +51,15 @@ class AdminPolicy
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function create(User $user)
+    public function create(User $user, User $modal)
     {
-        //
+        if($user->role_id == Roles::ADMIN || $modal->patritions->first()->created_by == auth()->user()->id || $modal->patritions->first()->permission?->permission_id == 2 ||  $user->patritions->first()->permission?->permission_id ==3) {
+            return true;
+        }
+        else {
+            return false;
+        }
+
     }
 
     /**

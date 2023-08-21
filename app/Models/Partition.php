@@ -22,7 +22,9 @@ class Partition extends Model
         ];
     }
     public function Users() : BelongsToMany {
-        return $this->belongsToMany(User::class, 'userPartition', 'partition_id','user_id');
+        return $this->belongsToMany(User::class, 'userPartition', 'partition_id','user_id')
+            ->as('permission')
+            ->withPivot(['accepted', 'permission_id']);
     }
     public function Chapter() :HasMany {
         return $this->HasMany(Chapter::class);

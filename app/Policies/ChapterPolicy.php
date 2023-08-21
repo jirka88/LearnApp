@@ -35,13 +35,12 @@ class ChapterPolicy
 
     /**
      * Determine whether the user can create models.
-     *
      * @param \App\Models\User $user
-     * @param $slug
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user)
     {
+
     }
 
     /**
@@ -55,7 +54,7 @@ class ChapterPolicy
     {
         //zjištění zdali předmět není vytvořený správcem
         $usr = User::where('id', $chapter->partition->created_by)->first();
-        if($user->id == $chapter->partition->created_by || $user->role_id == Roles::ADMIN) {
+        if($user->id == $chapter->partition->created_by || $user->role_id == Roles::ADMIN ||$chapter->partition->Users[0]?->permission->permission_id == 2 || $chapter->partition->Users[0]?->permission->permission_id == 3 ) {
             return true;
         }
         else if ($user->role_id == Roles::OPERATOR) {
