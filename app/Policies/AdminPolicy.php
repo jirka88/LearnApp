@@ -53,8 +53,11 @@ class AdminPolicy
      */
     public function create(User $user, User $modal)
     {
-        if($user->role_id == Roles::ADMIN || $modal->patritions->first()->created_by == auth()->user()->id || $modal->patritions->first()->permission?->permission_id == 2 ||  $user->patritions->first()->permission?->permission_id ==3) {
+        if($user->role_id == Roles::ADMIN || $modal->patritions->first()?->created_by == $user->id || $modal->patritions->first()?->permission?->permission_id == 2 ||  $user->patritions->first()?->permission?->permission_id ==3) {
             return true;
+        }
+        else if($user->role_id == Roles::OPERATOR && $modal->role_id != Roles::ADMIN && $modal->role_id != Roles::OPERATOR) {
+                return true;
         }
         else {
             return false;

@@ -158,7 +158,7 @@
                                 >
                                 </v-btn>
                             </Link>
-                            <Link :href="route('chapter.show', {chapter: chapter.id, slug: subject.slug})">
+                            <Link :href="route('chapter.show', {chapter: chapter.slug, slug: subject.slug})">
                                 <v-btn
                                     icon="mdi-near-me"
                                     variant="flat"

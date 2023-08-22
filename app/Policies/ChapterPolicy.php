@@ -31,6 +31,12 @@ class ChapterPolicy
      */
     public function view(User $user, Chapter $chapter)
     {
+        if($user->role_id == Roles::ADMIN || $user->id == $chapter->Partition->created_by || $user->patritions->where('permission.partition_id', $chapter->Partition->id)->first() != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /**

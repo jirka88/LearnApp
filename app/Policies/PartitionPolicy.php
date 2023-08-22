@@ -70,7 +70,7 @@ class PartitionPolicy
             return true;
         } //zobrazení operátora --> nemůže zobrazit správcův předmět a jiný operátorův
         else if ($user->role_id == Roles::OPERATOR) {
-            return (int)$adminSubject->role_id !== Roles::ADMIN && (int)$adminSubject->role_id !== Roles::OPERATOR;
+            return $adminSubject->role_id !== Roles::ADMIN && $adminSubject->role_id !== Roles::OPERATOR;
         } else {
             return false;
         }
