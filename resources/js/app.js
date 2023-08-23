@@ -11,6 +11,8 @@ import * as directives from 'vuetify/directives'
 import "@mdi/font/css/materialdesignicons.css";
 import {InertiaProgress} from "@inertiajs/progress"; // Ensure you are using css-loader
 import { createRouter, createWebHistory } from 'vue-router';
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 const routes = [
     {}
 ];
@@ -44,5 +46,6 @@ createInertiaApp({
             .mount(el)
     },
 }).then(() => {
+    AOS.init();
     InertiaProgress.init({});
 })

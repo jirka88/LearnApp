@@ -6,15 +6,14 @@
                      :class="{'flex-column-reverse': $vuetify.display.xs}">
                     <div class="d-flex flex-1-1-100 flex-wrap gp-em-05"
                          :class="{'justify-center': $vuetify.display.xs}">
-                        <v-fade-transition appear>
-                        <Link v-if="subject.permission.permission_id != 1" :href="route('chapter.create', subject.slug )">
+                        <Link v-if="subject.permission.permission_id != 1" :href="route('chapter.create', subject.slug )" data-aos="zoom-in"  data-aos-duration="400">
                             <v-btn
                                 class="bg-green">
                                 Vytvořit kapitolu
                             </v-btn>
                         </Link>
-                        </v-fade-transition>
                         <v-btn
+                            data-aos="zoom-in"  data-aos-duration="400"
                             v-if="subject.created_by == this.$page.props.user.id"
                             class="bg-orange text-white"
                             @click="enableSharing">
@@ -130,6 +129,7 @@
                         </v-form>
                     </v-dialog>
                     <v-card
+                        data-aos="zoom-in" data-aos-delay="200" data-aos-duration="300"
                         v-if="selectedChapter === undefined"
                         v-for="chapter in chapters" :key="chapter.id"
                         class="pa-2 d-flex flex-column elevation-20"
@@ -284,7 +284,6 @@ const sharingToUsers = () => {
 <style scoped lang="scss">
 main {
     gap: 1em;
-
     .v-card {
         flex: 1 1 auto;
         width: 350px !important;
