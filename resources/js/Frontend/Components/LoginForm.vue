@@ -19,14 +19,21 @@
                 name="input-10-1"
                 :rules="[rules.required]"
                 label="Heslo"
+                hide-details
                 @click:append="show = !show"
             ></v-text-field>
+            <div class="d-flex justify-center align-center">
             <v-checkbox
                 v-model="form.remember"
                 hide-details
+                color="blue"
                 label="Zapamatovat si mě">
 
             </v-checkbox>
+            <Link class="forgetPassword" href="" >
+                Zapomenuté heslo
+            </Link>
+            </div>
             <span class="text-center text-red pa-2">{{form.errors.msg}}</span>
             <v-btn
                 type="submit"
@@ -42,7 +49,7 @@
 </template>
 <script setup>
 import {ref} from "vue";
-import {useForm} from "@inertiajs/inertia-vue3";
+import {useForm, Link} from "@inertiajs/inertia-vue3";
 
 defineProps({ errors: Object })
 
@@ -74,4 +81,25 @@ const login = () => {
     padding-bottom: 1.2em !important;
     transition: 0.3s;
 }
+.forgetPassword {
+    color: gray;
+    position: relative;
+    &::before {
+        position: absolute;
+        content: "";
+        height: 2px;
+        width: 0%;
+        background: black;
+        bottom: 0;
+    }
+    &:hover {
+        color: black;
+        transition: 0.3s;
+    }
+    &:hover::before {
+        width: 100%;
+        transition: 0.3s;
+    }
+}
+
 </style>
