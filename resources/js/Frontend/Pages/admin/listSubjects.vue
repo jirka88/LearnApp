@@ -21,6 +21,7 @@
                             <th class="font-weight-bold">Název:</th>
                             <th class="font-weight-bold">Ikona:</th>
                             <th class="font-weight-bold">Počet kapitol:</th>
+                            <th class="font-weight-bold">Zobrazit:</th>
                             <th class="font-weight-bold" >Editace:</th>
                             <th class="font-weight-bold">Smazání:</th>
                         </tr>
@@ -32,9 +33,16 @@
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
                                 <td>{{subjectData.chapter_count}}</td>
                                 <td>
+                                    <Link :href="route('subject.show', subjectData.slug)">
+                                        <v-btn
+                                            color="green"
+                                            append-icon="mdi-near-me"
+                                        >Zobrazit</v-btn></Link>
+                                </td>
+                                <td>
                                     <Link :href="route('subject.edit', subjectData.slug)">
                                         <v-btn
-                                    color="green"
+                                    color="blue"
                                     append-icon="mdi-pencil"
                                     >Upravit!</v-btn></Link>
                                 </td>

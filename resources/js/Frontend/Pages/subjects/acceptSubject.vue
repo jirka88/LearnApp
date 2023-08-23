@@ -16,13 +16,13 @@
                             <div class="font-weight-bold">{{ subject.users[0].email }}</div>
                             <br>
                         </div>
-                        <div class="text--primary font-weight-bold" v-if="subject.pivot.permission_id == 1">
+                        <div class="text--primary font-weight-bold" v-if="subject.permission.permission_id == 1">
                             S právem ke čtení<br>
                         </div>
-                        <div class="text--primary  font-weight-bold" v-if="subject.pivot.permission_id == 2">
+                        <div class="text--primary  font-weight-bold" v-if="subject.permission.permission_id == 2">
                             S právem ke čtení a úpravě<br>
                         </div>
-                        <div class="text--primary  font-weight-bold" v-if="subject.pivot.permission_id == 3">
+                        <div class="text--primary  font-weight-bold" v-if="subject.permission.permission_id == 3">
                             S právem plnou kontrolou<br>
                         </div>
                     </v-card-text>

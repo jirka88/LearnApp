@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partition;
+use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -37,12 +38,8 @@ class Controller extends BaseController
      * Slouží ke získání všech aktivních uživatelů v aplikaci
      * @return \Illuminate\Http\JsonResponse
      */
-    //TO DO
     public function showUsersForSharing() {
-        /*dd(Partition::with('Users')->whereHas('Users', function ($query) {
-            $query->where('user_id', )
-        }));*/
-        $users = User::where("active", true)->whereNot('id', auth()->user()->id)->get(['email', 'firstname']);
+        $users = User::where("active", true)->whereNot('id', auth()->user()->id)->whereNot('id', Roles::ADMIN)->get(['email', 'firstname']);
         return response()->json($users);
     }
 

@@ -13,7 +13,9 @@ use Inertia\Inertia;
 class ChapterController extends Controller
 {
     public function show(Request $request, $slug, $chapter) {
-        $chapter = Chapter::where('slug', $chapter)->with('Partition')->first();
+        $chapter = Chapter::where('slug', $chapter)->with(['Partition.Users' => function ($query) {
+          $query->where('permission_id', null);
+        }])->first();
         $this->authorize('view', $chapter);
         return Inertia::render('chapter/chapter', ['chapter' => $chapter, 'slug' => $slug]);
     }

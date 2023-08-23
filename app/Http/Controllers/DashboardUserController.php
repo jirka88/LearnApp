@@ -21,8 +21,17 @@ class DashboardUserController extends Controller
     public function view() {
         $id = auth()->user()->id;
         $usr =  User::with(['roles', 'accountTypes'])->find($id);
-        $roles = Roles::all();
+        $roles = [];
         $accountTypes = AccountTypes::all();
+        if(auth()->user()->role_id == Roles::ADMIN) {
+           $roles = Roles::all();
+        }
+        else if(auth()->user()->role_id == Roles::OPERATOR) {
+            $roles = Roles::whereNot('id', Roles::ADMIN)->get();
+        }
+        else {
+            $roles = Roles::find(Roles::BASIC_USER);
+        }
         return Inertia::render('user/user', compact('usr', 'roles', 'accountTypes'));
     }
 

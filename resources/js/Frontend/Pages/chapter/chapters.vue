@@ -154,7 +154,7 @@
                                 <v-btn
                                     icon="mdi-pencil"
                                     variant="flat"
-                                    color="green"
+                                    color="blue"
                                 >
                                 </v-btn>
                             </Link>
@@ -196,7 +196,7 @@
                                 <v-btn
                                     icon="mdi-pencil"
                                     variant="flat"
-                                    color="green"
+                                    color="blue"
                                 >
                                 </v-btn>
                             </Link>

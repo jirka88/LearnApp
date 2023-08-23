@@ -37,7 +37,7 @@ class PartitionPolicy
             return true;
         } //operátor pokud není správcová má přístup
         else if ($user->role_id == Roles::OPERATOR) {
-            return (int)$partition->Users[0]->role_id !== Roles::ADMIN && (int)$partition->Users[0]->role_id !== Roles::OPERATOR;
+            return (int)$partition->Users->first()->role_id !== Roles::ADMIN && (int)$partition->Users->first()->role_id !== Roles::OPERATOR;
         }
         else {
             return false;

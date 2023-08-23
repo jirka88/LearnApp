@@ -5,10 +5,12 @@
         <legend align="center" class="text-h5">Resetování hesla:</legend>
         <v-form ref="formResetPassword" @submit.prevent="changePassword">
             <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.required]"
-                          variant="outlined"></v-text-field>
+                          variant="outlined"
+                          prepend-inner-icon="mdi-lock"></v-text-field>
             <v-text-field v-model="formPassword.newPassword" label="Nové heslo"
                           :rules="[rules.required, rules.password]" variant="outlined"
                           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                          prepend-inner-icon="mdi-lock"
                           :type="show1 ? 'text' : 'password'"
                           @click:append="show1 = !show1"
             >
@@ -18,6 +20,7 @@
                           :rules="[rules.required, rules.passwordConfirm]"
                           :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                           :type="show2 ? 'text' : 'password'"
+                          prepend-inner-icon="mdi-lock"
                           @click:append="show2 = !show2"
                           variant="outlined"></v-text-field>
             <p class="text-center text-red">{{ props.errors.msg }}</p>
