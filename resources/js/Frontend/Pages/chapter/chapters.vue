@@ -6,12 +6,14 @@
                      :class="{'flex-column-reverse': $vuetify.display.xs}">
                     <div class="d-flex flex-1-1-100 flex-wrap gp-em-05"
                          :class="{'justify-center': $vuetify.display.xs}">
+                        <v-fade-transition appear>
                         <Link v-if="subject.permission.permission_id != 1" :href="route('chapter.create', subject.slug )">
                             <v-btn
                                 class="bg-green">
                                 Vytvořit kapitolu
                             </v-btn>
                         </Link>
+                        </v-fade-transition>
                         <v-btn
                             v-if="subject.created_by == this.$page.props.user.id"
                             class="bg-orange text-white"
