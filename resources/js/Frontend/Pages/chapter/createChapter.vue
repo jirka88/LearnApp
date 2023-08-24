@@ -3,7 +3,7 @@
         <div class="creatingChapter d-flex justify-center align-center primary-bg">
             <v-container class="pa-8">
                 <BackBtn :url="route('subject.show', slug)"/>
-                <form class="pa-8 py-4 w-100 d-flex flex-column elevation-20" @submit.prevent="createChapter">
+                <form class="pa-8 py-4 mt-4 w-100 d-flex flex-column elevation-20" @submit.prevent="createChapter">
                     <h1 class="py-4">Vytvoření Kapitoly</h1>
                     <v-text-field
                         v-model="form.name"

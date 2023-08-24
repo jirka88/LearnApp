@@ -14,7 +14,7 @@ class ChapterController extends Controller
 {
     public function show(Request $request, $slug, $chapter) {
         $chapter = Chapter::where('slug', $chapter)->with(['Partition.Users' => function ($query) {
-          $query->where('permission_id', null);
+          $query->where('user_id', auth()->user()->id);
         }])->first();
         $this->authorize('view', $chapter);
         return Inertia::render('chapter/chapter', ['chapter' => $chapter, 'slug' => $slug]);
@@ -94,5 +94,6 @@ class ChapterController extends Controller
     public function destroy(Request $request, $slug, $chapter) {
         $chapterDelete = Chapter::where('slug', $chapter)->first();
         $chapterDelete->delete();
+        return to_route('subject.show', $slug);
     }
 }

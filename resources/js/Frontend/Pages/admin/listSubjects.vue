@@ -6,7 +6,8 @@
                 <p class="text-h5">Předměty uživatele: {{subjects.firstname}} - {{subjects.email}}</p>
                 <v-divider></v-divider>
                 </div>
-                <Link :href="route('adminuser.createSubject', subjects.slug)">
+                <Link :href="route('adminuser.createSubject', subjects.slug)"  data-aos="zoom-in"
+                      data-aos-duration="400">
                     <div class="btns">
                         <v-btn
                         class="bg-green">

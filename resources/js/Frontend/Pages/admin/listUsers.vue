@@ -2,7 +2,8 @@
     <component :is="DashboardLayout">
         <v-container>
             <div v-if="this.$page.props.permission.view" class="btns d-flex align-center py-8">
-                <Link :href="route('adminuser.create')">
+                <Link :href="route('adminuser.create')"  data-aos="zoom-in"
+                      data-aos-duration="400">
                     <v-btn
                         class="bg-green">
                         Vytvořit Uživatele
