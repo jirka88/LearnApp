@@ -257,7 +257,7 @@ const rules = {
     required: v => v.length < 0 || "Musíte zadat uživatele",
 }
 const enableSharing = async () => {
-    await axios.get(route('sharing'))
+    await axios.get( props.subject.slug + "/sharing/users")
         .then(response => {
             users.value = response.data;
             console.log(users);

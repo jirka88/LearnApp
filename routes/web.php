@@ -39,11 +39,12 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         return to_route('user.info');
     });
     Route::post('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
+    Route::post('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
     Route::resource('/manager/subject', SubjectController::class);
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
     Route::resource("/manager/subject/{slug}/chapter", ChapterController::class);
-    Route::get("/sharing/users", [Controller::class, 'showUsersForSharing'])->name('sharing');
+    Route::get("/manager/subject/{slug}/sharing/users", [Controller::class, 'showUsersForSharing'])->name('sharing');
     Route::post("/sharing/users", [Controller::class, 'share'])->name('share');
     Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
     Route::post("/sharing/subjects", [Controller::class, 'acceptShare'])->name('share.accept');

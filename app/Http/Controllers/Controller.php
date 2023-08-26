@@ -38,8 +38,8 @@ class Controller extends BaseController
      * Slouží ke získání všech aktivních uživatelů v aplikaci
      * @return \Illuminate\Http\JsonResponse
      */
-    public function showUsersForSharing() {
-        $users = User::where("active", true)->whereNot('id', auth()->user()->id)->whereNot('id', Roles::ADMIN)->get(['email', 'firstname']);
+    public function showUsersForSharing(Request $request) {
+        $users = User::with('patritions')->where("active", true)->whereNot('id', auth()->user()->id)->whereNot('id', Roles::ADMIN)->get();
         return response()->json($users);
     }
 

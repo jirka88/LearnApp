@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
                 'flash' => [
                     'messagePasswordReset' => session('successReset'),
                     'messageUpdate' => session('successUpdate'),
+                    'messageShare' => session('successShare')
                 ],
                 'user' => [
                     'id' => auth()->user()->id ?? '',

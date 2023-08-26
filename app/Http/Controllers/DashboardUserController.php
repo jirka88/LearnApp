@@ -30,7 +30,7 @@ class DashboardUserController extends Controller
             $roles = Roles::whereNot('id', Roles::ADMIN)->get();
         }
         else {
-            $roles = Roles::find(Roles::BASIC_USER);
+            $roles = Roles::find(Roles::BASIC_USER)->get();
         }
         return Inertia::render('user/user', compact('usr', 'roles', 'accountTypes'));
     }
@@ -66,6 +66,25 @@ class DashboardUserController extends Controller
             'password' => $passwordResetRequest->newPassword,
         ]);
         return redirect()->back()->with('successReset', 'Heslo bylo úspěšně změněno!');
+    }
+
+    /**
+     * Nastavení možnosti přijímání sdílení od uživatelů
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function changeShare(Request $request) {
+        $customMessages = [
+            'share.required' => 'Je nutné zadat sdílení',
+        ];
+        $validated = $request->validate([
+            'share' => 'required',
+        ], $customMessages);
+        User::find(auth()->user()->id)->update([
+            'canShare' => $validated['share']['id']
+        ]);
+
+        return redirect()->back()->with('successShare', 'Sdílení bylo změněno!');
     }
 
     /**
