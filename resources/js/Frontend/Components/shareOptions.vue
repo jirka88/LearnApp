@@ -40,7 +40,7 @@ const form = useForm({
 });
 
 const changeShare = () => {
-    form.post(route('user.share'), {onSuccess: () => {
+    form.put(route('user.share'), {onSuccess: () => {
     }
     });
 }

@@ -39,7 +39,12 @@ class Controller extends BaseController
      * @return \Illuminate\Http\JsonResponse
      */
     public function showUsersForSharing(Request $request) {
-        $users = User::with('patritions')->where("active", true)->whereNot('id', auth()->user()->id)->whereNot('id', Roles::ADMIN)->get();
+        $users = User::with('patritions')->where(function ($query) {
+            $query->where("active", true);
+            $query->whereNot('id', auth()->user()->id);
+            $query->whereNot('id', Roles::ADMIN);
+            $query->where('canShare', true);
+        })->get();
         return response()->json($users);
     }
 
