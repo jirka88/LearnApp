@@ -39,7 +39,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         return to_route('user.info');
     });
     Route::post('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
-    Route::post('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
+    Route::put('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
     Route::resource('/manager/subject', SubjectController::class);
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');

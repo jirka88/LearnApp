@@ -22,7 +22,8 @@ class User extends Authenticatable
         'type_id',
         'password',
         'active',
-        'slug'
+        'slug',
+        'canShare'
     ];
 
     protected $hidden = [
