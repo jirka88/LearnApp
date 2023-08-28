@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class userTest extends TestCase
@@ -38,7 +39,6 @@ class userTest extends TestCase
     public function test_login_screen_can_be_rendered()
     {
         $response = $this->get('/login');
-
         $response->assertStatus(200);
     }
 
@@ -59,6 +59,7 @@ class userTest extends TestCase
         $this->assertDatabaseHas('users', [
             'email' => $user['email'],
         ]);
+        $this->assertAuthenticated();
         $response->assertRedirect('/dashboard');
     }
 
@@ -68,10 +69,15 @@ class userTest extends TestCase
      */
     public function test_login_user()
     {
+        /*$user = User::factory()->create([
+            'password' => bcrypt('Aa123456#'),
+        ]);*/
         $response = $this->post('/login', [
-            'email' => 'navratil.jiri@atlas.cz',
+            'email' => "navratil.jiri@atlas.cz",
             'password' => 'Aa123456#',
+            'remember' => 'on',
         ]);
+        $this->assertAuthenticated();
         $response->assertRedirect('/dashboard');
     }
 
@@ -101,6 +107,7 @@ class userTest extends TestCase
             "role" => ["id" => fake()->numberBetween(1, 2)]
         ];
         $response = $this->actingAs($user)->put('/dashboard/user', $userUpdate);
+        $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
             "id" => $user->id,
@@ -108,4 +115,40 @@ class userTest extends TestCase
         ]);
     }
 
+    /**
+     * Změnění nastavení sdílení
+     * @return void
+     */
+    public function test_user_share_change() {
+        $user = User::factory()->create();
+        $userUpdate = [
+            "share" => ["id" => fake()->boolean()],
+        ];
+        $response = $this->actingAs($user)->put(route('user.share'), $userUpdate);
+        $this->assertAuthenticated();
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('users', [
+            "id" => $user->id,
+        ]);
+    }
+
+    /**
+     * Uživatel změní heslo
+     * @return void
+     */
+    public function test_user_change_password() {
+        $user = User::factory()->create();
+        $newPassword = fake()->password(8,20);
+        $userUpdate = [
+            "oldPassword" => $user->password,
+            "newPassword" => $newPassword,
+            "againNewPassword" => $newPassword,
+        ];
+        $response = $this->actingAs($user)->put(route('user.passwordReset'), $userUpdate);
+        $this->assertAuthenticated();
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('users', [
+            "id" => $user->id,
+        ]);
+    }
 }

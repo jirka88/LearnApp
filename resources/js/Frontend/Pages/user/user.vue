@@ -61,8 +61,8 @@ defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Objec
     display: grid;
     grid-template-areas: 'avatar info'
                         'tabs tabs';
-    gap: 4em;
-
+    grid-column-gap: 4em;
+    grid-row-gap: 2em;
     .avatar {
         grid-area: avatar;
         display: flex;

@@ -4,11 +4,11 @@
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Resetování hesla:</legend>
         <v-form ref="formResetPassword" @submit.prevent="changePassword">
-            <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.required]"
+            <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.oldPassword]"
                           variant="outlined"
                           prepend-inner-icon="mdi-lock"></v-text-field>
             <v-text-field v-model="formPassword.newPassword" label="Nové heslo"
-                          :rules="[rules.required, rules.password]" variant="outlined"
+                          :rules="[rules.password]" variant="outlined"
                           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                           prepend-inner-icon="mdi-lock"
                           :type="show1 ? 'text' : 'password'"
@@ -17,7 +17,7 @@
 
             </v-text-field>
             <v-text-field v-model="formPassword.againNewPassword" label="Nové heslo znova"
-                          :rules="[rules.required, rules.passwordConfirm]"
+                          :rules="[rules.passwordConfirm]"
                           :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                           :type="show2 ? 'text' : 'password'"
                           prepend-inner-icon="mdi-lock"
@@ -50,13 +50,14 @@ const formPassword = useForm({
     againNewPassword: '',
 })
 const changePassword = async () => {
-    formPassword.post('/dashboard/user/changePassword', {
+    formPassword.put('/dashboard/user/changePassword', {
         onSuccess: () => {
             formPassword.reset();
         }
     });
 }
 const rules = {
+    oldPassword: v => v.length > 0 || "Nutné zadat staré heslo!",
     password: v => {
         const missingElements = [];
         if (v.length < 8) {

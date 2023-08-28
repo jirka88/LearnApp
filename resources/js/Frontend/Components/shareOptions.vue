@@ -1,9 +1,9 @@
-
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Nastavení sdílení:</legend>
         <v-form @submit.prevent="changeShare">
-            <div class="text-body-1 pb-8">Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete přijímat od žádného uživatele sekci zaškrtněntě možnost<strong> NE.</strong></div>
+            <div class="text-body-1 pb-8">Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete
+                přijímat od žádného uživatele sekci zaškrtněntě možnost<strong> NE.</strong></div>
             <v-select
                 v-model="form.share"
                 :items="items"
@@ -15,23 +15,27 @@
                 single-line
                 variant="outlined"
             ></v-select>
-            <p class="text-center text-red">{{errors.share}}</p>
+            <p class="text-center text-red">{{ errors.share }}</p>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"
                    :class="{'w-100': $vuetify.display.smAndDown}"
+                   :disabled="disabledBtn == form.share.id"
             >
                 Upravit!
             </v-btn>
             <p v-if="$page.props.flash.messageShare" class="text-center text-green pt-4">
-                {{ $page.props.flash.messageShare}}</p>
+                {{ $page.props.flash.messageShare }}</p>
         </v-form>
     </fieldset>
 </template>
 
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
+import {ref} from "vue";
+
 const props = defineProps({usr: Object, errors: Object});
+const disabledBtn = ref(props.usr.canShare === true ? 1 : 0);
 const items = [{
     state: 'ANO', id: 1
 }, {state: 'NE', id: 0}]
@@ -40,8 +44,10 @@ const form = useForm({
 });
 
 const changeShare = () => {
-    form.put(route('user.share'), {onSuccess: () => {
-    }
+    form.put(route('user.share'), {
+        onSuccess: () => {
+            disabledBtn.value = form.share.id === 1;
+        }
     });
 }
 </script>
