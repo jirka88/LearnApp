@@ -85,7 +85,6 @@ defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Objec
         padding: 2em;
         grid-column: 1 / span 2;
         width: 600px;
-
     }
 }
 
@@ -94,11 +93,10 @@ defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Objec
 }
 
 .mobile-variant {
-    grid-template-areas: 'avatar'
+    grid-template-areas:    'avatar'
                         'info'
-    '                   tabs'
-                            'menu' !important;
-
+                        'tabs'
+                        'menu' !important;
     .v-window {
         grid-column: unset;
     }

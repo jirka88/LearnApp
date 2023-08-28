@@ -107,7 +107,7 @@ const status = markRaw([
 );
 
 const updateUser = async (id) => {
-    form.post('/dashboard/user'), {
+    form.put('/dashboard/user'), {
         onSuccess: () => {
         }
     }

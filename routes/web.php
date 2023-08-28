@@ -34,7 +34,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::inertia('/','dashboard')->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
-    Route::post('/user', [DashboardUserController::class, 'update'])->name('user.update');
+    Route::put('/user', [DashboardUserController::class, 'update'])->name('user.update');
     Route::get('/user/changePassword', function () {
         return to_route('user.info');
     });

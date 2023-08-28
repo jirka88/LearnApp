@@ -52,7 +52,6 @@ class AdminSetUsers extends Controller
      * @return \Illuminate\Http\RedirectResponse**
      */
     public function update(User $user, UpdateRequest $updateRequest) {
-
         $role = $updateRequest->role['id'];
         $typeAccount = $updateRequest->type['id'];
         $active = $updateRequest->active['id'];

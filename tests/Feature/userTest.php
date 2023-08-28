@@ -13,6 +13,7 @@ class userTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -29,6 +30,7 @@ class userTest extends TestCase
 
         $response->assertStatus(200);
     }
+
     /**
      * Renderování přihlášení
      * @return void
@@ -39,6 +41,7 @@ class userTest extends TestCase
 
         $response->assertStatus(200);
     }
+
     /**
      * Registrace uživatele
      * @return void
@@ -48,7 +51,7 @@ class userTest extends TestCase
         $user = [
             'firstname' => fake()->firstName(),
             'email' => fake()->email(),
-            'type' => ['value' => fake()->numberBetween(1,2)],
+            'type' => ['value' => fake()->numberBetween(1, 2)],
             'password' => 'Aa123456#',
             'password_confirm' => 'Aa123456#',
             'confirm' => true,];
@@ -63,7 +66,8 @@ class userTest extends TestCase
      * Přihlášení uživatele
      * @return void
      */
-    public function test_login_user() {
+    public function test_login_user()
+    {
         $response = $this->post('/login', [
             'email' => 'navratil.jiri@atlas.cz',
             'password' => 'Aa123456#',
@@ -75,10 +79,33 @@ class userTest extends TestCase
      * Načtení uživatelského profilu
      * @return void
      */
-    public function test_user_profile_can_be_rendered() {
+    public function test_user_profile_can_be_rendered()
+    {
         $user = User::factory()->create();
         $response = $this->actingAs($user)->get("/dashboard/user");
+        $this->assertAuthenticated();
         $response->assertStatus(200);
+    }
+
+    /**
+     * Běžný uživatel si změní nastavení v profilu
+     * @return void
+     */
+    public function test_user_profile_change()
+    {
+        $user = User::factory()->create();
+        $userUpdate = [
+            "firstname" => fake()->firstName(),
+            "type" => ["id" => fake()->numberBetween(1, 2)],
+            "active" => 1,
+            "role" => ["id" => fake()->numberBetween(1, 2)]
+        ];
+        $response = $this->actingAs($user)->put('/dashboard/user', $userUpdate);
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('users', [
+            "id" => $user->id,
+            "firstname" => $userUpdate["firstname"],
+        ]);
     }
 
 }

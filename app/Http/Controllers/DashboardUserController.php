@@ -41,7 +41,6 @@ class DashboardUserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRequest $updateRequest) {
-
         $typeAccount = $updateRequest->type['id'];
         User::find(auth()->user()->id)->update([
             'firstname' => $updateRequest->firstname,
