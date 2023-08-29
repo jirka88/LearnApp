@@ -41,15 +41,11 @@ class SubjectController extends Controller
         else {
             $subject["permission"] = $pShare;
         }
-
-
         $this->authorize("view", $subject);
-
         $chapters = Chapter::with('Partition')
         ->where('partition_id', $subject->id)->get(['name', 'perex', 'id', 'slug']);
         return Inertia::render('chapter/chapters', compact('chapters','subject'));
     }
-
     /**
      * Redirect k formuláři k vytvoření předmětu
      * @return \Inertia\Response

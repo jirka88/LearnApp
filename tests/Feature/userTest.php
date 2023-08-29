@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Partition;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -28,7 +29,6 @@ class userTest extends TestCase
     public function test_registration_screen_can_be_rendered()
     {
         $response = $this->get('/register');
-
         $response->assertStatus(200);
     }
 
@@ -170,5 +170,21 @@ class userTest extends TestCase
         $this->assertDatabaseHas('users', [
             "id" => $user->id,
         ]);
+    }
+
+    /**
+     * uživatel přejde do seznamu svých předmětu (20)
+     * @return void
+     */
+    public function test_organisation_screen_can_be_rendered() {
+        $user = User::factory()->create();
+        for ($x = 0; $x <= 20; $x++) {
+            Partition::factory()->create([
+                "created_by" => $user->id,
+            ]);
+        }
+        $response = $this->actingAs($user)->get(route('subject.index'));
+        $this->assertAuthenticated();
+        $response->assertStatus(200);
     }
 }
