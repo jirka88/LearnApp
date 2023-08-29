@@ -6,10 +6,11 @@
                 <p class="text-h5">Předměty uživatele: {{subjects.firstname}} - {{subjects.email}}</p>
                 <v-divider></v-divider>
                 </div>
-                <Link :href="route('adminuser.createSubject', subjects.slug)"  data-aos="zoom-in"
-                      data-aos-duration="400">
+                <Link :href="route('adminuser.createSubject', subjects.slug)" >
                     <div class="btns">
                         <v-btn
+                            data-aos="zoom-in"
+                            data-aos-duration="400"
                         class="bg-green">
                         Vytvořit předmět
                         </v-btn>
@@ -58,7 +59,7 @@
                         </tbody>
                         <tbody v-else>
                             <tr>
-                                <td class="text-center" colspan="6">Předměty nebyly vytvořeny!</td>
+                                <td class="text-center" colspan="7">Předměty nebyly vytvořeny!</td>
                             </tr>
                         </tbody>
                     </v-table>

@@ -62,6 +62,26 @@ class userTest extends TestCase
         $this->assertAuthenticated();
         $response->assertRedirect('/dashboard');
     }
+    /**
+     * Neúspěšná registrace uživatele
+     * @return void
+     */
+    public function test_register_user_denied()
+    {
+        $user = [
+            'firstname' => fake()->firstName(),
+            'email' => 'navratil.jiri@atlas.cz',
+            'type' => ['value' => fake()->numberBetween(1, 2)],
+            'password' => 'Aa123',
+            'password_confirm' => 'Aa12',
+            'confirm' => true,];
+        $response = $this->post('/register', $user);
+        $this->assertDatabaseHas('users', [
+            'email' => $user['email'],
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+    }
 
     /**
      * Přihlášení uživatele
@@ -106,7 +126,7 @@ class userTest extends TestCase
             "active" => 1,
             "role" => ["id" => fake()->numberBetween(1, 2)]
         ];
-        $response = $this->actingAs($user)->put('/dashboard/user', $userUpdate);
+        $response = $this->actingAs($user)->put(route('user.update'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [

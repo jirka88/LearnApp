@@ -25,7 +25,7 @@
                 >
                     <v-tab value="1">Uživatelské informace</v-tab>
                     <v-tab value="2">Resetování hesla</v-tab>
-                    <v-tab value="3">Sdílení</v-tab>
+                    <v-tab v-if="$page.props.user.role.id !== 1" value="3">Sdílení</v-tab>
                 </v-tabs>
                 <v-window v-model="tab" :class="{'width-vw-85': $vuetify.display.smAndDown,
                                                 'width-vw-100': $vuetify.display.xs }">
@@ -35,7 +35,7 @@
                     <v-window-item value="2">
                         <ResetPassword :usr="usr" :errors="errors"/>
                     </v-window-item>
-                    <v-window-item value="3">
+                    <v-window-item v-if="$page.props.user.role.id !== 1" value="3">
                         <share-options :usr="usr" :errors="errors"/>
                     </v-window-item>
 

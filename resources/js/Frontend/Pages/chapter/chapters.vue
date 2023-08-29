@@ -1,6 +1,5 @@
 <template>
     <component :is="DashboardLayout">
-        <div class="vh-calc">
             <v-container>
                 <div class="d-flex justify-content-between align-center pa-5 gp-em-05"
                      :class="{'flex-column-reverse': $vuetify.display.xs}">
@@ -216,7 +215,6 @@
                 </main>
                 {{subject}}
             </v-container>
-        </div>
     </component>
 </template>
 

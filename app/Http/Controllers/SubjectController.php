@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Partition;
+use App\Models\Roles;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,15 @@ class SubjectController extends Controller
     public function show($slug) {
         $subject = Partition::where('slug', $slug)->first();
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
-        $subject["permission"] = $pShare;
+        if($pShare == null) {
+            if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
+                $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
+            }
+        }
+        else {
+            $subject["permission"] = $pShare;
+        }
+
 
         $this->authorize("view", $subject);
 

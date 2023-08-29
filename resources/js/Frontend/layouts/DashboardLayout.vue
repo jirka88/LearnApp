@@ -1,5 +1,5 @@
 <template>
-    <v-layout>
+    <v-layout class="flex-column">
         <v-navigation-drawer
             v-model="drawer"
             :permanent="permanent"
@@ -83,11 +83,16 @@
                 </v-btn>
             </Link>
         </v-app-bar>
-        <v-main>
+        <v-main class="vh-calc">
             <slot>
 
             </slot>
         </v-main>
+        <v-footer class="pa-0">
+            <div class="bg-black w-100">
+                <p class="text-center pa-4">Created by: Jiří Navrátil - {{new Date().getFullYear()}}</p>
+            </div>
+        </v-footer>
     </v-layout>
 </template>
 <script setup>
@@ -122,5 +127,8 @@ const drawer = ref(true);
 }
 .v-list-item--active {
     background: gray;
+}
+.v-footer {
+
 }
 </style>
