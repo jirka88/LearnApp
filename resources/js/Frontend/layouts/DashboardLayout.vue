@@ -88,10 +88,8 @@
 
             </slot>
         </v-main>
-        <v-footer class="pa-0">
-            <div class="bg-black w-100">
-                <p class="text-center pa-4">Created by: Jiří Navrátil - {{new Date().getFullYear()}}</p>
-            </div>
+        <v-footer class="pa-0 primary-bg">
+                <p class="text-center pa-4 w-100 text-white">Created by: Jiří Navrátil - {{new Date().getFullYear()}}</p>
         </v-footer>
     </v-layout>
 </template>

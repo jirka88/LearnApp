@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Chapter;
 use App\Models\Partition;
+use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -16,10 +18,13 @@ class userTest extends TestCase
     use RefreshDatabase;
     use DatabaseMigrations;
 
+    public $user = [];
+
     public function setUp(): void
     {
         parent::setUp();
         $this->seed();
+        $this->user = User::factory()->create();
     }
 
     /**
@@ -107,8 +112,7 @@ class userTest extends TestCase
      */
     public function test_user_profile_can_be_rendered()
     {
-        $user = User::factory()->create();
-        $response = $this->actingAs($user)->get("/dashboard/user");
+        $response = $this->actingAs($this->user)->get("/dashboard/user");
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
@@ -119,18 +123,17 @@ class userTest extends TestCase
      */
     public function test_user_profile_change()
     {
-        $user = User::factory()->create();
         $userUpdate = [
             "firstname" => fake()->firstName(),
             "type" => ["id" => fake()->numberBetween(1, 2)],
             "active" => 1,
             "role" => ["id" => fake()->numberBetween(1, 2)]
         ];
-        $response = $this->actingAs($user)->put(route('user.update'), $userUpdate);
+        $response = $this->actingAs($this->user)->put(route('user.update'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
-            "id" => $user->id,
+            "id" => $this->user->id,
             "firstname" => $userUpdate["firstname"],
         ]);
     }
@@ -140,15 +143,14 @@ class userTest extends TestCase
      * @return void
      */
     public function test_user_share_change() {
-        $user = User::factory()->create();
         $userUpdate = [
             "share" => ["id" => fake()->boolean()],
         ];
-        $response = $this->actingAs($user)->put(route('user.share'), $userUpdate);
+        $response = $this->actingAs($this->user)->put(route('user.share'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
-            "id" => $user->id,
+            "id" => $this->user->id,
         ]);
     }
 
@@ -157,18 +159,17 @@ class userTest extends TestCase
      * @return void
      */
     public function test_user_change_password() {
-        $user = User::factory()->create();
         $newPassword = fake()->password(8,20);
         $userUpdate = [
-            "oldPassword" => $user->password,
+            "oldPassword" => $this->user->password,
             "newPassword" => $newPassword,
             "againNewPassword" => $newPassword,
         ];
-        $response = $this->actingAs($user)->put(route('user.passwordReset'), $userUpdate);
+        $response = $this->actingAs($this->user)->put(route('user.passwordReset'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
-            "id" => $user->id,
+            "id" => $this->user->id,
         ]);
     }
 
@@ -177,14 +178,28 @@ class userTest extends TestCase
      * @return void
      */
     public function test_organisation_screen_can_be_rendered() {
-        $user = User::factory()->create();
         for ($x = 0; $x <= 20; $x++) {
             Partition::factory()->create([
-                "created_by" => $user->id,
+                "created_by" => $this->user,
             ]);
         }
-        $response = $this->actingAs($user)->get(route('subject.index'));
+        $response = $this->actingAs($this->user)->get(route('subject.index'));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
+
+   public function test_subject_screen_can_be_rendered() {
+       $subject = Partition::factory()->create([
+           "created_by" => $this->user,
+       ]);
+       $subject->Users()->attach($this->user->id);
+       for ($x = 0; $x <= fake()->numberBetween(0,10); $x++) {
+           Chapter::factory()->create([
+               "partition_id" => $subject->id,
+           ]);
+       }
+       $response = $this->actingAs($this->user)->get(route("subject.show", $subject->slug));
+       $this->assertAuthenticated();
+       $response->assertStatus(200);
+   }
 }

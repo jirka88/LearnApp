@@ -33,7 +33,7 @@ class SubjectController extends Controller
     public function show($slug) {
         $subject = Partition::where('slug', $slug)->first();
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
-        if($pShare == null) {
+        if($pShare === null) {
             if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
                 $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
             }
