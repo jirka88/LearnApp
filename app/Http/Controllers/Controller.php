@@ -71,7 +71,7 @@ class Controller extends BaseController
     }
 
     /**
-     * Zorbrazení všech nabídek ke sdílení předmětu
+     * Zobrazení všech nabídek ke sdílení předmětu
      * @return \Inertia\Response
      */
     public function showShare() {

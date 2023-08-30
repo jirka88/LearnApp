@@ -118,6 +118,14 @@ class userTest extends TestCase
     }
 
     /**
+     * Odhlášení uživatele
+     * @return void
+     */
+    public function test_logoff() {
+        $response = $this->actingAs($this->user)->get(route("logout"));
+        $response->assertStatus(302);
+    }
+    /**
      * Běžný uživatel si změní nastavení v profilu
      * @return void
      */
@@ -188,12 +196,33 @@ class userTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * Vytvoření předmětu
+     * @return void
+     */
+    public function test_create_subject() {
+        $subject = [
+          'name' => fake()->text(10),
+          'icon' => ['iconName' => fake()->text(20)]
+        ];
+        $response = $this->actingAs($this->user)->post(route('subject.store', $subject));
+        $this->assertAuthenticated();
+        $response->assertStatus(302);
+        $createdSubject = User::with("patritions")->find($this->user->id);
+        $this->assertDatabaseHas('partitions', [
+            "id" => $createdSubject->patritions->first()->id,
+        ]);
+    }
+    /**
+     * Zobrazení předmětu s kapitolami
+     * @return void
+     */
    public function test_subject_screen_can_be_rendered() {
        $subject = Partition::factory()->create([
            "created_by" => $this->user,
        ]);
        $subject->Users()->attach($this->user->id);
-       for ($x = 0; $x <= fake()->numberBetween(0,10); $x++) {
+       for ($x = 0; $x <= fake()->numberBetween(0,18); $x++) {
            Chapter::factory()->create([
                "partition_id" => $subject->id,
            ]);
