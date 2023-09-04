@@ -69,4 +69,8 @@ const editChapter = () => {
 :deep(.ql-snow) {
     border: 1px solid black;
 }
+:deep(.v-messages__message) {
+    padding-bottom: 1.2em;
+    text-align: left !important;
+}
 </style>

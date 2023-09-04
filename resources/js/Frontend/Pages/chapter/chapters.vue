@@ -1,6 +1,18 @@
 <template>
     <component :is="DashboardLayout">
-            <v-container>
+        <div v-if="showSearchMobile" class="hidden-md-and-up justify-center pa-5 w-100 justify-end position-sticky" id="m-box"  data-aos="zoom-in-down">
+            <v-autocomplete
+                v-model="selectedChapter"
+                variant="outlined"
+                :items="selectedChapters"
+                item-title="name"
+                item-value="id"
+                class="w-100 searchMobile"
+                prepend-inner-icon="mdi-folder-search-outline"
+                hide-details>
+            </v-autocomplete>
+        </div>
+            <v-container v-scroll="onScroll">
                 <div class="d-flex justify-content-between align-center pa-5 gp-em-05"
                      :class="{'flex-column-reverse': $vuetify.display.xs}">
                     <div class="d-flex flex-1-1-100 flex-wrap gp-em-05"
@@ -31,7 +43,7 @@
                         </v-autocomplete>
                     </div>
                 </div>
-                <main class="pa-5 d-flex flex-wrap" :class="{'justify-center': $vuetify.display.smAndDown}">
+                <selection class="pa-5 d-flex flex-wrap" :class="{'justify-center': $vuetify.display.smAndDown}">
                     <v-dialog
                         v-model="status"
                         persistent
@@ -129,10 +141,11 @@
                     </v-dialog>
                     <v-card
                         data-aos="zoom-in" data-aos-delay="200" data-aos-duration="300"
+                        data-aos-anchor-placement="top-bottom"
+                        :class="{'w-50': $vuetify.display.sm}"
                         v-if="selectedChapter === undefined"
                         v-for="chapter in chapters" :key="chapter.id"
                         class="pa-2 d-flex flex-column elevation-20"
-                        max-width="344"
                     >
                         <v-card-text>
                             <p class="text-h4 font-weight-bold text--primary py-4">
@@ -171,6 +184,8 @@
                     </v-card>
                     <v-card
                         v-else
+                        data-aos="zoom-in" data-aos-delay="200" data-aos-duration="300"
+                        data-aos-anchor-placement="top-bottom"
                         class="pa-2 d-flex flex-column elevation-20"
                         max-width="344"
                     >
@@ -211,9 +226,16 @@
                             </Link>
                         </v-card-actions>
                     </v-card>
+                </selection>
+                <v-pagination
+                    class="pa-8"
+                    v-model="page"
+                    :length="pages"
 
-                </main>
-                {{subject}}
+                    prev-icon="mdi-menu-left"
+                    next-icon="mdi-menu-right"
+                    @update:modelValue="fetchData"
+                ></v-pagination>
             </v-container>
     </component>
 </template>
@@ -227,11 +249,17 @@ import {Inertia} from "@inertiajs/inertia";
 import axios from "axios";
 import {useForm} from "@inertiajs/inertia-vue3";
 
+const page = ref(0);
+const pages = ref(1);
+
 const status = ref(false);
 const sharing = ref(false);
 const activeChapter = ref("");
 const users = ref();
 const selectedUsers = ref();
+
+const showSearchMobile = ref(false);
+
 const props = defineProps({chapters: Object, subject: Object, users: Object, errors: Object});
 const selectedChapters = props.chapters;
 const permission = ref();
@@ -278,13 +306,29 @@ const sharingToUsers = () => {
         }
     })
 }
+const isOn = ref(false);
+const onScroll = () => {
+    if(window.scrollY > 120) {
+        showSearchMobile.value = true;
+        isOn.value = true;
+    }
+    else {
+        if(isOn) {
+            isOn.value = false;
+            showSearchMobile.value = false;
+        }
+    }
+}
+const fetchData = () => {
+
+}
 </script>
 <style scoped lang="scss">
-main {
-    gap: 1em;
+selection {
+    gap: 2.5em;
     .v-card {
         flex: 1 1 auto;
-        width: 350px !important;
+        width: 260px !important;
         min-height: 14em !important;
         .text-h4 {
             text-wrap: balance;
@@ -308,6 +352,13 @@ main {
 }
 .search {
     max-width: 200px !important;
+}
+#m-box {
+    display: flex;
+    width: 100%;
+    background: white !important;
+    top: 4em;
+    z-index: 1;
 }
 .v-autocomplete {
     max-width: 500px;

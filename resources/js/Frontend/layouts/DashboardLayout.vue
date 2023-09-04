@@ -89,7 +89,7 @@
             </slot>
         </v-main>
         <v-footer class="pa-0 primary-bg">
-                <p class="text-center pa-4 w-100 text-white">Created by: Jiří Navrátil - {{new Date().getFullYear()}}</p>
+                <p class="text-center pa-4 w-100 text-white" :class="drawer ? 'move' : 'move-back'">Created by: Jiří Navrátil - {{new Date().getFullYear()}}</p>
         </v-footer>
     </v-layout>
 </template>
@@ -127,6 +127,12 @@ const drawer = ref(true);
     background: gray;
 }
 .v-footer {
-
+    .move {
+        transition: .8s;
+        margin-left: 255px;
+    }
+    .move-back {
+        transition: .8s;
+    }
 }
 </style>
