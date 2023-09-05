@@ -250,7 +250,6 @@ import axios from "axios";
 import {useForm} from "@inertiajs/inertia-vue3";
 
 const page = ref(0);
-const pages = ref(1);
 
 const status = ref(false);
 const sharing = ref(false);
@@ -260,7 +259,8 @@ const selectedUsers = ref();
 
 const showSearchMobile = ref(false);
 
-const props = defineProps({chapters: Object, subject: Object, users: Object, errors: Object});
+const props = defineProps({chapters: Object, subject: Object, users: Object, errors: Object, pages: Object
+});
 const selectedChapters = props.chapters;
 const permission = ref();
 
@@ -320,7 +320,9 @@ const onScroll = () => {
     }
 }
 const fetchData = () => {
-
+    Inertia.get(route('subject.show', props.subject.slug),{page: page.value}, {preserveState: true, onSuccess: (response) => {
+            props.chapters = response.props.chapters;
+        }});
 }
 </script>
 <style scoped lang="scss">

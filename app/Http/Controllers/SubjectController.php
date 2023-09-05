@@ -13,6 +13,7 @@ use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
+    public $ItemsInPages = 20;
 
     /**
      * Vrácení všech předmětů
@@ -21,7 +22,7 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Partition::withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
-        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / 20);
+        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
         return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages]);
     }
 
@@ -42,9 +43,12 @@ class SubjectController extends Controller
             $subject["permission"] = $pShare;
         }
         $this->authorize("view", $subject);
-        $chapters = Chapter::with('Partition')
-        ->where('partition_id', $subject->id)->get(['name', 'perex', 'id', 'slug']);
-        return Inertia::render('chapter/chapters', compact('chapters','subject'));
+        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate($this->ItemsInPages);
+        $chapters = $chaptersSelect->map(function ($chapter) {
+            return $chapter->toArray();
+        });
+        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / $this->ItemsInPages);
+        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
     }
     /**
      * Redirect k formuláři k vytvoření předmětu
