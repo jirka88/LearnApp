@@ -45,9 +45,7 @@ class SubjectController extends Controller
             $subject["permission"] = $pShare;
         }
         $this->authorize("view", $subject);
-
         $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate($this->ItemsInPages);
-
         $chapters = $chaptersSelect->map(function ($chapter) {
             return $chapter->toArray();
         });

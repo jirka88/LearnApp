@@ -333,8 +333,9 @@ const onScroll = () => {
     if (window.scrollY > 120) {
         showSearchMobile.value = true;
         isOn.value = true;
-    } else {
-        if (isOn) {
+    }
+    else {
+        if(isOn) {
             isOn.value = false;
             showSearchMobile.value = false;
         }
