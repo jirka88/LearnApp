@@ -34,6 +34,7 @@ class ChapterRequest extends FormRequest
     {
         return [
             "content.required" => "Musíte mít obsah!",
+            "name.unique" => "Název musí být unikátní!"
         ];
     }
 }

@@ -8,6 +8,7 @@ use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 
@@ -31,9 +32,10 @@ class SubjectController extends Controller
      * @param Partition $subject
      * @return \Inertia\Response
      */
-    public function show($slug) {
+    public function show(Request $request, $slug) {
         $subject = Partition::where('slug', $slug)->first();
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
+
         if($pShare === null) {
             if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
                 $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
@@ -43,13 +45,20 @@ class SubjectController extends Controller
             $subject["permission"] = $pShare;
         }
         $this->authorize("view", $subject);
+
         $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate($this->ItemsInPages);
+
         $chapters = $chaptersSelect->map(function ($chapter) {
             return $chapter->toArray();
         });
         $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / $this->ItemsInPages);
+        $loadedSelectedChapter = Chapter::where('name', $request->select)->first();
+
+        if($loadedSelectedChapter == null) {
+            $loadedSelectedChapter = '';
+        }
         $AllChapter = $subject->Chapter()->pluck("name");
-        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'AllChapter'));
+        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'AllChapter', 'loadedSelectedChapter'));
     }
     /**
      * Redirect k formuláři k vytvoření předmětu

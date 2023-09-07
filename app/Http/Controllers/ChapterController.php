@@ -46,6 +46,9 @@ class ChapterController extends Controller
      */
     public function store(ChapterRequest $chapterRequest) {
         $partition = Partition::where("slug", $chapterRequest->slug)->first();
+        if(Chapter::where("partition_id", $partition->id)->where("name", $chapterRequest->name)->first() !== null) {
+            return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
+        }
         Chapter::create([
             "name" => $chapterRequest->name,
             "perex" => $chapterRequest->perex,
@@ -106,6 +109,6 @@ class ChapterController extends Controller
     public function selectChapter(Request $request) {
         $sort = $request->input('select');
         $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug')->first();
-        return response()->json($chapter);
+        return response()->json(["loadedSelectedChapter" => $chapter]);
     }
 }

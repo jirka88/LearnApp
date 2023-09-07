@@ -10,6 +10,7 @@
                         variant="outlined"
                         label="Název"
                         :rules="[rules.required, rules.nameLength]"
+                        :error="errors.name"
                         required
                     ></v-text-field>
                     <v-text-field
@@ -20,14 +21,15 @@
                         required
                     ></v-text-field>
                     <QuillEditor v-model:content="form.contentChapter" theme="snow" toolbar="full" content-type="html"/>
+                    <span class="text-center text-red py-4 font-weight-bold" v-if="errors.content">{{ errors.content }}</span>
+                    <span class="text-center text-red py-4 font-weight-bold" v-if="errors.name">{{ errors.name }}</span>
                     <v-btn type="submit"
                            color="blue"
-                           class="btn d-flex my-8"
+                           class="btn d-flex my-4"
                            :class="{'w-100': $vuetify.display.smAndDown}"
                     >
                         Vytvořit!
                     </v-btn>
-                    <span class="text-center text-red py-4" v-if="errors.content">{{ errors.content }}</span>
                 </form>
             </v-container>
         </div>
@@ -52,7 +54,7 @@ const form = useForm({
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',
     nameLength: value => value.length <= 20 || "Název je příliš dlouhý!",
-    perexLength: value => value.length <= 50 || "Perex je příliš dlouhý!"
+    perexLength: value => value.length <= 50 || "Perex je příliš dlouhý!",
 }
 const createChapter = () => {
     form.post(route('chapter.store', props.slug), {
