@@ -6,6 +6,7 @@
                 variant="outlined"
                 :items="selectedChapters"
                 item-title="name"
+                item-value="id"
                 class="w-100 searchMobile"
                 prepend-inner-icon="mdi-folder-search-outline"
                 hide-details>
@@ -183,13 +184,14 @@
                     </v-card>
                     <v-card
                         v-else
+                        data-aos="zoom-in" data-aos-delay="200" data-aos-duration="300"
                         data-aos-anchor-placement="top-bottom"
                         class="pa-2 d-flex flex-column elevation-20"
                         max-width="344"
                     >
                         <v-card-text>
                             <p class="text-h4 font-weight-bold text--primary py-4">
-                                {{ selectedChapterShow.name}}
+                                {{ selectedChapterShow.name }}
                             </p>
                             <div class="text--primary">
                                 {{ selectedChapterShow.perex }}<br>
@@ -214,7 +216,7 @@
                                 >
                                 </v-btn>
                             </Link>
-                            <Link :href="route('chapter.show', {chapter: selectedChapterShow.slug, slug: subject.slug})">
+                            <Link :href="route('chapter.show', {chapter: selectedChapterShow.id, slug: subject.slug})">
                                 <v-btn
                                     icon="mdi-near-me"
                                     variant="flat"
@@ -246,8 +248,7 @@ import {ref, watch} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 import axios from "axios";
 import {useForm} from "@inertiajs/inertia-vue3";
-import {useRouter} from "vue-router";
-const router = useRouter();
+
 const page = ref(0);
 
 const status = ref(false);
@@ -258,30 +259,20 @@ const selectedUsers = ref();
 
 const showSearchMobile = ref(false);
 
-const props = defineProps({chapters: Object, subject: Object, users: Object, errors: Object, pages: Object, AllChapter: Object
+const props = defineProps({chapters: Object, subject: Object, users: Object, errors: Object, pages: Object
 });
-const selectedChapters = props.AllChapter;
+const selectedChapters = props.chapters;
 const permission = ref();
 
 const selectedChapter = ref();
 const selectedChapterShow = ref();
-watch(selectedChapter, async() => {
-            selectedChapterShow.value = await axios.get(`/dashboard/manager/subject/${props.subject.slug}/select?select=${selectedChapter.value}`);
-            router.push(`?select=${selectedChapter.value}`);
 
-        if (Object.keys(selectedChapterShow.value ).length === 0) {
-            selectedChapter.value = undefined;
-        }
-    });
-
-    //selectedChapterShow.value = props.chapters.find(x => x.id === selectedChapter.value);
-    /*if(selected.value) {
-        if (selectedChapterShow.value === undefined) {
-            selectedChapter.value = undefined;
-            selected.value = false;
-            router.back(-2);
-        }
-    }*/
+watch(selectedChapter, () => {
+    selectedChapterShow.value = props.chapters.find(x => x.id === selectedChapter.value);
+    if (selectedChapterShow.value === undefined) {
+        selectedChapter.value = undefined;
+    }
+})
 const form = useForm({
     users: selectedUsers,
     permission: permission,
@@ -295,6 +286,7 @@ const enableSharing = async () => {
     await axios.get( props.subject.slug + "/sharing/users")
         .then(response => {
             users.value = response.data;
+            console.log(users);
         })
     sharing.value = true;
 }

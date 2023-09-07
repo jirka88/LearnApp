@@ -103,9 +103,4 @@ class ChapterController extends Controller
         $chapterDelete->delete();
         return to_route('subject.show', $slug);
     }
-    public function selectChapter(Request $request) {
-        $sort = $request->input('select');
-        $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug')->first();
-        return response()->json($chapter);
-    }
 }

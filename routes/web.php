@@ -44,7 +44,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::get("/logout", [LogoutController::class, 'logout'])->name('logout');
     Route::resource("/manager/subject/{slug}/chapter", ChapterController::class);
-    Route::get("/manager/subject/{slug}/select", [ChapterController::class, 'selectChapter'])->name('chapter.select');
     Route::get("/manager/subject/{slug}/sharing/users", [Controller::class, 'showUsersForSharing'])->name('sharing');
     Route::post("/sharing/users", [Controller::class, 'share'])->name('share');
     Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
