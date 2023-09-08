@@ -20,7 +20,7 @@ class RegisterController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        $usr = $request->only(['firstname', 'email', 'password']);
+        $usr = $request->only(['firstname', 'email', 'lastname', 'password']);
         $usr['type_id'] = $request->type['value'];
         $usr['slug'] = SlugService::createSlug(User::class, 'slug', $request->firstname);
         $user = User::create($usr);

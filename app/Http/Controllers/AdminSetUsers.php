@@ -57,6 +57,7 @@ class AdminSetUsers extends Controller
         $active = $updateRequest->active['id'];
         User::find($user->id)->update([
             'firstname' => $updateRequest->firstname,
+            'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
             'role_id' => $role,
             'active' => $active,
@@ -89,6 +90,7 @@ class AdminSetUsers extends Controller
     public function store(AdminCreateUser $adminCreateUser) {
         User::create([
            "firstname" => $adminCreateUser->firstname,
+            "lastname" => $adminCreateUser->lastname,
            "email" => $adminCreateUser->email,
            "password" => $adminCreateUser->password,
            "role_id" => $adminCreateUser->role["id"],

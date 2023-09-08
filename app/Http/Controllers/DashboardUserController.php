@@ -44,6 +44,7 @@ class DashboardUserController extends Controller
         $typeAccount = $updateRequest->type['id'];
         User::find(auth()->user()->id)->update([
             'firstname' => $updateRequest->firstname,
+            'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');

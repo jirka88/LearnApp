@@ -12,6 +12,12 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="w-50">Příjmení:</td>
+                    <td class="w-50">
+                        <v-text-field v-model="form.lastname" :rules="[rules.required,rules.lengthlastName]" variant="outlined"></v-text-field>
+                    </td>
+                </tr>
+                <tr>
                     <td class="w-50">Email:</td>
                     <td class="w-50">
                         <v-text-field v-model="form.email" :disabled="this.$page.props.permission.view ? false : true"
@@ -88,6 +94,7 @@ import {markRaw} from "vue";
 const props = defineProps({'usr': Object, 'roles': Object, 'accountTypes': Array, errors: Object});
 const form = useForm({
     firstname: props.usr.firstname,
+    lastname: props.usr.lastname,
     email: props.usr.email,
     role: {state: props.usr.roles.role, id: props.usr.roles.id},
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
@@ -117,7 +124,8 @@ const updateAdminUser = async(id) => {
 }
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',
-    lengthName: v => v.length < 25 || "Příliš dlouhé jméno!"
+    lengthName: v => v.length < 25 || "Příliš dlouhé jméno!",
+    lengthlastName: v => v.length < 50 || "Příliš dlouhé příjmení!"
 }
 </script>
 

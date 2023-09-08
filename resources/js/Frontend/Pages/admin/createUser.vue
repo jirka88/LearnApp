@@ -6,9 +6,18 @@
             <form class="py-8 w-100 d-flex flex-column gp-em-05"  @submit.prevent="createUser">
                 <v-text-field
                     v-model="form.firstname"
+                    prepend-inner-icon="mdi-account"
                     variant="outlined"
                     label="Jméno"
                     :rules="[rules.required, rules.firstnameLength]"
+                    required
+                ></v-text-field>
+                <v-text-field
+                    v-model="form.lastname"
+                    prepend-inner-icon="mdi-account"
+                    variant="outlined"
+                    label="Příjmení"
+                    :rules="[rules.required, rules.lastnameLength]"
                     required
                 ></v-text-field>
                 <v-text-field
@@ -74,6 +83,7 @@ import {markRaw, ref} from "vue";
 const props = defineProps({accountTypes: Object, roles: Object, errors: Object});
 const form = useForm( {
     firstname: "",
+    lastname: "",
     email: "",
     password: "",
     type: {state: "Osobní", id: 1},
@@ -91,6 +101,7 @@ const roles = markRaw(
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',
     firstnameLength: v => v.length < 25 || 'Jméno je příliš dlouhé!',
+    lastnameLength: v => v.length < 50 || 'Příjmení je příliš dlouhé!',
     email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail musí být validní!',
     password: v => {
         const missingElements = [];

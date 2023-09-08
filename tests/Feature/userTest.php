@@ -55,6 +55,7 @@ class userTest extends TestCase
     {
         $user = [
             'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
             'email' => fake()->email(),
             'type' => ['value' => fake()->numberBetween(1, 2)],
             'password' => 'Aa123456#',
@@ -94,9 +95,6 @@ class userTest extends TestCase
      */
     public function test_login_user()
     {
-        /*$user = User::factory()->create([
-            'password' => bcrypt('Aa123456#'),
-        ]);*/
         $response = $this->post('/login', [
             'email' => "navratil.jiri@atlas.cz",
             'password' => 'Aa123456#',

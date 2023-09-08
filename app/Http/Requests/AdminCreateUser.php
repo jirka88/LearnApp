@@ -25,6 +25,7 @@ class AdminCreateUser extends FormRequest
     {
         return [
             'firstname' => 'required|min:3|max:25',
+            'lastname' => 'required|max:50',
             'email' => 'required|email|unique:users|max:320',
             'type' => 'required',
             'role' => 'required',

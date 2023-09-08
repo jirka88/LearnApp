@@ -14,7 +14,7 @@
                 </div>
                 <div class="info d-flex justify-center flex-column"
                      :class="{'align-center': $vuetify.display.smAndDown}">
-                    <div class="text-h4">{{ usr.firstname }}</div>
+                    <div class="text-h4">{{ usr.firstname + " " + usr.lastname}}</div>
                     <div class="text-subtitle-1">{{ usr.email }}</div>
                     <div class="text-subtitle-2">{{ usr.account_types.type }} účet</div>
                 </div>

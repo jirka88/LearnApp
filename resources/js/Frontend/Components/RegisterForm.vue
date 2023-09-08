@@ -19,6 +19,13 @@
                 :rules="[rules.required, rules.firstnameLength]"
                 required/>
             <v-text-field
+                v-model="form.lastname"
+                prepend-inner-icon="mdi-account"
+                variant="outlined"
+                label="Příjmení"
+                :rules="[rules.required, rules.lastnameLength]"
+                required/>
+            <v-text-field
                 v-model="form.email"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
@@ -99,6 +106,7 @@ defineProps({ errors: Object })
 
 const form = useForm({
     firstname: '',
+    lastname: '',
     email: '',
     password: '',
     type: {state: 'Osobní účet', value: '1'},
@@ -109,6 +117,7 @@ const form = useForm({
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',
     firstnameLength: v => v.length < 25 || 'Jméno je příliš dlouhé!',
+    lastnameLength: v => v.length < 50 ||'Příjmení je příliš dlouhé!',
     email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail musí být validní!',
     password: v => {
         const missingElements = [];

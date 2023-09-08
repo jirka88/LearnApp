@@ -23,6 +23,7 @@
                 <tr>
                     <th class="font-weight-bold">ID:</th>
                     <th class="font-weight-bold">Jméno:</th>
+                    <th class="font-weight-bold">Příjmení:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Role:</th>
                     <th class="font-weight-bold">Typ účtu:</th>
@@ -35,6 +36,7 @@
                 <tr class="pa-8" v-for="user in users.data" :key="user.id">
                     <td>{{user.id}}</td>
                     <td>{{ user.firstname }}</td>
+                    <td>{{user.lastname}}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.account_types.type }}</td>
