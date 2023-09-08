@@ -131,6 +131,7 @@ class userTest extends TestCase
     {
         $userUpdate = [
             "firstname" => fake()->firstName(),
+            "lastname" => fake()->lastName(),
             "type" => ["id" => fake()->numberBetween(1, 2)],
             "active" => 1,
             "role" => ["id" => fake()->numberBetween(1, 2)]
@@ -141,6 +142,7 @@ class userTest extends TestCase
         $this->assertDatabaseHas('users', [
             "id" => $this->user->id,
             "firstname" => $userUpdate["firstname"],
+            "lastname" => $userUpdate["lastname"]
         ]);
     }
 
@@ -228,5 +230,43 @@ class userTest extends TestCase
        $response = $this->actingAs($this->user)->get(route("subject.show", $subject->slug));
        $this->assertAuthenticated();
        $response->assertStatus(200);
+   }
+
+    /**
+     * Zobrazení určité kapitoly
+     * @return void
+     */
+   public function test_chapter_can_be_rendered() {
+       $subject = Partition::factory()->create([
+           "created_by" => $this->user,
+       ]);
+       $subject->Users()->attach($this->user->id);
+       $chapter = Chapter::factory()->create([
+           "partition_id" => $subject->id,
+       ]);
+       $response = $this->actingAs($this->user)->get(route('chapter.show', ['chapter' => $chapter->slug, 'slug' => $subject->slug]));
+       $this->assertAuthenticated();
+       $response->assertStatus(200);
+   }
+   public function test_chapter_delete() {
+       $subject = Partition::factory()->create([
+           "created_by" => $this->user,
+       ]);
+       $subject->Users()->attach($this->user->id);
+
+       $chapter = Chapter::factory()->create([
+           "partition_id" => $subject->id,
+       ]);
+
+       $response = $this->actingAs($this->user)->delete(route('chapter.destroy', ["slug" => $subject->slug, "chapter" => $chapter->slug]));
+
+       $this->assertAuthenticated();
+
+       $response->assertStatus(302);
+
+       $this->assertDatabaseMissing("chapters", [
+           "id" => $chapter->id,
+       ]);
+
    }
 }
