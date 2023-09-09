@@ -22,21 +22,24 @@ class UserSeeder extends Seeder
                 'email' => 'navratil.jiri@atlas.cz',
                 'type_id' => 1,
                 'password' => 'Aa123456#',
-                'slug' => 'jirka'],
+                'slug' => 'jirka',
+                'licences_id' => 3],
             ['firstname' => 'Test',
                 'lastname' => 'Převrátil',
                 'role_id' => 2,
                 'email' => 'laval@centrum.cz',
                 'type_id' => 1,
                 'password' => 'Aa123456#',
-                'slug' => 'test'],
+                'slug' => 'test',
+                'licences_id' => 1],
             ['firstname' => 'Test2',
                 'lastname' => 'Odvrátil',
                 'role_id' => 4,
                 'email' => 'test@test.cz',
                 'type_id' => 1,
                 'password' => 'Aa123456#',
-                'slug' => 'test2']
+                'slug' => 'test2',
+                'licences_id' => 2]
         ];
         foreach ($users as $user) {
             User::create($user);

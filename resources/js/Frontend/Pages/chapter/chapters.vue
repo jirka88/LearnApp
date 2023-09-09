@@ -277,6 +277,7 @@ const permission = ref();
 
 const selectedChapter = ref(props.loadedSelectedChapter.name);
 const selectedChapterShow = ref(props.loadedSelectedChapter);
+
 watch(selectedChapter, async () => {
     selectedChapterShow.value = props.chapters.find(x => x.name === selectedChapter.value);
     if (selectedChapterShow.value === undefined) {
@@ -291,7 +292,6 @@ watch(selectedChapter, async () => {
         if(selectedChapterShow.value.loadedSelectedChapter === null)  {
             return;
         }
-        console.log(selectedChapterShow.value);
     }
     router.push(`?select=${selectedChapter.value}`);
 });

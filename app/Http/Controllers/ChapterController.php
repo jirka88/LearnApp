@@ -108,6 +108,7 @@ class ChapterController extends Controller
     }
     public function selectChapter(Request $request) {
         $sort = $request->input('select');
+        //echo route('chapter.select', [$sort]);
         $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug')->first();
         return response()->json(["loadedSelectedChapter" => $chapter]);
     }

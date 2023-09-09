@@ -24,6 +24,8 @@ return new class extends Migration
                 ->constrained('roles', 'id');
             $table->foreignId('type_id')->default(1)
                 ->constrained('account_types', 'id');
+            $table->foreignId('licences_id')->default(1)
+                ->constrained('licences', 'id');
             $table->boolean('active')->default(1);
             $table->boolean('canShare')->default(1);
             $table->rememberToken();

@@ -200,7 +200,7 @@ class userTest extends TestCase
      * Vytvoření předmětu
      * @return void
      */
-    public function test_create_subject() {
+    public function test_subject_create() {
         $subject = [
           'name' => fake()->text(10),
           'icon' => ['iconName' => fake()->text(20)]
@@ -213,6 +213,28 @@ class userTest extends TestCase
             "id" => $createdSubject->patritions->first()->id,
         ]);
     }
+
+    /**
+     * Vymazání předmětu -> současně i s navázenýma kapitolama
+     * @return void
+     */
+    public function test_subject_delete() {
+    $subject = Partition::factory()->create([
+        "created_by" => $this->user,
+    ]);
+    $subject->Users()->attach($this->user->id);
+    for ($x = 0; $x <= fake()->numberBetween(0,18); $x++) {
+        Chapter::factory()->create([
+            "partition_id" => $subject->id,
+        ]);
+    }
+    $response = $this->actingAs($this->user)->delete(route("subject.destroy", $subject->id));
+    $this->assertAuthenticated();
+    $response->assertStatus(200);
+    $this->assertDatabaseMissing("partitions", [
+        "id" => $subject->id,
+    ]);
+}
     /**
      * Zobrazení předmětu s kapitolami
      * @return void
@@ -248,6 +270,11 @@ class userTest extends TestCase
        $this->assertAuthenticated();
        $response->assertStatus(200);
    }
+
+    /**
+     * Vymazání kapitoly
+     * @return void
+     */
    public function test_chapter_delete() {
        $subject = Partition::factory()->create([
            "created_by" => $this->user,
