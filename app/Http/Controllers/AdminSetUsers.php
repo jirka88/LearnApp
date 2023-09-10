@@ -32,7 +32,7 @@ class AdminSetUsers extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($slug) {
-        $usr = User::with(['roles', 'accountTypes'])->where('slug', $slug)->first();
+        $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->first();
         $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if($isAdmin) {
@@ -55,6 +55,7 @@ class AdminSetUsers extends Controller
         $role = $updateRequest->role['id'];
         $typeAccount = $updateRequest->type['id'];
         $active = $updateRequest->active['id'];
+        $this->authorize('view', $user);
         User::find($user->id)->update([
             'firstname' => $updateRequest->firstname,
             'lastname' => $updateRequest->lastname,

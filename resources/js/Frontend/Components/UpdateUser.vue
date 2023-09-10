@@ -24,7 +24,7 @@
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="usr.role_id != 4 || $page.props.user.role.id == 1 || $page.props.user.role.id == 2">
                     <td class="w-50">Role:</td>
                     <td class="w-50">
                         <v-select
@@ -57,6 +57,10 @@
                         ></v-select>
                     </td>
                 </tr>
+                <tr>
+                    <td class="w-50">Licence:</td>
+                    <td class="w-50 font-weight-bold py-6">{{props.usr.licences.Licence}}</td>
+                </tr>
                 <tr v-if="this.$page.props.permission.view && this.$page.props.user.id !== usr.id">
                     <td class="w-50">Aktivní:</td>
                     <td  class="w-50">
@@ -75,7 +79,7 @@
                 </tr>
                 </tbody>
             </table>
-            <p v-if="$page.props.flash.messageUpdate" class="text-center text-green">
+            <p v-if="$page.props.flash.messageUpdate" class="text-center pt-4 font-weight-bold text-green">
                 {{ $page.props.flash.messageUpdate }}</p>
             <v-btn type="submit"
                    color="blue"
@@ -100,7 +104,7 @@ const form = useForm({
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
     active: props.usr.active == 1 ? {state: 'ANO', id: '1'} : {state: 'NE', id: '0'}
 });
-const items = markRaw(
+const items= markRaw(
     props.roles.map(role => ({
         state: role.role, id: role.id
     })));

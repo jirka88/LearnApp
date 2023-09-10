@@ -20,7 +20,7 @@ class DashboardUserController extends Controller
      */
     public function view() {
         $id = auth()->user()->id;
-        $usr =  User::with(['roles', 'accountTypes'])->find($id);
+        $usr =  User::with(['roles', 'accountTypes', 'licences'])->find($id);
         $roles = [];
         $accountTypes = AccountTypes::all();
         if(auth()->user()->role_id == Roles::ADMIN) {
