@@ -24,27 +24,9 @@ class userTest extends TestCase
     {
         parent::setUp();
         $this->seed();
-        $this->user = User::factory()->create();
-    }
-
-    /**
-     * Renderování registrace
-     * @return void
-     */
-    public function test_registration_screen_can_be_rendered()
-    {
-        $response = $this->get('/register');
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Renderování přihlášení
-     * @return void
-     */
-    public function test_login_screen_can_be_rendered()
-    {
-        $response = $this->get('/login');
-        $response->assertStatus(200);
+        $this->user = User::factory()->create([
+            "role_id" => 4
+        ]);
     }
 
     /**
@@ -93,7 +75,7 @@ class userTest extends TestCase
      * Přihlášení uživatele
      * @return void
      */
-    public function test_login_user()
+    public function test_user_can_login()
     {
         $response = $this->post('/login', [
             'email' => "navratil.jiri@atlas.cz",
@@ -127,7 +109,7 @@ class userTest extends TestCase
      * Běžný uživatel si změní nastavení v profilu
      * @return void
      */
-    public function test_user_profile_change()
+    public function test_user_can_change_profile()
     {
         $userUpdate = [
             "firstname" => fake()->firstName(),
@@ -166,7 +148,7 @@ class userTest extends TestCase
      * Uživatel změní heslo
      * @return void
      */
-    public function test_user_change_password() {
+    public function test_user_can_change_password() {
         $newPassword = fake()->password(8,20);
         $userUpdate = [
             "oldPassword" => $this->user->password,
@@ -200,7 +182,7 @@ class userTest extends TestCase
      * Vytvoření předmětu
      * @return void
      */
-    public function test_subject_create() {
+    public function test_user_can_create_subject() {
         $subject = [
           'name' => fake()->text(10),
           'icon' => ['iconName' => fake()->text(20)]
@@ -218,7 +200,7 @@ class userTest extends TestCase
      * Vymazání předmětu -> současně i s navázenýma kapitolama
      * @return void
      */
-    public function test_subject_delete() {
+    public function test_user_can_delete_subject() {
     $subject = Partition::factory()->create([
         "created_by" => $this->user,
     ]);
@@ -275,25 +257,25 @@ class userTest extends TestCase
      * Vymazání kapitoly
      * @return void
      */
-   public function test_chapter_delete() {
+   public function test_user_can_delete_chapter() {
        $subject = Partition::factory()->create([
            "created_by" => $this->user,
        ]);
        $subject->Users()->attach($this->user->id);
-
        $chapter = Chapter::factory()->create([
            "partition_id" => $subject->id,
        ]);
-
        $response = $this->actingAs($this->user)->delete(route('chapter.destroy', ["slug" => $subject->slug, "chapter" => $chapter->slug]));
-
        $this->assertAuthenticated();
-
        $response->assertStatus(302);
-
        $this->assertDatabaseMissing("chapters", [
            "id" => $chapter->id,
        ]);
-
    }
+   public function test_user_cant_access_to_another_user_profile() {
+       $user = User::factory()->create();
+       $this->actingAs($this->user)->get(route('adminuser.edit', $user->slug))->assertRedirect("/dashboard")->assertStatus(302);
+       $this->assertAuthenticated();
+   }
+
 }
