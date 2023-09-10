@@ -272,6 +272,11 @@ class userTest extends TestCase
            "id" => $chapter->id,
        ]);
    }
+
+    /**
+     * Uživatel nemůže přistoupit k nastavnení jiného uživatele
+     * @return void
+     */
    public function test_user_cant_access_to_another_user_profile() {
        $user = User::factory()->create();
        $this->actingAs($this->user)->get(route('adminuser.edit', $user->slug))->assertRedirect("/dashboard")->assertStatus(302);
