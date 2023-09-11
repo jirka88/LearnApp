@@ -5,6 +5,7 @@
         <legend align="center" class="text-h5">Resetování hesla:</legend>
         <v-form ref="formResetPassword" @submit.prevent="changePassword">
             <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.oldPassword]"
+                          hint="Staré heslo, které jste zadal při registraci."
                           variant="outlined"
                           prepend-inner-icon="mdi-lock"></v-text-field>
             <v-text-field v-model="formPassword.newPassword" label="Nové heslo"
@@ -84,6 +85,7 @@ const rules = {
 </script>
 <style scoped lang="scss">
 .v-btn {
+    padding: 1.6em;
     margin: 1em auto;
 }
 </style>

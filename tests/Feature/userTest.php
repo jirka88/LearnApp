@@ -6,6 +6,7 @@ use App\Models\Chapter;
 use App\Models\Partition;
 use App\Models\Permission;
 use App\Models\User;
+use App\Traits\testTrait;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,6 +18,7 @@ class userTest extends TestCase
 {
     use RefreshDatabase;
     use DatabaseMigrations;
+    use testTrait;
 
     public $user = [];
 
@@ -201,9 +203,7 @@ class userTest extends TestCase
      * @return void
      */
     public function test_user_can_delete_subject() {
-    $subject = Partition::factory()->create([
-        "created_by" => $this->user,
-    ]);
+    $subject = $this->createSubject($this->user);
     $subject->Users()->attach($this->user->id);
     for ($x = 0; $x <= fake()->numberBetween(0,18); $x++) {
         Chapter::factory()->create([
@@ -222,9 +222,7 @@ class userTest extends TestCase
      * @return void
      */
    public function test_subject_screen_can_be_rendered() {
-       $subject = Partition::factory()->create([
-           "created_by" => $this->user,
-       ]);
+       $subject = $this->createSubject($this->user);
        $subject->Users()->attach($this->user->id);
        for ($x = 0; $x <= fake()->numberBetween(0,18); $x++) {
            Chapter::factory()->create([
@@ -241,13 +239,10 @@ class userTest extends TestCase
      * @return void
      */
    public function test_chapter_can_be_rendered() {
-       $subject = Partition::factory()->create([
-           "created_by" => $this->user,
-       ]);
+       $subject = $this->createSubject($this->user);
        $subject->Users()->attach($this->user->id);
-       $chapter = Chapter::factory()->create([
-           "partition_id" => $subject->id,
-       ]);
+       $chapter = $this->createChapter($subject);
+
        $response = $this->actingAs($this->user)->get(route('chapter.show', ['chapter' => $chapter->slug, 'slug' => $subject->slug]));
        $this->assertAuthenticated();
        $response->assertStatus(200);
@@ -258,13 +253,10 @@ class userTest extends TestCase
      * @return void
      */
    public function test_user_can_delete_chapter() {
-       $subject = Partition::factory()->create([
-           "created_by" => $this->user,
-       ]);
+       $subject = $this->createSubject($this->user);
        $subject->Users()->attach($this->user->id);
-       $chapter = Chapter::factory()->create([
-           "partition_id" => $subject->id,
-       ]);
+       $chapter = $this->createChapter($subject);
+
        $response = $this->actingAs($this->user)->delete(route('chapter.destroy', ["slug" => $subject->slug, "chapter" => $chapter->slug]));
        $this->assertAuthenticated();
        $response->assertStatus(302);
@@ -281,6 +273,11 @@ class userTest extends TestCase
        $user = User::factory()->create();
        $this->actingAs($this->user)->get(route('adminuser.edit', $user->slug))->assertRedirect("/dashboard")->assertStatus(302);
        $this->assertAuthenticated();
+   }
+   public function test_user_can_access_to_list_of_active_user_for_sharing_subject() {
+       /*$subject = $this->createSubject($this->user);
+       dd($subject);*/
+       //$this->actingAs($this->user)->get(route('sharing'));
    }
 
 }

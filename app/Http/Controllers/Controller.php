@@ -63,11 +63,18 @@ class Controller extends BaseController
             'permission' => 'required',
             'subject' => 'required'
         ], $customMessages);
+
+        $sendMessage = 'Žádost o sdílení byla zaslána!';
         foreach($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
-            $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
+            if($user->patritions()->where("partition_id", $validated['subject'])->first() == null) {
+                $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
+            }
+            else {
+                $sendMessage = 'Žádost o sdílení byla už zaslána!';
+            }
         }
-        return redirect()->back()->with('successUpdate', 'Žádost o sdílení byla zaslána!');
+            return redirect()->back()->with('successUpdate', $sendMessage);
     }
 
     /**

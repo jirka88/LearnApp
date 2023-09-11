@@ -154,4 +154,5 @@ class AdminSetUsers extends Controller
         $user->patritions()->attach($subjectT->id);
         return to_route('adminuser.subjects', $user->slug);
     }
+
 }

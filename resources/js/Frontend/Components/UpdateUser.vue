@@ -135,6 +135,7 @@ const rules = {
 
 <style scoped lang="scss">
 .v-btn {
+    padding: 1.6em;
     margin: 1em auto;
 }
 </style>

@@ -54,6 +54,7 @@ const changeShare = () => {
 
 <style scoped lang="scss">
 .v-btn {
+    padding: 1.6em;
     margin: 0 auto;
 }
 </style>
