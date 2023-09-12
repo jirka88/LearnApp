@@ -22,13 +22,13 @@ class Controller extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function sort(Request $request) {
+    public function sort(Request $request)
+    {
         $sort = $request->input('sort', 'default');
-        if($sort !== 'default') {
-            $subjects = Partition::orderBy('name',$sort)->where('created_by', auth()->user()->id)->paginate(20);
+        if ($sort !== 'default') {
+            $subjects = Partition::orderBy('name', $sort)->where('created_by', auth()->user()->id)->paginate(20);
             return response()->json($subjects);
-        }
-        else {
+        } else {
             $subjects = Partition::where('created_by', auth()->user()->id)->paginate(20);
             return response()->json($subjects);
         }
@@ -38,13 +38,14 @@ class Controller extends BaseController
      * Slouží ke získání všech aktivních uživatelů v aplikaci
      * @return \Illuminate\Http\JsonResponse
      */
-    public function showUsersForSharing(Request $request) {
-        $users = User::with('patritions')->where(function ($query) {
-            $query->where("active", true);
-            $query->whereNot('id', auth()->user()->id);
-            $query->whereNot('id', Roles::ADMIN);
-            $query->where('canShare', true);
-        })->get();
+    public function showUsersForSharing(Request $request)
+    {
+        $subject = Partition::where("slug", $request->slug)->first();
+        $users = User::whereNotIn('id', [auth()->user()->id, Roles::ADMIN])
+            ->where('canShare', true)
+            ->whereDoesntHave('patritions', function ($query) use ($subject) {
+                $query->where("partition_id", $subject->id);
+            })->get();
         return response()->json($users);
     }
 
@@ -53,7 +54,8 @@ class Controller extends BaseController
      * @param Request $request
      * @return void
      */
-    public function share(Request $request) {
+    public function share(Request $request)
+    {
         $customMessages = [
             'users.required' => 'Je nutné vyplnit uživatele.',
             'permission.required' => 'Musíte vyplnit oprávnění'
@@ -65,28 +67,28 @@ class Controller extends BaseController
         ], $customMessages);
 
         $sendMessage = 'Žádost o sdílení byla zaslána!';
-        foreach($validated['users'] as $email) {
+        foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
-            if($user->patritions()->where("partition_id", $validated['subject'])->first() == null) {
+            if ($user->patritions()->where("partition_id", $validated['subject'])->first() == null) {
                 $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
-            }
-            else {
+            } else {
                 $sendMessage = 'Žádost o sdílení byla už zaslána!';
             }
         }
-            return redirect()->back()->with('successUpdate', $sendMessage);
+        return redirect()->back()->with('successUpdate', $sendMessage);
     }
 
     /**
      * Zobrazení všech nabídek ke sdílení předmětu
      * @return \Inertia\Response
      */
-    public function showShare() {
+    public function showShare()
+    {
         $subjects = User::with(['patritions' => function ($query) {
-           $query->where('accepted', false);
-           $query->with(['Users' => function ($query2) {
-               $query2->select('email', 'firstname');
-           }]);
+            $query->where('accepted', false);
+            $query->with(['Users' => function ($query2) {
+                $query2->select('email', 'firstname');
+            }]);
         }])->find(auth()->user()->id);
         return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
@@ -96,7 +98,8 @@ class Controller extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function deleteShare(Request $request) {
+    public function deleteShare(Request $request)
+    {
         $subject = Partition::where('slug', $request->slug)->first();
         $user = User::find(auth()->user()->id);
         $user->patritions()->detach($subject->id);
@@ -108,7 +111,8 @@ class Controller extends BaseController
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function acceptShare(Request $request) {
+    public function acceptShare(Request $request)
+    {
         $subject = Partition::where('slug', $request->slug)->first();
         $user = User::find(auth()->user()->id);
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);

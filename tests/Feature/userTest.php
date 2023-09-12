@@ -275,9 +275,10 @@ class userTest extends TestCase
        $this->assertAuthenticated();
    }
    public function test_user_can_access_to_list_of_active_user_for_sharing_subject() {
-       /*$subject = $this->createSubject($this->user);
-       dd($subject);*/
-       //$this->actingAs($this->user)->get(route('sharing'));
+       $subject = $this->createSubject($this->user);
+       $response = $this->actingAs($this->user)->get(route('sharing'));
+       $this->assertAuthenticated();
+       $response->assertStatus(200);
    }
 
 }
