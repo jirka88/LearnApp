@@ -171,9 +171,7 @@ class userTest extends TestCase
      */
     public function test_organisation_screen_can_be_rendered() {
         for ($x = 0; $x <= 20; $x++) {
-            Partition::factory()->create([
-                "created_by" => $this->user,
-            ]);
+            $this->createSubject($this->user);
         }
         $response = $this->actingAs($this->user)->get(route('subject.index'));
         $this->assertAuthenticated();
@@ -206,9 +204,7 @@ class userTest extends TestCase
     $subject = $this->createSubject($this->user);
     $subject->Users()->attach($this->user->id);
     for ($x = 0; $x <= fake()->numberBetween(0,18); $x++) {
-        Chapter::factory()->create([
-            "partition_id" => $subject->id,
-        ]);
+        $this->createChapter($subject);
     }
     $response = $this->actingAs($this->user)->delete(route("subject.destroy", $subject->id));
     $this->assertAuthenticated();
@@ -225,9 +221,7 @@ class userTest extends TestCase
        $subject = $this->createSubject($this->user);
        $subject->Users()->attach($this->user->id);
        for ($x = 0; $x <= fake()->numberBetween(0,18); $x++) {
-           Chapter::factory()->create([
-               "partition_id" => $subject->id,
-           ]);
+           $this->createChapter($subject);
        }
        $response = $this->actingAs($this->user)->get(route("subject.show", $subject->slug));
        $this->assertAuthenticated();
@@ -274,9 +268,14 @@ class userTest extends TestCase
        $this->actingAs($this->user)->get(route('adminuser.edit', $user->slug))->assertRedirect("/dashboard")->assertStatus(302);
        $this->assertAuthenticated();
    }
+
+    /**
+     * získání všech aktivních uživatelů
+     * @return void
+     */
    public function test_user_can_access_to_list_of_active_user_for_sharing_subject() {
        $subject = $this->createSubject($this->user);
-       $response = $this->actingAs($this->user)->get(route('sharing'));
+       $response = $this->actingAs($this->user)->get(route('sharing', $subject->slug));
        $this->assertAuthenticated();
        $response->assertStatus(200);
    }
