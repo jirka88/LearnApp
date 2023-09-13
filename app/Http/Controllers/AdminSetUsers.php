@@ -6,6 +6,7 @@ use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Models\AccountTypes;
+use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
@@ -74,13 +75,14 @@ class AdminSetUsers extends Controller
     public function create() {
         $this->authorize('viewAny', auth()->user());
         $accountTypes = AccountTypes::all();
+        $licences = Licences::all();
         if(auth()->user()->role_id == 1) {
             $roles = Roles::all();
         }
         else {
             $roles = Roles::all()->whereNotIn("id", [1,2])->values();
         }
-        return Inertia::render('admin/createUser', compact('accountTypes', 'roles'));
+        return Inertia::render('admin/createUser', compact('accountTypes', 'roles', 'licences'));
     }
 
     /**
@@ -96,6 +98,7 @@ class AdminSetUsers extends Controller
            "password" => $adminCreateUser->password,
            "role_id" => $adminCreateUser->role["id"],
            "type_id" => $adminCreateUser->type["id"],
+           "licences_id" => $adminCreateUser->licence["id"],
            "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
         ]);
         return to_route('admin')->with('successUpdate', 'Uživatel byl úspěšně vytvořen!');

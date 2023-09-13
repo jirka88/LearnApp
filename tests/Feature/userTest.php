@@ -2,16 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Models\Chapter;
-use App\Models\Partition;
-use App\Models\Permission;
 use App\Models\User;
 use App\Traits\testTrait;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class userTest extends TestCase

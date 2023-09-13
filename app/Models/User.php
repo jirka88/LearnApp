@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'role_id',
         'type_id',
+        'licences_id',
         'password',
         'active',
         'slug',

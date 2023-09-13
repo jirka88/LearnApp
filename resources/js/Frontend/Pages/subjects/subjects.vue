@@ -26,7 +26,7 @@
                     </div>
                     <v-table class="text-left">
                         <thead>
-                        <tr>
+                        <tr class="pa-8">
                             <th class="font-weight-bold" v-if="$page.props.permission.view">ID:</th>
                             <th class="font-weight-bold">Název:</th>
                             <th class="font-weight-bold">Ikona:</th>
@@ -36,7 +36,7 @@
                         </tr>
                         </thead>
                         <tbody v-if="subjectsShow.length !== 0">
-                            <tr v-for="subjectData in subjectsShow" :key="subjectData.id">
+                            <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
                                 <td class="font-weight-bold"  v-if="$page.props.permission.view">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>

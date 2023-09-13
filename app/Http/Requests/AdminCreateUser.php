@@ -29,6 +29,7 @@ class AdminCreateUser extends FormRequest
             'email' => 'required|email|unique:users|max:320',
             'type' => 'required',
             'role' => 'required',
+            'licence' => 'required',
             'password' => 'required|min:8'
         ];
     }

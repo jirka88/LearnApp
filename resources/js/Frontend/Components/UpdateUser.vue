@@ -59,7 +59,7 @@
                 </tr>
                 <tr>
                     <td class="w-50">Licence:</td>
-                    <td class="w-50 font-weight-bold py-6">{{props.usr.licences.Licence}}</td>
+                    <td class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
                 </tr>
                 <tr v-if="this.$page.props.permission.view && this.$page.props.user.id !== usr.id">
                     <td class="w-50">Aktivní:</td>

@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Models\Chapter;
 use App\Models\Partition;
+use App\Models\User;
 
 trait testTrait
 {
@@ -29,5 +30,16 @@ trait testTrait
             "partition_id" => $subject->id,
         ]);
         return $chapter;
+    }
+    public function createUser($role) {
+        if($role === 0) {
+            $user = User::factory()->create();
+        }
+        else {
+            $user = User::factory()->create([
+                "role_id" => $role
+            ]);
+        }
+        return $user;
     }
 }
