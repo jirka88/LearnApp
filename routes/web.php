@@ -62,8 +62,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::get('controll/user/create', [AdminSetUsers::class, 'create'])->name('user.create');
         route::post('controll/user/create', [AdminSetUsers::class, 'store'])->name('user.store');
     });
-    //redirect
-    //Route::redirect("dashboard/user/changePassword","/dashboard/user",301);
 });
 
 

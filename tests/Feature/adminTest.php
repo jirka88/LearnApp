@@ -64,6 +64,28 @@ class adminTest extends TestCase
     }
 
     /**
+     * Vytvoření předmětu pod uživatelem
+     * @return void
+     */
+    public function test_admin_can_create_subject_to_user() {
+        $user = $this->createUser(4);
+        $subject = [
+            'name' => fake()->firstName(),
+            'icon' => [
+                'iconName' => fake()->text(50)
+            ],
+            'created_by' => $user->id
+        ];
+        $response = $this->actingAs($this->user)->post(route('adminuser.storeSubject', $user->slug), $subject);
+        $this->assertAuthenticated();
+        $this->assertDatabaseHas('partitions', [
+            'name' => $subject['name'],
+            'created_by' => $user->id
+        ]);
+        $response->assertStatus(302);
+    }
+
+    /**
      * ADMIN - Může vytvořit nového uživatele
      * @return void
      */
@@ -73,6 +95,11 @@ class adminTest extends TestCase
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
+
+    /**
+     * Vytvoření uživatele
+     * @return void
+     */
     public function test_admin_can_create_new_user()
     {
         $user = [

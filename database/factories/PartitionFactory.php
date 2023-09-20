@@ -20,7 +20,7 @@ class PartitionFactory extends Factory
     {
         return [
             'name' => fake()->firstName(),
-            'icon' => fake()->firstName(),
+            'icon' => fake()->text(50),
         ];
     }
 }

@@ -31,6 +31,12 @@ trait testTrait
         ]);
         return $chapter;
     }
+
+    /**
+     * Vytvoří uživatele
+     * @param $role
+     * @return User|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
+     */
     public function createUser($role) {
         if($role === 0) {
             $user = User::factory()->create();
