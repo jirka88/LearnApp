@@ -46,7 +46,6 @@
                     </v-card-actions>
                 </v-card>
             </v-main>
-            {{ subjects }}
         </div>
     </component>
 </template>
