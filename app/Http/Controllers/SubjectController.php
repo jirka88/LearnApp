@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
+use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
@@ -73,15 +74,24 @@ class SubjectController extends Controller
      * @return RedirectResponse
      */
     public function store(SubjectRequest $subjectRequest) {
-        $subject = $subjectRequest->only('name');
-        $subject['created_by'] = auth()->user()->id;
-        $subject['icon'] = $subjectRequest->icon["iconName"];
-        $subject['slug'] = SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name);
-        $subjectT = Partition::create($subject);
         $user = User::find(auth()->user()->id);
+        if($user->licences_id == 1 && $user->patritions()->count() > Licences::standartUserPartitions ) {
+            return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
+        }
+        else if($user->licences_id == 2 && $user->patritions()->count() > Licences::standartPlusUserPartitions ) {
+            return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
+        }
+        else {
+            $subject = $subjectRequest->only('name');
+            $subject['created_by'] = auth()->user()->id;
+            $subject['icon'] = $subjectRequest->icon["iconName"];
+            $subject['slug'] = SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name);
+            $subjectT = Partition::create($subject);
 
-        $user->patritions()->attach($subjectT->id);
-        return to_route('subject.index');
+            $user->patritions()->attach($subjectT->id);
+            return to_route('subject.index');
+        }
+
     }
 
     /**

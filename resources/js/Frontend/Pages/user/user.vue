@@ -18,7 +18,6 @@
                     <div class="text-subtitle-1">{{ usr.email }}</div>
                     <div class="text-subtitle-2">{{ usr.account_types.type }} účet</div>
                 </div>
-
                 <v-tabs
                     v-model="tab"
                     align-tabs="center"
@@ -38,7 +37,6 @@
                     <v-window-item v-if="$page.props.user.role.id !== 1" value="3">
                         <share-options :usr="usr" :errors="errors"/>
                     </v-window-item>
-
                 </v-window>
             </div>
         </v-container>
@@ -93,7 +91,7 @@ defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Objec
 }
 
 .mobile-variant {
-    grid-template-areas:    'avatar'
+    grid-template-areas: 'avatar'
                         'info'
                         'tabs'
                         'menu' !important;

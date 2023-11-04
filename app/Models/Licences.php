@@ -12,6 +12,9 @@ class Licences extends Model
     use HasFactory;
     public $timestamps = false;
 
+    public const standartUserPartitions = 10;
+    public const standartPlusUserPartitions = 40;
+
     public function Users() : HasMany {
         return $this->HasMany(User::class);
     }
