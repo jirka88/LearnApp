@@ -29,6 +29,7 @@
                     >
                         vytvořit!
                     </v-btn>
+                    <p v-if="form.errors.msg" class="text-center text-red pt-2">{{form.errors.msg}}</p>
                 </v-form>
             </div>
         </component>
@@ -39,7 +40,7 @@ import icons from "../../../itemsIcons";
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 import {ref} from "vue";
 
-const props = defineProps({usr: Object, url: String});
+const props = defineProps({usr: Object, url: String, errors: Object});
 const creating = ref(false);
 const form = useForm({
     name: '',
@@ -77,7 +78,7 @@ const rules = {
 <style lang="scss">
 .create-subject {
     width: 600px;
-    p {
+    p:first-child {
         font-size: 1.8em !important;
         white-space: nowrap;
         overflow: auto;

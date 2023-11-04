@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Licences;
 use App\Models\User;
 use App\Traits\testTrait;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -188,6 +189,26 @@ class userTest extends TestCase
         $this->assertDatabaseHas('partitions', [
             "id" => $createdSubject->patritions->first()->id,
         ]);
+    }
+
+    /**
+     * Překročení vytvoření předmětů u standartního uživatele
+     * @return void
+     */
+    public function test_user_standart_can_create_subject_because_of_limit() {
+        for ($x = 0; $x <= Licences::standartUserPartitions; $x++) {
+            $subject = $this->createSubject($this->user);
+            $subject->Users()->attach($this->user->id);
+        }
+        $newSubject = [
+            'name' => fake()->text(10),
+            'icon' => ['iconName' => fake()->text(20)]
+        ];
+
+        $response = $this->actingAs($this->user)->post(route('subject.store', $newSubject));
+        $this->assertAuthenticated();
+        $response->assertRedirect();
+        $response->assertSessionHasErrors(['msg']);
     }
 
     /**
