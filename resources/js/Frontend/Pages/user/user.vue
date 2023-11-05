@@ -29,7 +29,7 @@
                 <v-window v-model="tab" :class="{'width-vw-85': $vuetify.display.smAndDown,
                                                 'width-vw-100': $vuetify.display.xs }">
                     <v-window-item value="1">
-                        <UpdateUser :usr="usr" :roles="roles" :accountTypes="accountTypes"/>
+                        <UpdateUser :usr="usr" :roles="roles" :accountTypes="accountTypes" :licences="licences"/>
                     </v-window-item>
                     <v-window-item value="2">
                         <ResetPassword :usr="usr" :errors="errors"/>
@@ -52,7 +52,7 @@ import {ref} from "vue";
 import ShareOptions from "@/Frontend/Components/shareOptions.vue";
 
 const tab = ref(null);
-defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, errors: Object});
+defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
 </script>
 <style scoped lang="scss">
 .d-grid {
