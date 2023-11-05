@@ -29,6 +29,7 @@ class UpdateRequest extends FormRequest
                 'active' => 'required',
                 'role' => 'required',
                 'type' => 'required',
+                'licences' => 'required'
         ];
     }
 }

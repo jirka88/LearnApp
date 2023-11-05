@@ -43,7 +43,8 @@ class AdminSetUsers extends Controller
             $roles = Roles::all()->whereNotIn('id', [1,2])->values();
         }
         $accountTypes = AccountTypes::all();
-        return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes']));
+        $licences = Licences::all();
+        return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes', 'licences']));
     }
 
     /**
@@ -56,6 +57,7 @@ class AdminSetUsers extends Controller
         $role = $updateRequest->role['id'];
         $typeAccount = $updateRequest->type['id'];
         $active = $updateRequest->active['id'];
+        $licence = $updateRequest->licences['id'];
         $this->authorize('view', $user);
         User::find($user->id)->update([
             'firstname' => $updateRequest->firstname,
@@ -63,6 +65,7 @@ class AdminSetUsers extends Controller
             'type_id' => $typeAccount,
             'role_id' => $role,
             'active' => $active,
+            'licences_id' => $licence
         ]);
         return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
     }

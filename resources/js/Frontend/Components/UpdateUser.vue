@@ -57,9 +57,22 @@
                         ></v-select>
                     </td>
                 </tr>
-                <tr>
+                <tr v-if="!this.$page.props.permission.view || props.usr.role_id == 4">
                     <td class="w-50">Licence:</td>
-                    <td class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
+                    <td v-if="!this.$page.props.permission.view" class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
+                  <td  v-else class="w-50">
+                            <v-select
+                                v-model="form.licences"
+                                :items="licences"
+                                item-title="state"
+                                item-value="id"
+                                label="Select"
+                                persistent-hint
+                                return-object
+                                single-line
+                                variant="outlined"
+                            ></v-select>
+                        </td>
                 </tr>
                 <tr v-if="this.$page.props.permission.view && this.$page.props.user.id !== usr.id">
                     <td class="w-50">Aktivní:</td>
@@ -95,13 +108,14 @@
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
 import {markRaw} from "vue";
-const props = defineProps({'usr': Object, 'roles': Object, 'accountTypes': Array, errors: Object});
+const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
 const form = useForm({
     firstname: props.usr.firstname,
     lastname: props.usr.lastname,
     email: props.usr.email,
     role: {state: props.usr.roles.role, id: props.usr.roles.id},
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
+    licences: {state: props.usr.licences.Licence, id: props.usr.licence_id},
     active: props.usr.active == 1 ? {state: 'ANO', id: '1'} : {state: 'NE', id: '0'}
 });
 const items= markRaw(
@@ -111,6 +125,10 @@ const items= markRaw(
 const types = markRaw(
     props.accountTypes.map(type => ({
         state: type.type, id: type.id
+    })));
+const licences = markRaw(
+    props.licences.map(licence => ({
+        state: licence.Licence, id: licence.id
     })));
 const status = markRaw([
     {state: 'ANO', id: '1'},
