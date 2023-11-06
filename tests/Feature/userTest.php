@@ -113,7 +113,8 @@ class userTest extends TestCase
             "lastname" => fake()->lastName(),
             "type" => ["id" => fake()->numberBetween(1, 2)],
             "active" => 1,
-            "role" => ["id" => fake()->numberBetween(1, 2)]
+            "role" => ["id" => fake()->numberBetween(1, 2)],
+            "licences" => ["id" => $this->user->licences_id]
         ];
         $response = $this->actingAs($this->user)->put(route('user.update'), $userUpdate);
         $this->assertAuthenticated();
