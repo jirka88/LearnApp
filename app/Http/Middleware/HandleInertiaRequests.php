@@ -41,7 +41,8 @@ class HandleInertiaRequests extends Middleware
                 'flash' => [
                     'messagePasswordReset' => session('successReset'),
                     'messageUpdate' => session('successUpdate'),
-                    'messageShare' => session('successShare')
+                    'messageShare' => session('successShare'),
+                    'messageLicenceLimitations' => session("LicenceLimitations")
                 ],
                 'user' => [
                     'id' => auth()->user()->id ?? '',
@@ -50,6 +51,7 @@ class HandleInertiaRequests extends Middleware
                     'role' => auth()->user()->roles ?? '',
                     'typeAccount' => auth()->user()->accountTypes->type ?? '',
                     'subjects' => auth()->user()->patritions ?? '',
+                    'licences' => auth()->user()->licences->id ?? '',
                 ],
             'permission' => [
                 'view' => in_array(auth()->user()?->role_id, [1,2]),

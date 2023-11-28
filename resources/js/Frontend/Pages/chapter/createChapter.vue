@@ -23,6 +23,7 @@
                     <QuillEditor v-model:content="form.contentChapter" theme="snow" toolbar="full" content-type="html"/>
                     <span class="text-center text-red py-4 font-weight-bold" v-if="errors.content">{{ errors.content }}</span>
                     <span class="text-center text-red py-4 font-weight-bold" v-if="errors.name">{{ errors.name }}</span>
+                    <span class="text-center text-red py-4 font-weight-bold" v-if="$page.props.flash.messageLicenceLimitations">{{$page.props.flash.messageLicenceLimitations}}</span>
                     <v-btn type="submit"
                            color="blue"
                            class="btn d-flex my-4"
