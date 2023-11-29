@@ -220,7 +220,7 @@ class userTest extends TestCase
             $chapter->save();
         }
         $newChapter = [
-            "name" => fake()->name(),
+            "name" => fake()->text(10),
             "perex" => fake()->text(20),
             "contentChapter" => fake()->text(2000),
             "slug" => $subject->slug,

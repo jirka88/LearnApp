@@ -30,7 +30,7 @@
                         <v-select
                             v-model="form.role"
                             :items="items"
-                            :disabled="this.$page.props.permission.view ? false : true"
+                            :disabled="permission(this.$page.props.permission.view, this.$page.props.user.role.id  )"
                             item-title="state"
                             item-value="id"
                             label="Select"
@@ -115,7 +115,7 @@ const form = useForm({
     email: props.usr.email,
     role: {state: props.usr.roles.role, id: props.usr.roles.id},
     type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
-    licences: {state: props.usr.licences.Licence, id: props.usr.licence_id},
+    licences: {state: props.usr.licences.Licence, id: props.usr.licences.id},
     active: props.usr.active == 1 ? {state: 'ANO', id: '1'} : {state: 'NE', id: '0'}
 });
 const items= markRaw(
@@ -148,6 +148,12 @@ const rules = {
     required: value => !!value || 'Nutné vyplnit!',
     lengthName: v => v.length < 25 || "Příliš dlouhé jméno!",
     lengthlastName: v => v.length < 50 || "Příliš dlouhé příjmení!"
+}
+const permission = (permissionView, userId) => {
+    if(permissionView) {
+        return props.usr.roles.id === 1;
+    }
+    return true;
 }
 </script>
 
