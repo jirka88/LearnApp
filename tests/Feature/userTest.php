@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\User;
 use App\Traits\testTrait;
@@ -113,7 +114,8 @@ class userTest extends TestCase
             "lastname" => fake()->lastName(),
             "type" => ["id" => fake()->numberBetween(1, 2)],
             "active" => 1,
-            "role" => ["id" => fake()->numberBetween(1, 2)]
+            "role" => ["id" => fake()->numberBetween(1, 2)],
+            "licences" => ["id" => $this->user->licences_id]
         ];
         $response = $this->actingAs($this->user)->put(route('user.update'), $userUpdate);
         $this->assertAuthenticated();
@@ -210,6 +212,23 @@ class userTest extends TestCase
         $response->assertRedirect();
         $response->assertSessionHasErrors(['msg']);
     }
+    public function test_user_standart_cant_create_chapter_because_of_limit() {
+        $subject = $this->createSubject($this->user);
+        $subject->Users()->attach($this->user->id);
+        for($x = 0; $x <= Licences::standartUserChaptersInPartitions; $x++) {
+            $chapter = $this->createChapter($subject);
+            $chapter->save();
+        }
+        $newChapter = [
+            "name" => fake()->text(10),
+            "perex" => fake()->text(20),
+            "contentChapter" => fake()->text(2000),
+            "slug" => $subject->slug,
+        ];
+        $response = $this->actingAs($this->user)->post(route('chapter.store', ["slug" => $subject->slug]), $newChapter);
+        $response->assertRedirect();
+        $response->assertSessionHas(["LicenceLimitations"]);
+    }
 
     /**
      * Vymazání předmětu -> současně i s navázenýma kapitolama
@@ -294,5 +313,4 @@ class userTest extends TestCase
        $this->assertAuthenticated();
        $response->assertStatus(200);
    }
-
 }

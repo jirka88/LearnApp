@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ChapterRequest;
 use App\Models\Chapter;
+use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
@@ -48,6 +49,9 @@ class ChapterController extends Controller
         $partition = Partition::where("slug", $chapterRequest->slug)->first();
         if(Chapter::where("partition_id", $partition->id)->where("name", $chapterRequest->name)->first() !== null) {
             return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
+        }
+        if(auth()->user()->licences->id == 1 && $partition->Chapter()->count() > Licences::standartUserChaptersInPartitions) {
+            return redirect()->back()->with(["LicenceLimitations" => "Přesáhnut limit!"]);
         }
         Chapter::create([
             "name" => $chapterRequest->name,

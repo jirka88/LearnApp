@@ -21,7 +21,7 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      */
     public function index() {
-        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'accountTypes'])->paginate(20);
+        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(20);
         $pages = ceil(count(User::all()) / 20);
         return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
     }
@@ -54,7 +54,13 @@ class AdminSetUsers extends Controller
      * @return \Illuminate\Http\RedirectResponse**
      */
     public function update(User $user, UpdateRequest $updateRequest) {
-        $role = $updateRequest->role['id'];
+        $role = 0;
+        if(Roles::ADMIN == $user->role_id) {
+            $role = 1;
+        }
+        else {
+            $role = $updateRequest->role['id'];
+        }
         $typeAccount = $updateRequest->type['id'];
         $active = $updateRequest->active['id'];
         $licence = $updateRequest->licences['id'];

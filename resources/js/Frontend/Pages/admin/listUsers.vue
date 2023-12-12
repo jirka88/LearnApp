@@ -26,7 +26,7 @@
                     <th class="font-weight-bold">Příjmení:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Role:</th>
-                    <th class="font-weight-bold">Typ účtu:</th>
+                    <th class="font-weight-bold">Licence:</th>
                     <th class="font-weight-bold">Aktivní:</th>
                     <th class="font-weight-bold">Předměty:</th>
                     <th class="font-weight-bold">Nastavení:</th>
@@ -39,7 +39,7 @@
                     <td>{{user.lastname}}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.role }}</td>
-                    <td>{{ user.account_types.type }}</td>
+                    <td>{{ user.licences.Licence }}</td>
                     <td>{{ user.active == 1 ? "ANO" : "NE" }}</td>
                     <td v-if="user.id == this.$page.props.user.id || this.$page.props.permission.administrator_view">
                         <Link :href="route('adminuser.subjects', user.slug)">
