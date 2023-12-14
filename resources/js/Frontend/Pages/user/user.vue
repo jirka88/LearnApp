@@ -1,6 +1,7 @@
 <template>
     <AdminLayout>
         <v-container>
+            <Breadcrumbs :items="[{title: 'Uživatelský profil', disabled: true }]"></Breadcrumbs>
             <div class="mt-10 d-grid align-center justify-center"
                  :class="{'gp-4 mobile-variant': $vuetify.display.smAndDown}">
                 <div class="avatar">
@@ -50,6 +51,7 @@ import UpdateUser from "../../Components/UpdateUser.vue";
 import ResetPassword from "../../Components/ResetPassword.vue";
 import {ref} from "vue";
 import ShareOptions from "@/Frontend/Components/shareOptions.vue";
+import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
 
 const tab = ref(null);
 defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});

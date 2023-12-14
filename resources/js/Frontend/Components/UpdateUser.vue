@@ -2,7 +2,7 @@
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Informace o účtě:</legend>
-        <v-form ref="formResetPassword" @submit.prevent="this.$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
+        <v-form ref="formResetPassword" @submit.prevent="$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
             <table class="w-100">
                 <tbody>
                 <tr>
@@ -20,7 +20,7 @@
                 <tr>
                     <td class="w-50">Email:</td>
                     <td class="w-50">
-                        <v-text-field v-model="form.email" :disabled="this.$page.props.permission.view ? false : true"
+                        <v-text-field v-model="form.email" :disabled="$page.props.permission.view ? false : true"
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
@@ -30,7 +30,7 @@
                         <v-select
                             v-model="form.role"
                             :items="items"
-                            :disabled="permission(this.$page.props.permission.view, this.$page.props.user.role.id  )"
+                            :disabled="permission($page.props.permission.view, $page.props.user.role.id  )"
                             item-title="state"
                             item-value="id"
                             label="Select"
@@ -57,9 +57,9 @@
                         ></v-select>
                     </td>
                 </tr>
-                <tr v-if="!this.$page.props.permission.view || props.usr.role_id == 4">
+                <tr v-if="!$page.props.permission.view || props.usr.role_id == 4">
                     <td class="w-50">Licence:</td>
-                    <td v-if="!this.$page.props.permission.view" class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
+                    <td v-if="!$page.props.permission.view" class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
                   <td  v-else class="w-50">
                             <v-select
                                 v-model="form.licences"
@@ -74,7 +74,7 @@
                             ></v-select>
                         </td>
                 </tr>
-                <tr v-if="this.$page.props.permission.view && this.$page.props.user.id !== usr.id">
+                <tr v-if="$page.props.permission.view && $page.props.user.id !== usr.id">
                     <td class="w-50">Aktivní:</td>
                     <td  class="w-50">
                         <v-select

@@ -98,4 +98,18 @@ class DashboardUserController extends Controller
     public function report() {
         return inertia::render('Report');
     }
+
+    /**
+     * Získá základní uživatelské statistiky
+     * @return \Inertia\Response
+     */
+    public function getUserStats() {
+        $stats = [];
+        if(auth()->user()->role_id == 1) {
+            $stats = app('App\Http\Controllers\Admin')->getStats();
+        }
+        else {
+        }
+        return Inertia::render('dashboard', compact('stats'));
+    }
 }

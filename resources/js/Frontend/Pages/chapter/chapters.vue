@@ -13,6 +13,7 @@
             </v-autocomplete>
         </div>
         <v-container v-scroll="onScroll">
+            <Breadcrumbs :items="[{title: 'předměty', disabled: false, to: route('subject.index') }, {title: subject.name, disabled: true }]"></Breadcrumbs>
             <div class="d-flex justify-content-between align-center pa-5 gp-em-05"
                  :class="{'flex-column-reverse': $vuetify.display.xs}">
                 <div class="d-flex flex-1-1-100 flex-wrap gp-em-05"
@@ -247,10 +248,12 @@
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
 import {ref, watch} from "vue";
-import {Inertia} from "@inertiajs/inertia";
+
 import axios from "axios";
 import {useForm} from "@inertiajs/inertia-vue3";
 import {useRouter} from "vue-router";
+import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
+import {Inertia} from "@inertiajs/inertia";
 
 const router = useRouter();
 const page = ref(0);

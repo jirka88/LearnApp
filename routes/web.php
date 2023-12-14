@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminSetUsers;
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
@@ -31,7 +31,7 @@ Route::group(['middleware' => ['guest']], function() {
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
-    Route::inertia('/','dashboard')->name('dashboard');
+    Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
     Route::put('/user', [DashboardUserController::class, 'update'])->name('user.update');
@@ -52,15 +52,15 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::delete("/sharing/subjects/{slug}", [Controller::class, 'deleteShare'])->name('share.delete');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
-        route::get('/controll', [AdminSetUsers::class, 'index']);
-        route::get('/controll/{slug}', [AdminSetUsers::class, 'edit'])->name('user.edit');
-        route::put('/controll/{user}', [AdminSetUsers::class, 'update'])->name('user.update');
-        route::delete('/controll/{user}', [AdminSetUsers::class, 'destroy'])->name('user.destroy');
-        route::get('/controll/{slug}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
-        route::get('/controll/{slug}/subject/create', [AdminSetUsers::class, 'createUserSubject'])->name('user.createSubject');
-        route::post('/controll/{slug}/subject/create', [AdminSetUsers::class, 'storeUserSubject'])->name('user.storeSubject');
-        route::get('controll/user/create', [AdminSetUsers::class, 'create'])->name('user.create');
-        route::post('controll/user/create', [AdminSetUsers::class, 'store'])->name('user.store');
+        route::get('/controll', [Admin::class, 'index']);
+        route::get('/controll/{slug}', [Admin::class, 'edit'])->name('user.edit');
+        route::put('/controll/{user}', [Admin::class, 'update'])->name('user.update');
+        route::delete('/controll/{user}', [Admin::class, 'destroy'])->name('user.destroy');
+        route::get('/controll/{slug}/subjects', [Admin::class, 'getUserSubjects'])->name('user.subjects');
+        route::get('/controll/{slug}/subject/create', [Admin::class, 'createUserSubject'])->name('user.createSubject');
+        route::post('/controll/{slug}/subject/create', [Admin::class, 'storeUserSubject'])->name('user.storeSubject');
+        route::get('controll/user/create', [Admin::class, 'create'])->name('user.create');
+        route::post('controll/user/create', [Admin::class, 'store'])->name('user.store');
     });
 });
 
