@@ -15,7 +15,7 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
 <template>
     <component :is="DashboardLayout">
             <v-container class="py-8">
-                <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">Statistiky:</h1>
+                <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">{{$t('dashboard.stats')}}</h1>
                 <template v-if="$page.props.user.role.id === 1">
                     <div class="py-4 d-flex flex-column">
                         <Bar
@@ -78,6 +78,6 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
     }
 }
 #my-chart-id {
-    max-height: 600px;
+    max-height: 500px !important;
 }
 </style>

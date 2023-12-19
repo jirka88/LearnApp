@@ -15,14 +15,14 @@
                 v-model="form.firstname"
                 prepend-inner-icon="mdi-account"
                 variant="outlined"
-                label="Jméno"
+                :label="$t('authentication.register.name')"
                 :rules="[rules.required, rules.firstnameLength]"
                 required/>
             <v-text-field
                 v-model="form.lastname"
                 prepend-inner-icon="mdi-account"
                 variant="outlined"
-                label="Příjmení"
+                :label="$t('authentication.register.surname')"
                 :rules="[rules.required, rules.lastnameLength]"
                 required/>
             <v-text-field
@@ -39,7 +39,7 @@
                 :type="show ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 variant="outlined"
-                label="Heslo"
+                :label="$t('authentication.register.password')"
                 :rules="[rules.required, rules.password]"
                 @click:append="show = !show"
             ></v-text-field>
@@ -49,7 +49,7 @@
                 :type="show1 ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 variant="outlined"
-                label="Potvrzení hesla"
+                :label="$t('authentication.register.password_confirm')"
                 :rules="[rules.required, rules.passwordConfirm]"
                 @click:append="show1 = !show1"
             ></v-text-field>

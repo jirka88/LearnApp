@@ -9,7 +9,9 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +25,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::inertia('/', 'app');
+Route::post('/language', function()  {
+    $validated = request()->validate([
+        'language' => ['required'],
+    ]);
+    App::setLocale($validated['language']);
+    Session::put('locale', $validated['language']);
+})->name('language');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');

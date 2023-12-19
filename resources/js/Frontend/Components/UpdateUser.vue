@@ -99,7 +99,7 @@
                    class="btn d-flex"
                    :class="{'w-100': $vuetify.display.smAndDown}"
             >
-                Upravit!
+                {{$t('global.edit')}}
             </v-btn>
         </v-form>
     </fieldset>

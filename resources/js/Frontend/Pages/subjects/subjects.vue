@@ -47,7 +47,7 @@
                                         <v-btn
                                     color="green"
                                     append-icon="mdi-pencil"
-                                    >Upravit!</v-btn></Link>
+                                    >{{$t('global.edit')}}</v-btn></Link>
                                 </td>
                                 <td>
                                     <v-btn

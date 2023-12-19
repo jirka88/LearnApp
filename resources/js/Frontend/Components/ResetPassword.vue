@@ -4,7 +4,7 @@
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Resetování hesla:</legend>
         <v-form ref="formResetPassword" @submit.prevent="changePassword">
-            <v-text-field v-model="formPassword.oldPassword" label="Staré heslo" :rules="[rules.oldPassword]"
+            <v-text-field v-model="formPassword.oldPassword" :label="$t('userAccount.old_password')" :rules="[rules.oldPassword]"
                           hint="Staré heslo, které jste zadal při registraci."
                           variant="outlined"
                           prepend-inner-icon="mdi-lock"></v-text-field>
