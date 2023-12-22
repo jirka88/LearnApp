@@ -26,7 +26,7 @@
                            class="btn d-flex my-8"
                            :class="{'w-100': $vuetify.display.smAndDown}"
                     >
-                        Vytvořit!
+                        {{$t('global.created')}}!
                     </v-btn>
                     <span class="text-center text-red py-4" v-if="errors.content">{{errors.content}}</span>
                 </form>

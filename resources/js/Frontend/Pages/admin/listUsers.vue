@@ -6,7 +6,7 @@
                       data-aos-duration="400">
                     <v-btn
                         class="bg-green">
-                        Vytvořit Uživatele
+                        {{$t('global.create_user')}}
                     </v-btn>
                 </Link>
 
@@ -22,12 +22,12 @@
                 <thead>
                 <tr>
                     <th class="font-weight-bold">ID:</th>
-                    <th class="font-weight-bold">{{$t('global.name')}}</th>
-                    <th class="font-weight-bold">{{$t('global.surname')}}</th>
+                    <th class="font-weight-bold">{{$t('global.name')}}:</th>
+                    <th class="font-weight-bold">{{$t('global.surname')}}:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Role:</th>
                     <th class="font-weight-bold">Licence:</th>
-                    <th class="font-weight-bold">Aktivní:</th>
+                    <th class="font-weight-bold">{{$t('dashboard.active')}}:</th>
                     <th class="font-weight-bold">Předměty:</th>
                     <th class="font-weight-bold">Nastavení:</th>
                 </tr>

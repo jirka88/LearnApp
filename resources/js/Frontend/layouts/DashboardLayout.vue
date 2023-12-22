@@ -33,7 +33,7 @@
                             <v-list-item
                                 v-bind="props"
                                 prepend-icon="mdi-account-circle"
-                                :title="$page.props.user.typeAccount == 'Osobní' ? 'Sekce' : 'Předměty'"
+                                :title="$page.props.user.typeAccount == 'Osobní' ? $t('dashboard.section') : $t('dashboard.subjects')"
                             >
                             </v-list-item>
                         </template>
@@ -68,8 +68,8 @@
                         </v-list-item>
                     </Link>
                     <Link :href="route('user.info')">
-                        <v-list-item prepend-icon="mdi-account-cog" title="Nastavení profilu"
-                                     value="Nastavení profilu"></v-list-item>
+                        <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.set_profile')"
+                                     :value="$t('dashboard.set_profile')"></v-list-item>
                     </Link>
                     <Link :href="route('user.report')">
                         <v-list-item prepend-icon="mdi-alert" title="Nahlásit chybu"
@@ -105,7 +105,7 @@
             </v-main>
             <v-footer class="pa-0 primary-bg">
                 <p class="text-center pa-4 w-100 text-white" :class="drawer ? 'move' : 'move-back'">
-                    {{ $t('FooterTitle') }} Jiří
+                    {{ $t('authentication.welcome.created') }} Jiří
                     Navrátil - {{ new Date().getFullYear() }}</p>
             </v-footer>
         </v-layout>

@@ -4,6 +4,9 @@ return [
     'edit' => 'Edit!',
     'yes' => 'Yes',
     'no' => 'No',
-    'name' => 'Name:',
-    'surname' => 'Surname:'
+    'name' => 'Name',
+    'surname' => 'Surname',
+    'close' => 'Close',
+    'create_user' => 'Create user',
+    'created' => 'Create'
 ];

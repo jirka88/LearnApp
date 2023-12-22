@@ -2,13 +2,13 @@
 
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
-        <legend align="center" class="text-h5">Resetování hesla:</legend>
+        <legend align="center" class="text-h5">{{$t('userAccount.password_reset')}}:</legend>
         <v-form ref="formResetPassword" @submit.prevent="changePassword">
             <v-text-field v-model="formPassword.oldPassword" :label="$t('userAccount.old_password')" :rules="[rules.oldPassword]"
                           hint="Staré heslo, které jste zadal při registraci."
                           variant="outlined"
                           prepend-inner-icon="mdi-lock"></v-text-field>
-            <v-text-field v-model="formPassword.newPassword" label="Nové heslo"
+            <v-text-field v-model="formPassword.newPassword" :label="$t('userAccount.new_password')"
                           :rules="[rules.password]" variant="outlined"
                           :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                           prepend-inner-icon="mdi-lock"
@@ -17,7 +17,7 @@
             >
 
             </v-text-field>
-            <v-text-field v-model="formPassword.againNewPassword" label="Nové heslo znova"
+            <v-text-field v-model="formPassword.againNewPassword" :label="$t('userAccount.confirm_password')"
                           :rules="[rules.passwordConfirm]"
                           :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                           :type="show2 ? 'text' : 'password'"

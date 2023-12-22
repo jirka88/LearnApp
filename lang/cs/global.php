@@ -4,6 +4,9 @@ return [
     'edit' => 'Upravit!',
     'yes' => 'Ano',
     'no' => 'Ne',
-    'name' => 'Jméno:',
-    'surname' => 'Příjmení:'
+    'name' => 'Jméno',
+    'surname' => 'Příjmení',
+    'close' => 'Zavři',
+    'create_user' => 'Vytvořit uživatele',
+    'created' => 'Vytvořit'
 ];

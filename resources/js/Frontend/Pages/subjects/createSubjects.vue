@@ -27,7 +27,7 @@
                         :disabled="creating"
                         :class="{'w-100': $vuetify.display.smAndDown}"
                     >
-                        vytvořit!
+                        {{$t('global.created')}}!
                     </v-btn>
                     <p v-if="form.errors.msg" class="text-center text-red pt-2">{{form.errors.msg}}</p>
                 </v-form>

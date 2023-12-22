@@ -29,7 +29,7 @@
                            class="btn d-flex my-4"
                            :class="{'w-100': $vuetify.display.smAndDown}"
                     >
-                        Vytvořit!
+                        {{$t('global.created')}}!
                     </v-btn>
                 </form>
             </v-container>

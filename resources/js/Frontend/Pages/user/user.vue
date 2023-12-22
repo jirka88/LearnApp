@@ -4,13 +4,15 @@
             <Breadcrumbs :items="[{title: 'Uživatelský profil', disabled: true }]"></Breadcrumbs>
             <div class="mt-10 d-grid align-center justify-center"
                  :class="{'gp-4 mobile-variant': $vuetify.display.smAndDown}">
-                <div class="avatar">
-                    <v-avatar class="avatar" :class="{'margin-center': $vuetify.display.smAndDown}" size="180">
+
+                <div class="avatar" @click="showChangeAvatar">
+                    <v-avatar class="avatar position-relative" :class="{'margin-center': $vuetify.display.smAndDown}" size="180">
                         <v-img
                             height="100%"
                             cover
                             src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg"
                         />
+                        <v-icon icon="mdi-camera" class="position-absolute" />
                     </v-avatar>
                 </div>
                 <div class="info d-flex justify-center flex-column"
@@ -23,8 +25,8 @@
                     v-model="tab"
                     align-tabs="center"
                 >
-                    <v-tab value="1">Uživatelské informace</v-tab>
-                    <v-tab value="2">Resetování hesla</v-tab>
+                    <v-tab value="1">{{$t('userAccount.information_user')}}</v-tab>
+                    <v-tab value="2">{{$t('userAccount.password_reset')}}</v-tab>
                     <v-tab v-if="$page.props.user.role.id !== 1" value="3">Sdílení</v-tab>
                 </v-tabs>
                 <v-window v-model="tab" :class="{'width-vw-85': $vuetify.display.smAndDown,
@@ -40,6 +42,7 @@
                     </v-window-item>
                 </v-window>
             </div>
+            <UploadImage v-model="isActive" :isActive="isActive"  @close="isActive = false"/>
         </v-container>
     </AdminLayout>
 </template>
@@ -49,12 +52,20 @@
 import AdminLayout from "../../layouts/DashboardLayout.vue";
 import UpdateUser from "../../Components/UpdateUser.vue";
 import ResetPassword from "../../Components/ResetPassword.vue";
-import {ref} from "vue";
+import {defineAsyncComponent, ref} from "vue";
 import ShareOptions from "@/Frontend/Components/shareOptions.vue";
 import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
+const UploadImage = defineAsyncComponent(() =>
+    import ("@/Frontend/Components/UploadImage.vue")
+)
 
 const tab = ref(null);
+const isActive = ref(false);
 defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
+
+const showChangeAvatar = () => {
+    isActive.value = true;
+}
 </script>
 <style scoped lang="scss">
 .d-grid {
@@ -67,6 +78,25 @@ defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': A
         grid-area: avatar;
         display: flex;
         justify-content: center;
+        &:hover {
+            cursor: pointer;
+            transition: 0.3s;
+            filter: brightness(80%);
+        }
+        &:hover .v-icon {
+            display: block;
+        }
+        .v-icon {
+            z-index: 200;
+            color: white;
+            top: 50%;
+            display: none;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+    }
+    .on-hover {
+        cursor: pointer;
     }
 
     .v-tabs {

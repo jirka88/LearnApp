@@ -1,32 +1,32 @@
 
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
-        <legend align="center" class="text-h5">Informace o účtě:</legend>
+        <legend align="center" class="text-h5">{{$t('userAccount.information_account')}}:</legend>
         <v-form ref="formResetPassword" @submit.prevent="$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
             <table class="w-100">
                 <tbody>
                 <tr>
-                    <td class="w-50">Jméno:</td>
-                    <td class="w-50">
+                    <td>{{$t('global.name')}}:</td>
+                    <td >
                         <v-text-field v-model="form.firstname" :rules="[rules.required,rules.lengthName]" variant="outlined"></v-text-field>
                     </td>
                 </tr>
                 <tr>
-                    <td class="w-50">Příjmení:</td>
-                    <td class="w-50">
+                    <td>{{$t('global.surname')}}:</td>
+                    <td >
                         <v-text-field v-model="form.lastname" :rules="[rules.required,rules.lengthlastName]" variant="outlined"></v-text-field>
                     </td>
                 </tr>
                 <tr>
-                    <td class="w-50">Email:</td>
-                    <td class="w-50">
+                    <td >Email:</td>
+                    <td >
                         <v-text-field v-model="form.email" :disabled="$page.props.permission.view ? false : true"
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
                 <tr v-if="usr.role_id != 4 || $page.props.user.role.id == 1 || $page.props.user.role.id == 2">
-                    <td class="w-50">Role:</td>
-                    <td class="w-50">
+                    <td>Role:</td>
+                    <td >
                         <v-select
                             v-model="form.role"
                             :items="items"
@@ -42,8 +42,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="w-50">Typ účtu:</td>
-                    <td class="w-50">
+                    <td >Typ účtu:</td>
+                    <td >
                         <v-select
                             v-model="form.type"
                             :items="types"

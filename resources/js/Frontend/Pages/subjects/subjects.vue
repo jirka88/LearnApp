@@ -7,7 +7,7 @@
                         <Link :href="route('subject.create')">
                             <v-btn
                             class="bg-green">
-                            Vytvořit {{$page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět'}}
+                                {{$t('global.created')}} {{$page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět'}}
                             </v-btn>
                         </Link>
                         <v-select

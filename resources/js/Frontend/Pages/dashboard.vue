@@ -26,7 +26,7 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
                         <div class="d-flex w-100 ga-4 py-8 text-center" :class="{'flex-column': $vuetify.display.mdAndDown}" >
                             <v-card elevation="4">
                                 <v-card-title class="font-weight-bold">
-                                    Uživatelů:
+                                    {{$t('dashboard.users')}}:
                                 </v-card-title>
                                 <v-card-text>
                                     {{stats.users}}
@@ -34,7 +34,7 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
                             </v-card>
                             <v-card elevation="4">
                                 <v-card-title class="font-weight-bold">
-                                    Operátorů:
+                                    {{$t('dashboard.operators')}}:
                                 </v-card-title>
                                 <v-card-text>
                                     {{stats.operators}}
@@ -42,7 +42,7 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
                             </v-card>
                             <v-card elevation="4">
                                 <v-card-title class="font-weight-bold">
-                                    Testerů:
+                                    {{$t('dashboard.testers')}}:
                                 </v-card-title>
                                 <v-card-text>
                                     {{stats.testersCount}}
@@ -50,7 +50,7 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
                             </v-card>
                             <v-card elevation="4">
                                 <v-card-title class="font-weight-bold">
-                                    Běžných uživatelů:
+                                    {{$t('dashboard.normal_users')}}:
                                 </v-card-title>
                                 <v-card-text>
                                     {{stats.normalUsers}}
