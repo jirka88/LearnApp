@@ -9,7 +9,7 @@
                 <div class="usr">
                     <Link :href="route('user.info')" class="text-decoration-none text-black">
                         <v-list-item
-                            prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+                            :prepend-avatar="'/storage/' + $page.props.user.image"
                             :title="$page.props.user.firstname"
                             nav
                             height="64"
@@ -117,7 +117,6 @@ import {ref} from "vue";
 import {loadLanguageAsync} from 'laravel-vue-i18n';
 import Base from "./../Pages/Base.vue"
 import {Inertia} from "@inertiajs/inertia";
-
 const drawer = ref(true);
 
 const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs'});

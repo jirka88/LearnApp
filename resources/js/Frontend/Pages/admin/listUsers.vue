@@ -22,6 +22,7 @@
                 <thead>
                 <tr>
                     <th class="font-weight-bold">ID:</th>
+                    <th class="font-weight-bold">Profilovka:</th>
                     <th class="font-weight-bold">{{$t('global.name')}}:</th>
                     <th class="font-weight-bold">{{$t('global.surname')}}:</th>
                     <th class="font-weight-bold">Email:</th>
@@ -35,6 +36,12 @@
                 <tbody>
                 <tr class="pa-8" v-for="user in users.data" :key="user.id">
                     <td>{{user.id}}</td>
+                    <td class="mx-0">    <v-avatar>
+                        <v-img
+                            :src="user.image ? '/storage/' + user.image : undefinedProfilePicture"
+                            alt="John"
+                        ></v-img>
+                    </v-avatar></td>
                     <td>{{ user.firstname }}</td>
                     <td>{{user.lastname}}</td>
                     <td>{{ user.email }}</td>
@@ -93,6 +100,7 @@ const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
 const props = defineProps({users: Object, pages: Object});
+import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')

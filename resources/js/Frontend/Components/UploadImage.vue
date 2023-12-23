@@ -2,16 +2,20 @@
 import {ref} from "vue";
 import {BoundingBox, CircleStencil, Cropper, Preview} from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
+import {useForm} from "@inertiajs/inertia-vue3";
 
-defineProps({isActive: Boolean})
+defineProps({isActive: Boolean, errors: Object})
 const emit = defineEmits(['close']);
 const image = ref(null);
-const savedImage = ref(null);
 const preview = ref("");
+const uploading = ref(false);
 const resultImage = ref({
     coordinates: null,
     image: null
 });
+const form = useForm( {
+    savedImage: null,
+})
 const closed = () => {
     emit('close');
 }
@@ -36,13 +40,21 @@ const createImage = (file) => {
 const change = ({coordinates, canvas, image}) => {
     resultImage.value.coordinates = coordinates;
     resultImage.value.image = image;
-    savedImage.value = canvas.toDataURL();
+    form.savedImage = canvas.toDataURL();
 }
 const uploadImage = () => {
-
+    uploading.value = true;
+        form.post(route('user.profilePicture'), {
+            onSuccess: () => {
+                resetInput();
+                uploading.value = false;
+                emit('close');
+            },
+            });
 }
 const resetInput = () => {
     preview.value = null;
+    image.value = null;
     resultImage.value.image = null;
     resultImage.value.coordinates = null;
 }
@@ -58,8 +70,8 @@ const resetInput = () => {
                 <v-btn
                     @click="closed"
                     variant="plain"
+                    icon="mdi-window-close"
                 >
-                    <v-icon icon="mdi-window-close"></v-icon>
                 </v-btn>
             </v-card-actions>
             <v-toolbar
@@ -67,6 +79,7 @@ const resetInput = () => {
                 class="text-center"
                 :title="$t('userAccount.upload_profile_image')"
             ></v-toolbar>
+            <v-form @submit.prevent="uploadImage" class="d-flex ga-2 flex-column" enctype="multipart/form-data">
             <v-file-input v-model="image" :show-size="1000" @change="onFileChange" variant="underlined"
                           @click:clear="resetInput"></v-file-input>
             <cropper
@@ -75,7 +88,7 @@ const resetInput = () => {
                 :src="preview"
                 :stencil-component="CircleStencil"
                 :debounce="false"
-                :max-canvas-size="4096*4096"
+                :max-canvas-size="2048*2048"
                 :stencil-props="{
                 handlers: {},
                 resizable: false,
@@ -94,13 +107,15 @@ const resetInput = () => {
                 :image="resultImage.image"
                 :coordinates="resultImage.coordinates"
             />
+                {{errors}}
             </div>
             <v-btn
                 color="primary"
-                @click="uploadImage"
-                :disabled="!preview"
+                type="submit"
+                :disabled="!preview || uploading"
             >{{$t('userAccount.upload_image')}}
             </v-btn>
+            </v-form>
         </v-card>
     </v-dialog>
 

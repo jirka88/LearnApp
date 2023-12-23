@@ -10,6 +10,7 @@ use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class DashboardUserController extends Controller
@@ -108,8 +109,57 @@ class DashboardUserController extends Controller
         if(auth()->user()->role_id == 1) {
             $stats = app('App\Http\Controllers\Admin')->getStats();
         }
-        else {
-        }
         return Inertia::render('dashboard', compact('stats'));
+    }
+
+    /**
+     * Změní profilovou fotku uživatele
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     */
+
+    public function changeProfilePicture(Request $request) {
+        $customMessages = [
+            'savedImage.required' => 'Obrázek není nahrán!',
+            'savedImage.max' => 'Obrázek je příliš velký > 4096KB'
+        ];
+        $request->validate([
+            'savedImage' => 'required'
+        ], $customMessages);
+
+        if(Auth()->user()->image) {
+            Storage::disk('public')->delete(Auth()->user()->image);
+        }
+
+        //image
+        if($request->hasFile('savedImage')) {
+            $image = $request->file('savedImage')[0];
+            $imageName = $image->getClientOriginalName();
+            $path = 'avatars/' . $imageName;
+            Storage::disk('public')->put($path, file_get_contents($image));
+
+            $user = User::find(Auth()->user()->id);
+            $user->image = $path;
+            $user->save();
+        }
+        //Base64
+        else {
+            $image = $request->input('savedImage');
+            $ext = explode(';base64',$image);
+            $ext = explode('/',$ext[0]);
+            $ext = $ext[1];
+
+            $image = str_replace('data:image/'.$ext.';base64', '', $image);
+            $image = str_replace(' ', '+', $image);
+
+            $imageName = "avatars/" . str_random(10) . '.'.$ext;
+            Storage::disk('public')->put($imageName, base64_decode($image));
+
+            $user = User::find(Auth()->user()->id);
+            $user->image = $imageName;
+            $user->save();
+        }
+        return redirect()->back();
     }
 }

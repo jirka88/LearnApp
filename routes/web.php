@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
     Route::post("/sharing/subjects", [Controller::class, 'acceptShare'])->name('share.accept');
     Route::delete("/sharing/subjects/{slug}", [Controller::class, 'deleteShare'])->name('share.delete');
+    Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [Admin::class, 'index']);

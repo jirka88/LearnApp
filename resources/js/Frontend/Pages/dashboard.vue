@@ -15,8 +15,8 @@ const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.
 <template>
     <component :is="DashboardLayout">
             <v-container class="py-8">
-                <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">{{$t('dashboard.stats')}}</h1>
                 <template v-if="$page.props.user.role.id === 1">
+                    <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">{{$t('dashboard.stats')}}</h1>
                     <div class="py-4 d-flex flex-column">
                         <Bar
                             id="my-chart-id"

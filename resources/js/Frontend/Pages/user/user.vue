@@ -10,7 +10,7 @@
                         <v-img
                             height="100%"
                             cover
-                            src="https://cdn.vuetifyjs.com/images/cards/server-room.jpg"
+                            :src="'/storage/' + usr.image"
                         />
                         <v-icon icon="mdi-camera" class="position-absolute" />
                     </v-avatar>
