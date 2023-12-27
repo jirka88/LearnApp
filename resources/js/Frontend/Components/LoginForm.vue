@@ -1,7 +1,7 @@
 <template>
     <v-form @submit.prevent="login">
         <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
-            <h1 class="pa-5 text-center">Přihlášení</h1>
+            <h1 class="pa-5 text-center">{{$t('authentication.login')}}</h1>
             <v-text-field
                 v-model="form.email"
                 prepend-inner-icon="mdi-email"
@@ -18,7 +18,7 @@
                 variant="outlined"
                 name="input-10-1"
                 :rules="[rules.required]"
-                label="Heslo"
+                :label="$t('authentication.register.password')"
                 hide-details
                 @click:append="show = !show"
             ></v-text-field>
@@ -27,11 +27,11 @@
                 v-model="form.remember"
                 hide-details
                 color="blue"
-                label="Zapamatovat si mě">
+                :label="$t('authentication.remember')">
 
             </v-checkbox>
             <Link class="forgetPassword" href="" >
-                Zapomenuté heslo
+                {{$t('authentication.forget')}}
             </Link>
             </div>
             <span class="text-center text-red pa-2">{{form.errors.msg}}</span>
@@ -42,7 +42,7 @@
                 :disabled="off"
                 :class="{'w-100': $vuetify.display.smAndDown}"
             >
-                přihlásit!
+                {{$t('authentication.loginBtn')}}
             </v-btn>
         </v-container>
     </v-form>

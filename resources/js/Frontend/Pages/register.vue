@@ -7,24 +7,24 @@
                     <v-sheet class="flex-column justify-center align-center w-30 author pa-4"
                              :class="{'d-none': $vuetify.display.mdAndDown}">
                         <div v-if="tab===1">
-                            <div class="text-h4 pa-4 font-weight-thin" >
-                                Vítejte zpět
+                            <div class="text-h4 pa-4 font-weight-thin text-center" >
+                                {{$t('authentication.welcome.back')}}
                             </div>
                             <v-divider class="border-opacity-50 pa-2" color="white"></v-divider>
                         </div>
                         <h2>LearnApp</h2>
-                        <p>Created by:<br> Jiří Navrátil</p>
+                        <p>{{$t('authentication.welcome.created')}}<br> Jiří Navrátil</p>
                     </v-sheet>
-                    <v-sheet class="authentication" :class="{'w-90 pa-8': $vuetify.display.smAndDown}"  :elevation="$vuetify.display.smAndDown ? '4' : ''">
+                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown}"  :elevation="$vuetify.display.smAndDown ? '4' : ''">
                         <v-tabs
                             v-model="tab"
                             align-tabs="center"
                         >
                             <v-tab>
-                                Registrace
+                               {{ $t('authentication.register.register')}}
                             </v-tab>
                             <v-tab>
-                                Přihlášení
+                                {{ $t('authentication.login')}}
                             </v-tab>
                         </v-tabs>
                         <v-window v-model="tab">
@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import Layout from './../layouts/Layout.vue'
+import Layout from '../layouts/AuthLayout.vue'
 import RegisterForm from "./../Components/RegisterForm.vue"
 import LoginForm from "./../Components/LoginForm.vue"
 import {ref} from "vue";

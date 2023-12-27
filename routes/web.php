@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AdminSetUsers;
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
@@ -9,7 +9,9 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SubjectController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +25,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::inertia('/', 'app');
+Route::post('/language', function()  {
+    $validated = request()->validate([
+        'language' => ['required'],
+    ]);
+    App::setLocale($validated['language']);
+    Session::put('locale', $validated['language']);
+})->name('language');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');
@@ -31,7 +40,7 @@ Route::group(['middleware' => ['guest']], function() {
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
-    Route::inertia('/','dashboard')->name('dashboard');
+    Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
     Route::put('/user', [DashboardUserController::class, 'update'])->name('user.update');
@@ -50,17 +59,19 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
     Route::post("/sharing/subjects", [Controller::class, 'acceptShare'])->name('share.accept');
     Route::delete("/sharing/subjects/{slug}", [Controller::class, 'deleteShare'])->name('share.delete');
+    Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
+    Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
-        route::get('/controll', [AdminSetUsers::class, 'index']);
-        route::get('/controll/{slug}', [AdminSetUsers::class, 'edit'])->name('user.edit');
-        route::put('/controll/{user}', [AdminSetUsers::class, 'update'])->name('user.update');
-        route::delete('/controll/{user}', [AdminSetUsers::class, 'destroy'])->name('user.destroy');
-        route::get('/controll/{slug}/subjects', [AdminSetUsers::class, 'getUserSubjects'])->name('user.subjects');
-        route::get('/controll/{slug}/subject/create', [AdminSetUsers::class, 'createUserSubject'])->name('user.createSubject');
-        route::post('/controll/{slug}/subject/create', [AdminSetUsers::class, 'storeUserSubject'])->name('user.storeSubject');
-        route::get('controll/user/create', [AdminSetUsers::class, 'create'])->name('user.create');
-        route::post('controll/user/create', [AdminSetUsers::class, 'store'])->name('user.store');
+        route::get('/controll', [Admin::class, 'index']);
+        route::get('/controll/{slug}', [Admin::class, 'edit'])->name('user.edit');
+        route::put('/controll/{user}', [Admin::class, 'update'])->name('user.update');
+        route::delete('/controll/{user}', [Admin::class, 'destroy'])->name('user.destroy');
+        route::get('/controll/{slug}/subjects', [Admin::class, 'getUserSubjects'])->name('user.subjects');
+        route::get('/controll/{slug}/subject/create', [Admin::class, 'createUserSubject'])->name('user.createSubject');
+        route::post('/controll/{slug}/subject/create', [Admin::class, 'storeUserSubject'])->name('user.storeSubject');
+        route::get('controll/user/create', [Admin::class, 'create'])->name('user.create');
+        route::post('controll/user/create', [Admin::class, 'store'])->name('user.store');
     });
 });
 

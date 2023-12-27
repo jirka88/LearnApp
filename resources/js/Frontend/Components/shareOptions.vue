@@ -22,7 +22,7 @@
                    :class="{'w-100': $vuetify.display.smAndDown}"
                    :disabled="disabledBtn == form.share.id"
             >
-                Upravit!
+                {{$t('global.edit')}}
             </v-btn>
             <p v-if="$page.props.flash.messageShare" class="text-center text-green pt-4">
                 {{ $page.props.flash.messageShare }}</p>

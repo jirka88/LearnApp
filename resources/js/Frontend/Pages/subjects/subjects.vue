@@ -1,12 +1,13 @@
 <template>
     <component :is="DashboardLayout">
-        <v-container>
+        <v-container class="pa-0">
             <div class="d-flex flex-column pa-5 gp-em-4">
+                <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
                     <div class="btns d-flex align-center">
                         <Link :href="route('subject.create')">
                             <v-btn
                             class="bg-green">
-                            Vytvořit {{this.$page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět'}}
+                                {{$t('global.created')}} {{$page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět'}}
                             </v-btn>
                         </Link>
                         <v-select
@@ -46,7 +47,7 @@
                                         <v-btn
                                     color="green"
                                     append-icon="mdi-pencil"
-                                    >Upravit!</v-btn></Link>
+                                    >{{$t('global.edit')}}</v-btn></Link>
                                 </td>
                                 <td>
                                     <v-btn
@@ -64,7 +65,7 @@
                             </tr>
                         </tbody>
                     </v-table>
-                <div class="text-center">
+                <div class="text-center pb-8">
                     <v-pagination
                         v-model="page"
                         :length="pages"
@@ -110,12 +111,13 @@
     </component>
 </template>
 <script setup>
-import {Link, useForm} from "@inertiajs/inertia-vue3";
+import  {Link, useForm} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import inertia from "@inertiajs/inertia";
 import {markRaw, ref} from "vue";
 import { useRouter } from 'vue-router';
+import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 const router = useRouter()
 const form = useForm();
 const dialog = ref(false);

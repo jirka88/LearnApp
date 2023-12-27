@@ -25,7 +25,8 @@ class User extends Authenticatable
         'password',
         'active',
         'slug',
-        'canShare'
+        'canShare',
+        'image'
     ];
 
     protected $hidden = [

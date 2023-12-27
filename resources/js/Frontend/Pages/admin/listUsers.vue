@@ -6,7 +6,7 @@
                       data-aos-duration="400">
                     <v-btn
                         class="bg-green">
-                        Vytvořit Uživatele
+                        {{$t('global.create_user')}}
                     </v-btn>
                 </Link>
 
@@ -22,12 +22,13 @@
                 <thead>
                 <tr>
                     <th class="font-weight-bold">ID:</th>
-                    <th class="font-weight-bold">Jméno:</th>
-                    <th class="font-weight-bold">Příjmení:</th>
+                    <th class="font-weight-bold">{{$t('userAccount.image')}}:</th>
+                    <th class="font-weight-bold">{{$t('global.name')}}:</th>
+                    <th class="font-weight-bold">{{$t('global.surname')}}:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Role:</th>
                     <th class="font-weight-bold">Licence:</th>
-                    <th class="font-weight-bold">Aktivní:</th>
+                    <th class="font-weight-bold">{{$t('dashboard.active')}}:</th>
                     <th class="font-weight-bold">Předměty:</th>
                     <th class="font-weight-bold">Nastavení:</th>
                 </tr>
@@ -35,23 +36,29 @@
                 <tbody>
                 <tr class="pa-8" v-for="user in users.data" :key="user.id">
                     <td>{{user.id}}</td>
+                    <td class="mx-0">    <v-avatar>
+                        <v-img
+                            :src="user.image ? '/storage/' + user.image : undefinedProfilePicture"
+                            alt="John"
+                        ></v-img>
+                    </v-avatar></td>
                     <td>{{ user.firstname }}</td>
                     <td>{{user.lastname}}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.licences.Licence }}</td>
-                    <td>{{ user.active == 1 ? "ANO" : "NE" }}</td>
+                    <td class="text-uppercase">{{ user.active == 1 ? $t('global.yes') : "global.no" }}</td>
                     <td v-if="user.id == this.$page.props.user.id || this.$page.props.permission.administrator_view">
                         <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">
-                                Zobrazit
+                                {{$t('global.show')}}
                             </v-btn>
                         </Link>
                     </td>
                     <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && this.$page.props.permission.operator_view">
                         <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">
-                                Zobrazit
+                                {{$t('global.show')}}
                             </v-btn>
                         </Link>
                     </td>
@@ -87,13 +94,17 @@
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
-import {ref} from "vue";
-import DialogDelete from "@/Frontend/Components/UI/Dialog-delete.vue";
+import {defineAsyncComponent, ref} from "vue";
 import inertia from "@inertiajs/inertia";
 const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
 const props = defineProps({users: Object, pages: Object});
+import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
+
+const DialogDelete = defineAsyncComponent(() =>
+    import('@/Frontend/Components/UI/Dialog-delete.vue')
+)
 const enableDialog = (user) => {
     activeUser.value = user;
     status.value = true;

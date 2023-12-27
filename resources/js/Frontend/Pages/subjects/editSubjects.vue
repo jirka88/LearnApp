@@ -26,7 +26,7 @@
                 class="d-flex justify-center margin-center"
                 :class="{'w-100': $vuetify.display.smAndDown}"
             >
-                upravit!
+                {{$t('global.edit')}}
             </v-btn>
         </v-form>
     </div>

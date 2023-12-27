@@ -6,6 +6,7 @@ use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Models\AccountTypes;
+use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
@@ -14,13 +15,14 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class AdminSetUsers extends Controller
+class Admin extends Controller
 {
     /**
      * ADMIN -Získání všech uživatelů
      * @return \Inertia\Response
      */
-    public function index() {
+    public function index()
+    {
         $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(20);
         $pages = ceil(count(User::all()) / 20);
         return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
@@ -32,15 +34,15 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function edit($slug) {
+    public function edit($slug)
+    {
         $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->first();
         $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
-        if($isAdmin) {
+        if ($isAdmin) {
             $roles = Roles::all();
-        }
-        else {
-            $roles = Roles::all()->whereNotIn('id', [1,2])->values();
+        } else {
+            $roles = Roles::all()->whereNotIn('id', [1, 2])->values();
         }
         $accountTypes = AccountTypes::all();
         $licences = Licences::all();
@@ -53,12 +55,12 @@ class AdminSetUsers extends Controller
      * @param UpdateRequest $updateRequest
      * @return \Illuminate\Http\RedirectResponse**
      */
-    public function update(User $user, UpdateRequest $updateRequest) {
+    public function update(User $user, UpdateRequest $updateRequest)
+    {
         $role = 0;
-        if(Roles::ADMIN == $user->role_id) {
+        if (Roles::ADMIN == $user->role_id) {
             $role = 1;
-        }
-        else {
+        } else {
             $role = $updateRequest->role['id'];
         }
         $typeAccount = $updateRequest->type['id'];
@@ -81,15 +83,15 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create() {
+    public function create()
+    {
         $this->authorize('viewAny', auth()->user());
         $accountTypes = AccountTypes::all();
         $licences = Licences::all();
-        if(auth()->user()->role_id == 1) {
+        if (auth()->user()->role_id == 1) {
             $roles = Roles::all();
-        }
-        else {
-            $roles = Roles::all()->whereNotIn("id", [1,2])->values();
+        } else {
+            $roles = Roles::all()->whereNotIn("id", [1, 2])->values();
         }
         return Inertia::render('admin/createUser', compact('accountTypes', 'roles', 'licences'));
     }
@@ -99,16 +101,17 @@ class AdminSetUsers extends Controller
      * @param AdminCreateUser $adminCreateUser
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AdminCreateUser $adminCreateUser) {
+    public function store(AdminCreateUser $adminCreateUser)
+    {
         User::create([
-           "firstname" => $adminCreateUser->firstname,
+            "firstname" => $adminCreateUser->firstname,
             "lastname" => $adminCreateUser->lastname,
-           "email" => $adminCreateUser->email,
-           "password" => $adminCreateUser->password,
-           "role_id" => $adminCreateUser->role["id"],
-           "type_id" => $adminCreateUser->type["id"],
-           "licences_id" => $adminCreateUser->licence["id"],
-           "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
+            "email" => $adminCreateUser->email,
+            "password" => $adminCreateUser->password,
+            "role_id" => $adminCreateUser->role["id"],
+            "type_id" => $adminCreateUser->type["id"],
+            "licences_id" => $adminCreateUser->licence["id"],
+            "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
         ]);
         return to_route('admin')->with('successUpdate', 'Uživatel byl úspěšně vytvořen!');
     }
@@ -118,7 +121,8 @@ class AdminSetUsers extends Controller
      * @param User $user
      * @return void
      */
-    public function destroy(User $user) {
+    public function destroy(User $user)
+    {
         $this->authorize('view', $user);
         $user->patritions()->detach();
         User::destroy($user->id);
@@ -130,10 +134,13 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function getUserSubjects($slug) {
+    public function getUserSubjects($slug)
+    {
         $user = User::where('slug', $slug)->first();
         $this->authorize('view', $user);
-        $subjects = User::with(['patritions' => function ($query) {$query->withCount('chapter');}])->find($user->id);
+        $subjects = User::with(['patritions' => function ($query) {
+            $query->withCount('chapter');
+        }])->find($user->id);
         return Inertia::render('admin/listSubjects', compact('subjects'));
     }
 
@@ -143,11 +150,12 @@ class AdminSetUsers extends Controller
      * @return \Inertia\Response
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function createUserSubject($slug) {
+    public function createUserSubject($slug)
+    {
         $user = User::where('slug', $slug)->first();
         $this->authorize('view', $user);
-        $url = "/dashboard/admin/controll/" . $user->slug ."/subject/create";
-        return Inertia::render('subjects/createSubjects', compact( 'url'));
+        $url = "/dashboard/admin/controll/" . $user->slug . "/subject/create";
+        return Inertia::render('subjects/createSubjects', compact('url'));
     }
 
     /**
@@ -156,7 +164,8 @@ class AdminSetUsers extends Controller
      * @param SubjectRequest $subjectRequest
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function storeUserSubject($slug,  SubjectRequest $subjectRequest) {
+    public function storeUserSubject($slug, SubjectRequest $subjectRequest)
+    {
         $user = User::where('slug', $slug)->first();
         $subject = $subjectRequest->only("name");
         $subject["icon"] = $subjectRequest->icon["iconName"];
@@ -167,4 +176,19 @@ class AdminSetUsers extends Controller
         return to_route('adminuser.subjects', $user->slug);
     }
 
+    public function getStats()
+    {
+        $userCount = User::all()->count();
+        $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
+        $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
+        $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
+        $allChapters = Chapter::all()->count();
+        $stats = ([
+            'users' =>  $userCount,
+            'operators' => $operatosCount,
+            'normalUsers' => $userNormalCount,
+            'chapters' => $allChapters,
+            'testersCount' => $testersCount]);
+        return $stats;
+    }
 }

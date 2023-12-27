@@ -1,5 +1,5 @@
-import { createApp, h } from 'vue'
-import { createInertiaApp } from '@inertiajs/inertia-vue3'
+import {createApp, h, onBeforeMount} from 'vue'
+import {createInertiaApp} from '@inertiajs/inertia-vue3'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import "../css/app.scss"
 import "../css/colors.scss"
@@ -16,6 +16,9 @@ import 'aos/dist/aos.css'
 const routes = [
     {}
 ];
+import { i18nVue } from 'laravel-vue-i18n'
+import setLanguage from "./setLanguage";
+
 const vuetify= createVuetify({
     icons: {
         defaultSet: "mdi",
@@ -31,7 +34,6 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 });
-
 createInertiaApp({
     resolve: name => {
         const pages = import.meta.glob('./Frontend/Pages/**/*.vue', { eager: true })
@@ -42,6 +44,14 @@ createInertiaApp({
             .use(plugin)
             .use(vuetify)
             .use(ZiggyVue)
+            .use(i18nVue, {
+                lang: 'cs',
+                fallbackLang: 'en',
+                resolve: async lang => {
+                    const langs = import.meta.glob('../../lang/*.json');
+                    return await langs[`../../lang/${lang}.json`]();
+                }
+            })
             .use(router)
             .mount(el)
     },

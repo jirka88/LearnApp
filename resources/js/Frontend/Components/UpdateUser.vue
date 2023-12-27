@@ -1,36 +1,36 @@
 
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
-        <legend align="center" class="text-h5">Informace o účtě:</legend>
-        <v-form ref="formResetPassword" @submit.prevent="this.$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
+        <legend align="center" class="text-h5">{{$t('userAccount.information_account')}}:</legend>
+        <v-form ref="formResetPassword" @submit.prevent="$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
             <table class="w-100">
                 <tbody>
                 <tr>
-                    <td class="w-50">Jméno:</td>
-                    <td class="w-50">
+                    <td>{{$t('global.name')}}:</td>
+                    <td >
                         <v-text-field v-model="form.firstname" :rules="[rules.required,rules.lengthName]" variant="outlined"></v-text-field>
                     </td>
                 </tr>
                 <tr>
-                    <td class="w-50">Příjmení:</td>
-                    <td class="w-50">
+                    <td>{{$t('global.surname')}}:</td>
+                    <td >
                         <v-text-field v-model="form.lastname" :rules="[rules.required,rules.lengthlastName]" variant="outlined"></v-text-field>
                     </td>
                 </tr>
                 <tr>
-                    <td class="w-50">Email:</td>
-                    <td class="w-50">
-                        <v-text-field v-model="form.email" :disabled="this.$page.props.permission.view ? false : true"
+                    <td >Email:</td>
+                    <td >
+                        <v-text-field v-model="form.email" :disabled="$page.props.permission.view ? false : true"
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
                 <tr v-if="usr.role_id != 4 || $page.props.user.role.id == 1 || $page.props.user.role.id == 2">
-                    <td class="w-50">Role:</td>
-                    <td class="w-50">
+                    <td>Role:</td>
+                    <td >
                         <v-select
                             v-model="form.role"
                             :items="items"
-                            :disabled="permission(this.$page.props.permission.view, this.$page.props.user.role.id  )"
+                            :disabled="permission($page.props.permission.view, $page.props.user.role.id  )"
                             item-title="state"
                             item-value="id"
                             label="Select"
@@ -42,8 +42,8 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="w-50">Typ účtu:</td>
-                    <td class="w-50">
+                    <td >Typ účtu:</td>
+                    <td >
                         <v-select
                             v-model="form.type"
                             :items="types"
@@ -57,9 +57,9 @@
                         ></v-select>
                     </td>
                 </tr>
-                <tr v-if="!this.$page.props.permission.view || props.usr.role_id == 4">
+                <tr v-if="!$page.props.permission.view || props.usr.role_id == 4">
                     <td class="w-50">Licence:</td>
-                    <td v-if="!this.$page.props.permission.view" class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
+                    <td v-if="!$page.props.permission.view" class="w-50 font-weight-bold pt-2 py-6">{{props.usr.licences.Licence}}</td>
                   <td  v-else class="w-50">
                             <v-select
                                 v-model="form.licences"
@@ -74,7 +74,7 @@
                             ></v-select>
                         </td>
                 </tr>
-                <tr v-if="this.$page.props.permission.view && this.$page.props.user.id !== usr.id">
+                <tr v-if="$page.props.permission.view && $page.props.user.id !== usr.id">
                     <td class="w-50">Aktivní:</td>
                     <td  class="w-50">
                         <v-select
@@ -99,7 +99,7 @@
                    class="btn d-flex"
                    :class="{'w-100': $vuetify.display.smAndDown}"
             >
-                Upravit!
+                {{$t('global.edit')}}
             </v-btn>
         </v-form>
     </fieldset>

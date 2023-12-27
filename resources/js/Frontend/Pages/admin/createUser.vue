@@ -1,8 +1,8 @@
 <template>
     <component :is="DashboardLayout">
-            <div class="creatingUser d-flex justify-center align-center flex-column">
+            <div class="creatingUser d-flex justify-center align-center py-4">
                 <v-container class="d-flex justify-center flex-column pa-8">
-            <h1>Vytvoření uživatele</h1>
+            <h1>{{$t('global.create_user')}}</h1>
             <form class="py-8 w-100 d-flex flex-column gp-em-05"  @submit.prevent="createUser">
                 <v-text-field
                     v-model="form.firstname"
@@ -79,9 +79,8 @@
                        class="btn d-flex"
                        :class="{'w-100': $vuetify.display.smAndDown}"
                 >
-                    Vytvořit!
+                    {{$t('global.created')}}!
                 </v-btn>
-                {{licences}}
                 <span class="text-center text-red py-4" v-if="errors.email">{{errors.email === "0" ? "" : errors.email}}</span>
             </form>
                 </v-container>
@@ -159,7 +158,7 @@ const createUser = () => {
 
 <style scoped lang="scss">
     .creatingUser {
-        height: calc(100vh - 64px);
+        min-height: calc(100vh - 64px);
         background: #4398f0 !important;
         overflow: auto;
         :deep(.v-messages__message){
