@@ -3,6 +3,7 @@ import {ref} from "vue";
 import {BoundingBox, CircleStencil, Cropper, Preview} from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import {useForm} from "@inertiajs/inertia-vue3";
+import {Inertia} from "@inertiajs/inertia";
 
 defineProps({isActive: Boolean, errors: Object})
 const emit = defineEmits(['close']);
@@ -57,6 +58,13 @@ const resetInput = () => {
     image.value = null;
     resultImage.value.image = null;
     resultImage.value.coordinates = null;
+}
+const deleteImage = (id) => {
+    Inertia.delete(route('user.deleteProfilePicture', {user: id}), {
+        onSuccess: () => {
+            closed();
+        },
+    });
 }
 
 </script>
@@ -115,6 +123,12 @@ const resetInput = () => {
                 :disabled="!preview || uploading"
             >{{$t('userAccount.upload_image')}}
             </v-btn>
+                <v-btn
+                    v-if="$page.props.user.image"
+                color="red"
+                @click="deleteImage($page.props.user.id)">
+                    Vymazat!
+                </v-btn>
             </v-form>
         </v-card>
     </v-dialog>

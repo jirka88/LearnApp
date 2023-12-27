@@ -11,5 +11,6 @@ return [
     'information_account' => 'Informace o účtě',
     'password_reset' => 'Resetování hesla',
     'information_user' => 'Uživatelské informace',
-    'upload_profile_image' => 'Nahraj profilovou fotku'
+    'upload_profile_image' => 'Nahraj profilovou fotku',
+    'image' => 'Profilovka'
 ];

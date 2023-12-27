@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class DashboardUserController extends Controller
@@ -122,10 +123,9 @@ class DashboardUserController extends Controller
     public function changeProfilePicture(Request $request) {
         $customMessages = [
             'savedImage.required' => 'Obrázek není nahrán!',
-            'savedImage.max' => 'Obrázek je příliš velký > 4096KB'
         ];
         $request->validate([
-            'savedImage' => 'required'
+            'savedImage' => 'required',
         ], $customMessages);
 
         if(Auth()->user()->image) {
@@ -161,5 +161,11 @@ class DashboardUserController extends Controller
             $user->save();
         }
         return redirect()->back();
+    }
+    public function deleteProfilePicture(Request $request, $user) {
+        $user = User::find($user);
+        Storage::disk('public')->delete($user->image);
+        $user->image = "";
+        $user->save();
     }
 }

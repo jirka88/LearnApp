@@ -22,7 +22,7 @@
                 <thead>
                 <tr>
                     <th class="font-weight-bold">ID:</th>
-                    <th class="font-weight-bold">Profilovka:</th>
+                    <th class="font-weight-bold">{{$t('userAccount.image')}}:</th>
                     <th class="font-weight-bold">{{$t('global.name')}}:</th>
                     <th class="font-weight-bold">{{$t('global.surname')}}:</th>
                     <th class="font-weight-bold">Email:</th>

@@ -11,5 +11,6 @@ return [
     'information_account' => 'Information about account',
     'password_reset' => 'Reset password',
     'information_user' => 'Information about user',
-    'upload_profile_image' => 'Upload profile image'
+    'upload_profile_image' => 'Upload profile image',
+    'image' => 'Image'
 ];

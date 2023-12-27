@@ -10,7 +10,7 @@
                         <v-img
                             height="100%"
                             cover
-                            :src="'/storage/' + usr.image"
+                            :src="usr.image ? '/storage/' + usr.image : undefinedProfilePicture"
                         />
                         <v-icon icon="mdi-camera" class="position-absolute" />
                     </v-avatar>
@@ -58,6 +58,7 @@ import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
 const UploadImage = defineAsyncComponent(() =>
     import ("@/Frontend/Components/UploadImage.vue")
 )
+import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 
 const tab = ref(null);
 const isActive = ref(false);

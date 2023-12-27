@@ -10,5 +10,6 @@ return [
     'users' => 'Všichni uživatelé',
     'operators' => 'Operátoři',
     'testers' => 'Testeři',
-    'normal_users' => 'Běžné uživatelé'
+    'normal_users' => 'Běžné uživatelé',
+    'organization' => 'Organizace'
 ];

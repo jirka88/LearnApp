@@ -10,5 +10,6 @@ return [
     'users' => 'All users',
     'operators' => 'Operators',
     'testers' => 'Testers',
-    'normal_users' => 'Normal users'
+    'normal_users' => 'Normal users',
+    'organization' => 'Organization'
 ];

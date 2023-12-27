@@ -9,7 +9,7 @@
                 <div class="usr">
                     <Link :href="route('user.info')" class="text-decoration-none text-black">
                         <v-list-item
-                            :prepend-avatar="'/storage/' + $page.props.user.image"
+                            :prepend-avatar="$page.props.user.image ? '/storage/' + $page.props.user.image : undefinedProfilePicture"
                             :title="$page.props.user.firstname"
                             nav
                             height="64"
@@ -41,7 +41,7 @@
                             <v-list-item
                                 class="subItem"
                                 prepend-icon="mdi-folder-edit"
-                                title="Organizace">
+                                :title="$t('dashboard.organization')">
                             </v-list-item>
                         </Link>
                         <Link v-for="subject in $page.props.user.subjects" :key="subject.id"
@@ -117,6 +117,7 @@ import {ref} from "vue";
 import {loadLanguageAsync} from 'laravel-vue-i18n';
 import Base from "./../Pages/Base.vue"
 import {Inertia} from "@inertiajs/inertia";
+import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg';
 const drawer = ref(true);
 
 const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs'});
