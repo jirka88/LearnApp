@@ -47,7 +47,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.licences.Licence }}</td>
-                    <td class="text-uppercase">{{ user.active == 1 ? $t('global.yes') : "global.no" }}</td>
+                    <td class="text-uppercase">{{ user.active == 1 ? $t('global.yes') : $t("global.no") }}</td>
                     <td v-if="user.id == this.$page.props.user.id || this.$page.props.permission.administrator_view">
                         <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">

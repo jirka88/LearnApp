@@ -25,13 +25,7 @@ use Illuminate\Support\Facades\Session;
 */
 
 Route::inertia('/', 'app');
-Route::post('/language', function()  {
-    $validated = request()->validate([
-        'language' => ['required'],
-    ]);
-    App::setLocale($validated['language']);
-    Session::put('locale', $validated['language']);
-})->name('language');
+Route::post('/language',[Controller::class, 'changeLanguage'])->name('language');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');

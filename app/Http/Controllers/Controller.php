@@ -11,6 +11,8 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class Controller extends BaseController
@@ -117,6 +119,13 @@ class Controller extends BaseController
         $user = User::find(auth()->user()->id);
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
         return redirect()->back();
+    }
+    public function changeLanguage(Request $request) {
+        $validated = request()->validate([
+            'language' => ['required'],
+        ]);
+        App::setLocale($validated['language']);
+        Session::put('locale', $validated['language']);
     }
 
 }

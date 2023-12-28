@@ -13,10 +13,10 @@ return [
     |
     */
 
-    'failed' => 'Email or password is not ok!',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'activate' => 'Account is deactivated!',
-    'exist' => 'Account does not exist under this email!'
+    'failed' => 'Email nebo heslo není v pořádku!',
+    'password' => 'Zadané heslo je nesprávné.',
+    'throttle' => 'Příliš mnoho pokusů o přihlášení. Zkuste to prosím znovu za :sekund sekund.',
+    'activate' => 'Účet je deaktivován!',
+    'exist' => 'Účet pod daným emailem neexistuje!'
 
 ];
