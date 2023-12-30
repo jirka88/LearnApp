@@ -52,7 +52,7 @@
 
 - Role: Admin, Operátor, Tester
 
-#TO DO
+# TO DO
 
 - Lepší propracování frontendu (Dashboard)
 - Optimalizace komponent
