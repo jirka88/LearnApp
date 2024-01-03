@@ -7,7 +7,10 @@
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
-                :rules="[rules.required]"
+                :rules="[rules.required, rules.email]"
+                :error="form.errors.email"
+                :error-messages="form.errors.email"
+                @input="() =>form.errors.email ? delete form.errors.email : ''"
                 required
             ></v-text-field>
             <v-text-field
@@ -16,10 +19,11 @@
                 :type="show ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
                 variant="outlined"
-                name="input-10-1"
                 :rules="[rules.required]"
                 :label="$t('authentication.register.password')"
-                hide-details
+                :error="form.errors.password"
+                :error-messages="form.errors.password"
+                @input="() =>form.errors.password ? delete form.errors.password : ''"
                 @click:append="show = !show"
             ></v-text-field>
             <div class="d-flex justify-center align-center">
@@ -48,7 +52,7 @@
     </v-form>
 </template>
 <script setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useForm, Link} from "@inertiajs/inertia-vue3";
 
 defineProps({ errors: Object })
@@ -58,6 +62,7 @@ const off = ref(false);
 
 const rules = {
     required: v => !!v || 'Nutné vyplnit!',
+    email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'Musí být platná e-mailová adresa!',
 }
 
 const form = useForm({
@@ -65,6 +70,7 @@ const form = useForm({
     password: '',
     remember: '',
 })
+
 
 const login = () => {
     off.value = true;

@@ -36,7 +36,7 @@ class RegisterRequest extends FormRequest
     public function messages() {
         return [
             'firstname.required' => "Jméno je povinné pole.",
-            'firstname.min' => 'Vaše jméno je příliš krátké.',
+            'firstname.min' => trans('validation.min.string', ['attribute' => __('authentication.register.name'), 'min' => 3]),
             'firstname.max' => 'Jméno je příliš dlouhé.',
             'email.required' => '0',
             'email.email' => 'E-mail musí být platný.',

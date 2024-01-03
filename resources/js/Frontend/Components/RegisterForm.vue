@@ -17,6 +17,9 @@
                 variant="outlined"
                 :label="$t('authentication.register.name')"
                 :rules="[rules.required, rules.firstnameLength]"
+                :error="form.errors.firstname"
+                :error-messages="form.errors.firstname"
+                @input="form.errors.firstname ? delete form.errors.firstname : ''"
                 required/>
             <v-text-field
                 v-model="form.lastname"
@@ -79,6 +82,7 @@
             >
                 Registrovat!
             </v-btn>
+
         </v-container>
     </v-form>
 

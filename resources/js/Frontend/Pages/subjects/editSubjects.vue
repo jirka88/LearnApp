@@ -9,7 +9,7 @@
                 v-model="form.name"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
-                label="Název"
+                :label="$t('global.name')"
                 :rules="[rules.required, rules.minName, rules.maxName]"
             ></v-text-field>
             <v-select

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\Localization;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
@@ -120,12 +121,11 @@ class Controller extends BaseController
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
         return redirect()->back();
     }
-    public function changeLanguage(Request $request) {
-        $validated = request()->validate([
-            'language' => ['required'],
-        ]);
-        App::setLocale($validated['language']);
-        Session::put('locale', $validated['language']);
+    public function changeLanguage(Request $request, $language) {
+        if(in_array($language, Localization::$supportedLanguages )) {
+            Localization::setLocale($language);
+        }
+        return Redirect()->back();
     }
 
 }

@@ -22,7 +22,7 @@
                           data-aos="zoom-in" data-aos-duration="400">
                         <v-btn
                             class="bg-green">
-                            Vytvořit kapitolu
+                            {{$t('global.created')}} kapitolu
                         </v-btn>
                     </Link>
                     <v-btn

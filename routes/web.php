@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Session;
 */
 
 Route::inertia('/', 'app');
-Route::post('/language',[Controller::class, 'changeLanguage'])->name('language');
+Route::post('/language/{language}',[Controller::class, 'changeLanguage'])->name('language');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');

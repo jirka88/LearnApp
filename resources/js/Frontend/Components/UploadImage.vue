@@ -127,7 +127,7 @@ const deleteImage = (id) => {
                     v-if="$page.props.user.image"
                 color="red"
                 @click="deleteImage($page.props.user.id)">
-                    Vymazat!
+                    {{$t('global.delete')}}!
                 </v-btn>
             </v-form>
         </v-card>

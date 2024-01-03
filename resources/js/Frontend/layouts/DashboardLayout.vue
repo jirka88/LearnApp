@@ -125,7 +125,7 @@ const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO
 const languages = [{language: 'Česky', ISO: 'cs'}, {language: 'English', ISO: 'en'}]
 
 const changeLanguage = () => {
-    Inertia.post(route('language'), {'language': select.value.ISO});
+    Inertia.post(route('language', {'language': select.value.ISO}));
     localStorage.setItem('langTitle', select.value.language);
     localStorage.setItem('lang', select.value.ISO);
     loadLanguageAsync(select.value.ISO);

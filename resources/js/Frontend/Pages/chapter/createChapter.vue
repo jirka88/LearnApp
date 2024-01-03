@@ -8,7 +8,7 @@
                     <v-text-field
                         v-model="form.name"
                         variant="outlined"
-                        label="Název"
+                        :label="$t('global.name')"
                         :rules="[rules.required, rules.nameLength]"
                         :error="errors.name"
                         required

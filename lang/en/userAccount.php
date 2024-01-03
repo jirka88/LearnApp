@@ -12,5 +12,7 @@ return [
     'password_reset' => 'Reset password',
     'information_user' => 'Information about user',
     'upload_profile_image' => 'Upload profile image',
-    'image' => 'Image'
+    'image' => 'Image',
+    'share' => 'Share',
+    'shareInfo' => "Allow other users to share their sections. If you don't want receive a section from any user, check the option"
 ];

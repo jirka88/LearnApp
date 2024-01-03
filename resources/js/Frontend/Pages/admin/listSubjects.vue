@@ -20,7 +20,7 @@
                         <thead>
                         <tr>
                             <th class="font-weight-bold">ID:</th>
-                            <th class="font-weight-bold">Název:</th>
+                            <th class="font-weight-bold">{{$t('global.name')}}:</th>
                             <th class="font-weight-bold">Ikona:</th>
                             <th class="font-weight-bold">Počet kapitol:</th>
                             <th class="font-weight-bold">Zobrazit:</th>

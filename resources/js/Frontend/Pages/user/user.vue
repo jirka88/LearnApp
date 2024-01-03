@@ -27,7 +27,7 @@
                 >
                     <v-tab value="1">{{$t('userAccount.information_user')}}</v-tab>
                     <v-tab value="2">{{$t('userAccount.password_reset')}}</v-tab>
-                    <v-tab v-if="$page.props.user.role.id !== 1" value="3">Sdílení</v-tab>
+                    <v-tab v-if="$page.props.user.role.id !== 1" value="3">{{$t('userAccount.share')}}</v-tab>
                 </v-tabs>
                 <v-window v-model="tab" :class="{'width-vw-85': $vuetify.display.smAndDown,
                                                 'width-vw-100': $vuetify.display.xs }">
