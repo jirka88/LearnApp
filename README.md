@@ -51,6 +51,8 @@
 ## Globální věci
 
 - Role: Admin, Operátor, Tester
+- Chráněné routy podle rolí a uživatelů
+- Automatizované testy (Features - PhpUnit)
 
 # TO DO
 
