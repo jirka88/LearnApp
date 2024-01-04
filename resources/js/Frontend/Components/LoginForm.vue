@@ -8,9 +8,6 @@
                 variant="outlined"
                 label="E-mail"
                 :rules="[rules.required, rules.email]"
-                :error="form.errors.email"
-                :error-messages="form.errors.email"
-                @input="() =>form.errors.email ? delete form.errors.email : ''"
                 required
             ></v-text-field>
             <v-text-field
@@ -21,9 +18,6 @@
                 variant="outlined"
                 :rules="[rules.required]"
                 :label="$t('authentication.register.password')"
-                :error="form.errors.password"
-                :error-messages="form.errors.password"
-                @input="() =>form.errors.password ? delete form.errors.password : ''"
                 @click:append="show = !show"
             ></v-text-field>
             <div class="d-flex justify-center align-center">

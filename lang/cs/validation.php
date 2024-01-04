@@ -163,8 +163,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'registered' => 'Email je registrován!',
         ],
     ],
 

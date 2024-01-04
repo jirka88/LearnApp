@@ -28,13 +28,4 @@ class LoginRequest extends FormRequest
                  'password' => 'required'
         ];
     }
-    public function messages()
-    {
-        return [
-            'email.email' => null,
-            'email.required' => trans('validation.required', ['attribute' => 'Email']),
-            'password.required' =>  trans('validation.required', ['attribute' => __('authentication.register.password')]),
-        ];
-    }
-
 }
