@@ -29,7 +29,7 @@ const chartData = ref({
     <component :is="DashboardLayout">
         <v-container class="py-8">
             <template v-if="$page.props.user.role.id === 1">
-                <div class="d-flex ga-5 flex-column dashboard">
+                <div class="d-flex ga-6 flex-column dashboard">
                     <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
                         {{ $t('dashboard.stats') }}</h1>
                     <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
@@ -45,7 +45,7 @@ const chartData = ref({
                                 class="d-flex justify-center align-center flex-column py-2"
                             >
                                 <div class="text-h5 font-weight-bold">LearnApp</div>
-                                <a href="http://github.com" target="_blank">Github</a>
+                                <a href="http://github.com" class="underlineLink" target="_blank">Github</a>
                             </v-sheet>
                         </v-col>
                     </v-row>
@@ -96,12 +96,19 @@ const chartData = ref({
                     <v-col>
                         <v-sheet
                             :elevation="8"
-
                             border
                             rounded
-                        class="py-8 px-8">
-                            <div class="text-h6 font-weight-bold">Registrace</div>
-                            <v-checkbox v-model="restrictRegister" @change="(() => restrictRegisterModal = true)" label="Omezit registraci" hide-details></v-checkbox>
+                             class="py-8 px-8 d-flex justify-center align-center flex-column">
+                            <div class="text-h6 font-weight-bold">Omezit registraci</div>
+                            <v-switch inset color="red" @change="(() => restrictRegisterModal = true)" hide-details></v-switch>
+                        </v-sheet>
+                    </v-col>
+                    <v-col>
+                        <v-sheet
+                            :elevation="8"
+                            border
+                            rounded
+                        >
                         </v-sheet>
                     </v-col>
                     <v-col>
@@ -135,9 +142,24 @@ const chartData = ref({
         font-size: 1.4em;
     }
 }
-
 #my-chart-id {
     max-height: 500px !important;
 }
-
+.v-switch__track {
+    background: green !important;
+}
+.underlineLink:before {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    width: 100%;
+    height: 0.1em;
+    background-color: #4398f0;
+    transition: opacity 300ms, transform 300ms;
+    transform: scale(0);
+    transform-origin: center;
+}
+.underlineLink:hover:before {
+    transform: scale(1) !important;
+}
 </style>

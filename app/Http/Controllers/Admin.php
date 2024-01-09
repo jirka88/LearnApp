@@ -200,9 +200,8 @@ class Admin extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function changeRestriction($register) {
+        $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['RestrictedRegistration' =>   $register === "true" ? 1 : 0]);
         return redirect()->back();
     }
-
-
 }

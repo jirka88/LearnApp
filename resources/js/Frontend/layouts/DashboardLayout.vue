@@ -13,7 +13,7 @@
                             :title="$page.props.user.firstname"
                             nav
                             height="64"
-                            class=" d-flex align-center"
+                            class=" d-flex align-center ga-2"
                         >
                             <div class="text-subtitle-2">{{ $page.props.user.email }}</div>
                         </v-list-item>
@@ -140,19 +140,16 @@ const changeLanguage = () => {
         font-size: 1.2em !important;
     }
 }
-
 .v-app-bar {
     gap: 6em;
 
     .v-icon {
         color: black !important;
     }
-
     .v-select {
         max-width: 10em;
     }
 }
-
 .v-list-item {
     padding: 0.7em !important;
 }
@@ -170,13 +167,11 @@ const changeLanguage = () => {
 .v-list-item--active {
     background: gray;
 }
-
 .v-footer {
     .move {
         transition: .8s;
         margin-left: 255px;
     }
-
     .move-back {
         transition: .8s;
     }
