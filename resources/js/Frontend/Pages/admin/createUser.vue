@@ -3,7 +3,7 @@
             <div class="creatingUser d-flex justify-center align-center py-4">
                 <v-container class="d-flex justify-center flex-column pa-8">
             <h1>{{$t('global.create_user')}}</h1>
-            <form class="py-8 w-100 d-flex flex-column gp-em-05"  @submit.prevent="createUser">
+            <form class="py-8 w-100 d-flex flex-column ga-1"  @submit.prevent="createUser">
                 <v-text-field
                     v-model="form.firstname"
                     prepend-inner-icon="mdi-account"

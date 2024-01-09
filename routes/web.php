@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::post('/controll/{slug}/subject/create', [Admin::class, 'storeUserSubject'])->name('user.storeSubject');
         route::get('controll/user/create', [Admin::class, 'create'])->name('user.create');
         route::post('controll/user/create', [Admin::class, 'store'])->name('user.store');
+        route::put('/controll/registration/{register}', [Admin::class, 'changeRestriction'])->name('register.restriction');
     });
 });
 

@@ -1,7 +1,7 @@
 <template>
     <component :is="DashboardLayout">
         <v-container class="pa-0">
-            <div class="d-flex flex-column pa-5 gp-em-4">
+            <div class="d-flex flex-column pa-5 ga-6">
                 <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
                     <div class="btns d-flex align-center">
                         <Link :href="route('subject.create')">

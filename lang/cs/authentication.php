@@ -14,6 +14,7 @@ return [
     'login' => 'Přihlášení',
     'loginBtn' => 'Přihlásit!',
     'remember' => 'Zapamatovat si mě',
-    'forget' => 'Zapomenuté heslo?'
+    'forget' => 'Zapomenuté heslo?',
+    'restricted' => 'Registrace je omezena!'
 
 ];

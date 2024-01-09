@@ -44,8 +44,8 @@
 
 <script setup>
 import Layout from '../layouts/AuthLayout.vue'
-import RegisterForm from "./../Components/RegisterForm.vue"
-import LoginForm from "./../Components/LoginForm.vue"
+import RegisterForm from "../Components/Authentication/RegisterForm.vue"
+import LoginForm from "../Components/Authentication/LoginForm.vue"
 import {ref} from "vue";
 //Register x login
 const props = defineProps(['value']);

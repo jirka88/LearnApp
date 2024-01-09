@@ -10,6 +10,7 @@ use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
+use App\Models\settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
@@ -183,12 +184,25 @@ class Admin extends Controller
         $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
         $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
         $allChapters = Chapter::all()->count();
+        $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
         $stats = ([
             'users' =>  $userCount,
             'operators' => $operatosCount,
             'normalUsers' => $userNormalCount,
             'chapters' => $allChapters,
-            'testersCount' => $testersCount]);
+            'testersCount' => $testersCount,
+            'restrictRegister' => $restrictRegister]);
         return $stats;
     }
+
+    /**
+     * Povolí/zákáže registraci do aplikace
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function changeRestriction($register) {
+        Settings::find(1)->update(['RestrictedRegistration' =>   $register === "true" ? 1 : 0]);
+        return redirect()->back();
+    }
+
+
 }

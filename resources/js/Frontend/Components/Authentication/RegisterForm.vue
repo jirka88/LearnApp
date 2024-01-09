@@ -72,6 +72,7 @@
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
             <span class="text-center text-red">{{form.errors.confirm}}</span>
+            <span class="text-center text-red pa-2">{{form.errors.msg}}</span>
             <span v-if="form.errors.email?.unique" class="text-center text-red">{{ form.errors.email.unique}}</span>
             <v-btn
                 type="submit"
@@ -98,7 +99,7 @@ const show = ref('');
 const show1 = ref('');
 const confirm = ref(false);
 const dialog = ref(false);
-const Dialog = defineAsyncComponent(() => import('./Dialog.vue'));
+const Dialog = defineAsyncComponent(() => import('../DialogAgree.vue'));
 
 const items = markRaw([
     {state: 'Osobní účet', value: '1'},

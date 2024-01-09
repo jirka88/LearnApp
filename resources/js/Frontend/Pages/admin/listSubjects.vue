@@ -1,7 +1,7 @@
 <template>
     <component :is="DashboardLayout">
         <v-container>
-            <div class="d-flex flex-column pa-4 gp-em-2">
+            <div class="d-flex flex-column pa-4 ga-4">
                 <div>
                 <p class="text-h5">Předměty uživatele: {{subjects.firstname}} - {{subjects.email}}</p>
                 <v-divider></v-divider>
