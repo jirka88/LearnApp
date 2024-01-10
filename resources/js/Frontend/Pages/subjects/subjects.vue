@@ -65,7 +65,7 @@
                             </tr>
                         </tbody>
                     </v-table>
-                <div class="text-center pb-8">
+                <div v-if="pages" class="text-center pb-8">
                     <v-pagination
                         v-model="page"
                         :length="pages"

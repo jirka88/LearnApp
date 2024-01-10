@@ -30,7 +30,7 @@
                     <th class="font-weight-bold">Licence:</th>
                     <th class="font-weight-bold">{{$t('dashboard.active')}}:</th>
                     <th class="font-weight-bold">Předměty:</th>
-                    <th class="font-weight-bold">Nastavení:</th>
+                    <th class="font-weight-bold">{{$t('global.setting')}}:</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -63,13 +63,13 @@
                         </Link>
                     </td>
                     <td v-else></td>
-                    <td v-if="this.$page.props.permission.administrator_view || user.id == this.$page.props.user.id" class="d-flex align-center gp-em-05">
+                    <td v-if="this.$page.props.permission.administrator_view || user.id == this.$page.props.user.id" class="d-flex align-center ga-2">
                         <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
-                            <v-btn v-if="user.id !== this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
+                        <v-btn v-if="user.id !== this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
                     </td>
-                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && this.$page.props.permission.operator_view" class="d-flex align-center gp-em-05">
+                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && this.$page.props.permission.operator_view" class="d-flex align-center ga-2">
                         <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>

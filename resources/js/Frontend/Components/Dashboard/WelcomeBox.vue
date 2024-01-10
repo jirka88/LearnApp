@@ -12,9 +12,10 @@ import undefinedProfilePicture from "../../../../assets/user/Default_pfp.svg";
         class="info align-center"
         :class="{'sm-center d-flex justify-center align-center ga-4': $vuetify.display.mdAndDown}"
     >
-        <v-img
+        <Link :href="route('user.info')" >  <v-img
             class="margin-center"
             :src="$page.props.user.image ? '/storage/' + $page.props.user.image : undefinedProfilePicture"></v-img>
+        </Link>
         <div>
             <p class="font-weight-bold text-h6">{{$t('dashboard.welcome')}},
                 {{ $page.props.user.firstname }}</p>

@@ -14,9 +14,9 @@
         </div>
         <v-container v-scroll="onScroll">
             <Breadcrumbs :items="[{title: 'předměty', disabled: false, to: route('subject.index') }, {title: subject.name, disabled: true }]"></Breadcrumbs>
-            <div class="d-flex justify-content-between align-center pa-5 gp-em-05"
+            <div class="d-flex justify-content-between align-center py-5"
                  :class="{'flex-column-reverse': $vuetify.display.xs}">
-                <div class="d-flex flex-1-1-100 flex-wrap gp-em-05"
+                <div class="d-flex flex-1-1-100 flex-wrap ga-6"
                      :class="{'justify-center': $vuetify.display.xs}">
                     <Link v-if="subject.permission.permission_id != 1" :href="route('chapter.create', subject.slug )"
                           data-aos="zoom-in" data-aos-duration="400">
@@ -33,7 +33,7 @@
                         Nasdílet {{ this.$page.props.user.typeAccount == 'Osobní' ? 'Sekci' : 'Předmět' }}
                     </v-btn>
                 </div>
-                <div class="d-flex flex-1-1-100 w-100 justify-end" :class="{'justify-center': $vuetify.display.xs}">
+                <div class="d-flex flex-1-1-100 w-100 justify-end align-center" :class="{'justify-center pb-4': $vuetify.display.xs}">
                     <v-autocomplete
                         v-model="selectedChapter"
                         variant="outlined"
@@ -41,6 +41,7 @@
                         item-title="name"
                         item-value="id"
                         class="search"
+                        hide-details
                         prepend-inner-icon="mdi-folder-search-outline">
                     </v-autocomplete>
                 </div>
@@ -256,7 +257,7 @@ import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
 import {Inertia} from "@inertiajs/inertia";
 
 const router = useRouter();
-const page = ref(0);
+const page = ref(1);
 
 const status = ref(false);
 const sharing = ref(false);

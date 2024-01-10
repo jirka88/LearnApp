@@ -2,9 +2,9 @@
 import DashboardLayout from "../layouts/DashboardLayout.vue";
 import Chart from 'chart.js/auto';
 import {Bar} from 'vue-chartjs'
-import {markRaw, ref, watch} from "vue";
+import {defineAsyncComponent, markRaw, ref, watch} from "vue";
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
-import DialogRegisterRestrict from "@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue";
+const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
 
 const props = defineProps(['stats'])
 
@@ -100,7 +100,7 @@ const chartData = ref({
                             rounded
                              class="py-8 px-8 d-flex justify-center align-center flex-column">
                             <div class="text-h6 font-weight-bold">Omezit registraci</div>
-                            <v-switch inset color="red" @change="(() => restrictRegisterModal = true)" hide-details></v-switch>
+                            <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)" hide-details></v-switch>
                         </v-sheet>
                     </v-col>
                     <v-col>
@@ -120,7 +120,7 @@ const chartData = ref({
                         </v-sheet>
                     </v-col>
                 </v-row>
-                <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;"></DialogRegisterRestrict>
+                <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;  restrictRegister = stats.restrictRegister;"></DialogRegisterRestrict>
             </template>
         </v-container>
     </component>
@@ -146,7 +146,7 @@ const chartData = ref({
     max-height: 500px !important;
 }
 .v-switch__track {
-    background: green !important;
+    background: red !important;
 }
 .underlineLink:before {
     position: absolute;

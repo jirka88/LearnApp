@@ -10,4 +10,5 @@ return [
     'create_user' => 'Create user',
     'created' => 'Create',
     'delete' => 'Delete',
+    'setting' => 'Settings'
 ];

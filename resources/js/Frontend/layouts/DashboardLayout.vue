@@ -22,7 +22,7 @@
                 <v-divider></v-divider>
                 <v-list density="compact" nav>
                     <Link :href="route('dashboard')">
-                        <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')" :value="$t('dashboard.home')"></v-list-item>
+                        <v-list-item  prepend-icon="mdi-home-city" :title="$t('dashboard.home')" :value="$t('dashboard.home')" active-class="bg-primary"></v-list-item>
                     </Link>
                     <Link v-if="$page.props.permission.view" :href="route('admin')">
                         <v-list-item prepend-icon="mdi-account-cog"  :title="$t('dashboard.all_users')"
