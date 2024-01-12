@@ -2,12 +2,15 @@
 import DashboardLayout from "../layouts/DashboardLayout.vue";
 import Chart from 'chart.js/auto';
 import {Bar} from 'vue-chartjs'
-import {defineAsyncComponent, markRaw, ref, watch} from "vue";
+import {computed, defineAsyncComponent, markRaw, ref, watch} from "vue";
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
 
 const props = defineProps(['stats'])
 
+const isActiveToast = ref(false)
+const statusToast = ref(true);
 const restrictRegister = ref(props.stats.restrictRegister);
 
 const restrictRegisterModal = ref(false);
@@ -22,7 +25,10 @@ const chartData = ref({
         label: 'Uživatelé'
     }], labels: ["Běžný uživatelé", "Testeři", "Operátoři"]
 });
-
+const toastFetch = (value) => {
+    isActiveToast.value = true;
+    statusToast.value = value;
+}
 </script>
 
 <template>
@@ -32,6 +38,7 @@ const chartData = ref({
                 <div class="d-flex ga-6 flex-column dashboard">
                     <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
                         {{ $t('dashboard.stats') }}</h1>
+                    <Toastify v-if="isActiveToast" :text="statusToast ? 'Aktualizace úspěšná!' : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
                     <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
                         <v-col>
                             <WelcomeBox></WelcomeBox>
@@ -100,7 +107,7 @@ const chartData = ref({
                             rounded
                              class="py-8 px-8 d-flex justify-center align-center flex-column">
                             <div class="text-h6 font-weight-bold">Omezit registraci</div>
-                            <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)" hide-details></v-switch>
+                            <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)"  hide-details></v-switch>
                         </v-sheet>
                     </v-col>
                     <v-col>
@@ -120,7 +127,7 @@ const chartData = ref({
                         </v-sheet>
                     </v-col>
                 </v-row>
-                <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;  restrictRegister = stats.restrictRegister;"></DialogRegisterRestrict>
+                <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;  restrictRegister = stats.restrictRegister;" @fetchIsSuccess="toastFetch"></DialogRegisterRestrict>
             </template>
         </v-container>
     </component>
