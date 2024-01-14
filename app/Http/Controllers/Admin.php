@@ -76,7 +76,7 @@ class Admin extends Controller
             'active' => $active,
             'licences_id' => $licence
         ]);
-        return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
+        return redirect()->back()->with('successUpdate', __('validation.custom.update'));
     }
 
     /**

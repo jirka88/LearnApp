@@ -166,6 +166,7 @@ return [
         'email' => [
             'registered' => 'Email is registered!',
         ],
+        'update' => 'Update success'
     ],
 
     /*

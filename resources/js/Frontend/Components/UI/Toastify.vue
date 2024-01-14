@@ -1,37 +1,34 @@
 <script setup>
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 
 const props = defineProps({text: String, variant: String, time: Number})
 const emit = defineEmits(["close"])
 const toast = ref(true);
 const closed = () => {
-    emit('close');
+    toast.value = false;
 }
 
- onMounted(() => {
-   setTimeout(() => toast.value = false, props.time)
+onMounted(() => {
+    setTimeout(() => toast.value = false, props.time ? props.time : 1000)
 })
-const handleAfterLeave = () =>{
+const handleAfterLeave = () => {
     emit('close');
 }
 </script>
 
 <template>
     <Transition name="bounce" mode="out-in" @after-leave="handleAfterLeave" appear>
-    <v-sheet
-        v-if="toast"
-        height="70"
-        min-width="300"
-        width="300"
-        class="position-fixed toastify px-4"
-        :color="variant"
-        ref="toast"
-        :class="{'center': $vuetify.display.mdAndDown}">
-        <div class="h-100 align-center ga-4">
-            <v-icon
-                icon="mdi-checkbox-marked-circle"
-            ></v-icon>
-            <p class="font-weight-bold text-white">{{text}}</p>
+        <v-alert
+            v-if="toast"
+            height="70"
+            min-width="300"
+            width="300"
+            :color="variant"
+            :icon="'$'+variant"
+            class="position-fixed toastify px-4"
+            :title="text"
+            prominent
+            :class="{'center': $vuetify.display.mdAndDown}">
             <v-btn
                 @click="closed"
                 variant="plain"
@@ -40,8 +37,7 @@ const handleAfterLeave = () =>{
                 class="justify-end align-start"
             >
             </v-btn>
-        </div>
-    </v-sheet>
+        </v-alert>
     </Transition>
 </template>
 
@@ -51,13 +47,28 @@ const handleAfterLeave = () =>{
     right: 5%;
     top: 2%;
     z-index: 9999;
-    div {
-        display: grid;
-        grid-template-columns: 1em 1fr 1em;
+    padding-top: 0.8em;
+    :deep(.v-alert__content) {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        .v-alert-title {
+            font-size: 0.8em;
+            line-height: 1.2em;
+            font-weight: bold;
+        }
+    }
+    :deep(.v-icon) {
+        font-size: 2em !important;
+    }
+    .v-btn {
+        :deep(.v-icon) {
+            font-size: 1.4em !important;
+        }
     }
 }
 .center {
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     left: 50%;
     top: 5%;
 }

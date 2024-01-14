@@ -10,5 +10,6 @@ return [
     'create_user' => 'Vytvořit uživatele',
     'created' => 'Vytvořit',
     'delete' => 'Vymazat',
-    'setting' => 'Nastavení'
+    'setting' => 'Nastavení',
+    'change' => 'Změnit'
 ];

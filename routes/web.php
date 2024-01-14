@@ -32,6 +32,7 @@ Route::group(['middleware' => ['guest']], function() {
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
+    Route::get('/passwordreset', [LoginController::class, 'passwordReset'])->name('reset');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');

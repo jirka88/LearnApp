@@ -166,6 +166,7 @@ return [
         'email' => [
             'registered' => 'Email je registrován!',
         ],
+        'update' => 'Aktualizace úspěšná'
     ],
 
     /*

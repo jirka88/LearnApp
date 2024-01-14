@@ -2,15 +2,14 @@
 import DashboardLayout from "../layouts/DashboardLayout.vue";
 import Chart from 'chart.js/auto';
 import {Bar} from 'vue-chartjs'
-import {computed, defineAsyncComponent, markRaw, ref, watch} from "vue";
+import {defineAsyncComponent, markRaw, ref} from "vue";
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
+import {isActiveToast, statusToast, toastShow, toastStatus} from "../../Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
 
 const props = defineProps(['stats'])
 
-const isActiveToast = ref(false)
-const statusToast = ref(true);
 const restrictRegister = ref(props.stats.restrictRegister);
 
 const restrictRegisterModal = ref(false);
@@ -26,8 +25,8 @@ const chartData = ref({
     }], labels: ["Běžný uživatelé", "Testeři", "Operátoři"]
 });
 const toastFetch = (value) => {
-    isActiveToast.value = true;
-    statusToast.value = value;
+    toastShow(true);
+    toastStatus(value);
 }
 </script>
 
@@ -38,7 +37,7 @@ const toastFetch = (value) => {
                 <div class="d-flex ga-6 flex-column dashboard">
                     <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
                         {{ $t('dashboard.stats') }}</h1>
-                    <Toastify v-if="isActiveToast" :text="statusToast ? 'Aktualizace úspěšná!' : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
+                    <Toastify v-if="isActiveToast" :text="statusToast ? $t('validation.custom.update') : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
                     <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
                         <v-col>
                             <WelcomeBox></WelcomeBox>
@@ -106,7 +105,7 @@ const toastFetch = (value) => {
                             border
                             rounded
                              class="py-8 px-8 d-flex justify-center align-center flex-column">
-                            <div class="text-h6 font-weight-bold">Omezit registraci</div>
+                            <div class="text-h6 font-weight-bold">{{$t('dashboard.restrict_register')}}</div>
                             <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)"  hide-details></v-switch>
                         </v-sheet>
                     </v-col>

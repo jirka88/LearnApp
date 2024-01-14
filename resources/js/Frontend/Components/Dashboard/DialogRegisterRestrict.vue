@@ -12,14 +12,14 @@
                 @click="close"
                 size="x-large"
             >
-                Zřušit
+                {{$t('global.close')}}
             </v-btn>
             <v-btn
                 class="bg-red"
                 size="x-large"
                 @click="changeRestrict"
             >
-                Změnit
+                {{$t('global.change')}}
             </v-btn>
         </v-card-actions>
     </v-card>

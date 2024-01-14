@@ -53,7 +53,7 @@ class DashboardUserController extends Controller
             'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
-        return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
+        return redirect()->back()->with('successUpdate', 'Aktualizace úspěšná!');
     }
 
     /**

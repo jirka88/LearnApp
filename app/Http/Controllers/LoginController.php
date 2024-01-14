@@ -67,5 +67,8 @@ class LoginController extends Controller
             ]),
         ]);
     }
+    public function passwordReset() {
+        return Inertia::render('register', ['value' => 2]);
+    }
 
 }

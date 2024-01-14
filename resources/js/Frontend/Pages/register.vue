@@ -26,13 +26,19 @@
                             <v-tab>
                                 {{ $t('authentication.login')}}
                             </v-tab>
+                            <v-tab v-if="tab === 2">
+                                Reset hesla
+                            </v-tab>
                         </v-tabs>
                         <v-window v-model="tab">
                             <v-window-item :key="1">
                                 <RegisterForm/>
                             </v-window-item>
                             <v-window-item :key="2">
-                                <LoginForm/>
+                                <LoginForm />
+                            </v-window-item>
+                            <v-window-item :key="3">
+                                <ResetPassword />
                             </v-window-item>
                         </v-window>
                     </v-sheet>
@@ -43,10 +49,11 @@
 </template>
 
 <script setup>
+import {defineAsyncComponent, ref} from "vue";
 import Layout from '../layouts/AuthLayout.vue'
 import RegisterForm from "../Components/Authentication/RegisterForm.vue"
 import LoginForm from "../Components/Authentication/LoginForm.vue"
-import {ref} from "vue";
+const ResetPassword = defineAsyncComponent(() =>import("@/Frontend/Components/Authentication/ResetPassword.vue"));
 //Register x login
 const props = defineProps(['value']);
 const tab = ref(props.value);
@@ -65,8 +72,8 @@ const tab = ref(props.value);
     padding: 0 !important;
 }
 .menu {
-    height: 100vh;
     display: flex;
+    height: 100vh;
     & .v-sheet {
         min-height: 420px;
     }

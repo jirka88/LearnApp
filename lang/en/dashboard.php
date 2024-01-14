@@ -13,5 +13,6 @@ return [
     'normal_users' => 'Normal users',
     'organization' => 'Organization',
     'welcome' => 'Welcome',
-    'sign_out' => 'Sign out'
+    'sign_out' => 'Sign out',
+    'restrict_register' => 'Restrict register'
 ];

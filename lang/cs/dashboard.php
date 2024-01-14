@@ -13,5 +13,6 @@ return [
     'normal_users' => 'Běžné uživatelé',
     'organization' => 'Organizace',
     'welcome' => 'Vítejte',
-    'sign_out' => 'Odhlásit se'
+    'sign_out' => 'Odhlásit se',
+    'restrict_register' => 'Omezit registraci'
 ];
