@@ -76,9 +76,8 @@ class ChapterController extends Controller
                 $query2->find(auth()->user()->id);
             }])->first();
         }])->first();
-
         $this->authorize('update', $chapter);
-        return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $slug]);
+        return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
     }
 
     /**
@@ -88,7 +87,8 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
-        $chapter = Chapter::where("slug", $chapterRequest->slug)->first();
+        $chapterModel = new Chapter();
+        $chapter = $chapterModel->getChapter($slug);
         $this->authorize('update', $chapter);
         $chapter->update([
             'name' => $chapterRequest->name,
@@ -96,7 +96,7 @@ class ChapterController extends Controller
             'context' => $chapterRequest->contentChapter,
             'slug' => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
         ]);
-        return to_route('subject.show', $slug);
+        return to_route('subject.show', $chapter->Partition()->find($chapter->partition_id)->slug);
     }
     /**
      * Vymazání kapitoly
@@ -113,7 +113,7 @@ class ChapterController extends Controller
     public function selectChapter(Request $request) {
         $sort = $request->input('select');
         //echo route('chapter.select', [$sort]);
-        $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug')->first();
+        $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug', 'context')->first();
         return response()->json(["loadedSelectedChapter" => $chapter]);
     }
 }

@@ -26,6 +26,15 @@ class Chapter extends Model
             ]
         ];
     }
+
+    /**
+     * Vrátí kapitolu podle slug
+     * @param $chapter
+     * @return mixed
+     */
+    public function getChapter($chapter) :Chapter {
+        return $this->where('slug', $chapter)->first();
+    }
     public function Partition() :BelongsTo {
         return $this->BelongsTo(Partition::class, 'partition_id');
     }
