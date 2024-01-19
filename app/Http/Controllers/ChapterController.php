@@ -12,6 +12,8 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use function Symfony\Component\String\b;
+
 class ChapterController extends Controller
 {
     public function show(Request $request, $slug, $chapterName) {
@@ -71,11 +73,10 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function edit(Request $request, $slug, $chapter) {
-        $chapter = Chapter::where("slug", $chapter)->with(["partition" => function ($query) {
-            $query->with(['Users' => function ($query2) {
+        $chapterModel = new Chapter();
+        $chapter =  $chapterModel->getChapter($chapter)->Partition()->with(['Users' => function ($query2) {
                 $query2->find(auth()->user()->id);
             }])->first();
-        }])->first();
         $this->authorize('update', $chapter);
         return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
     }
@@ -112,8 +113,15 @@ class ChapterController extends Controller
     }
     public function selectChapter(Request $request) {
         $sort = $request->input('select');
-        //echo route('chapter.select', [$sort]);
-        $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug', 'context')->first();
-        return response()->json(["loadedSelectedChapter" => $chapter]);
+        $chapter = [];
+        if($sort !== null) {
+            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->select('name', 'perex','slug')->get();
+        }
+        if(count($chapter) === 0) {
+            $chapter = 'Nic nenalezeno!';
+        }
+
+
+        return response()->json(["search" => $chapter]);
     }
 }

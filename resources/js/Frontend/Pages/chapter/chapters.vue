@@ -2,18 +2,10 @@
     <component :is="DashboardLayout">
         <div v-if="showSearchMobile" class="hidden-md-and-up justify-center pa-5 w-100 justify-end position-sticky"
              id="m-box" data-aos="zoom-in-down">
-            <v-autocomplete
-                v-model="selectedChapter"
-                variant="outlined"
-                :items="selectedChapters"
-                item-title="name"
-                class="w-100 searchMobile"
-                prepend-inner-icon="mdi-folder-search-outline"
-                hide-details>
-            </v-autocomplete>
         </div>
         <v-container v-scroll="onScroll">
-            <Breadcrumbs :items="[{title: 'předměty', disabled: false, to: route('subject.index') }, {title: subject.name, disabled: true }]"></Breadcrumbs>
+            <Breadcrumbs
+                :items="[{title: 'předměty', disabled: false, to: route('subject.index') }, {title: subject.name, disabled: true }]"></Breadcrumbs>
             <div class="d-flex justify-content-between align-center py-5"
                  :class="{'flex-column-reverse': $vuetify.display.xs}">
                 <div class="d-flex flex-1-1-100 flex-wrap ga-6"
@@ -22,7 +14,7 @@
                           data-aos="zoom-in" data-aos-duration="400">
                         <v-btn
                             class="bg-green">
-                            {{$t('global.created')}} kapitolu
+                            {{ $t('global.created') }} kapitolu
                         </v-btn>
                     </Link>
                     <v-btn
@@ -34,22 +26,21 @@
                     </v-btn>
                 </div>
                 <SearchChapters
-                    :selectedChapters ="selectedChapters"
                     :subject="subject"
                 ></SearchChapters>
             </div>
-            <v-sheet class="py-5 d-flex flex-wrap ga-8" :class="{'justify-center': $vuetify.display.smAndDown}">
+            <v-sheet class="py-5 d-grid ga-6">
                 <DialogShare
                     v-model="sharing"
                     :subject="subject"
                     :errors="errors"
                     :users="users"
                     @close="sharing = false"></DialogShare>
-                <ChapterPreview
-                    v-for="chapter in chapters" :key="chapter.id"
-                    :chapter="chapter"
-                    :subject="subject">
-                </ChapterPreview>
+                    <ChapterPreview
+                        v-for="chapter in chapters" :key="chapter.id"
+                        :chapter="chapter"
+                        :subject="subject">
+                    </ChapterPreview>
             </v-sheet>
             <v-pagination
                 v-if="pages !== 0"
@@ -82,6 +73,7 @@ import ChapterPreview from "@/Frontend/Components/ChapterPreview.vue";
 import axios from "axios";
 import SearchChapters from "@/Frontend/Components/SearchChapters.vue";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+
 const users = ref();
 const DialogShare = defineAsyncComponent(() => import("@/Frontend/Components/DialogShare.vue"))
 
@@ -94,34 +86,28 @@ const props = defineProps({
     subject: Object,
     errors: Object,
     pages: Number,
-    AllChapter: Object,
-    loadedSelectedChapter: Object
 });
-const selectedChapters = props.AllChapter;
-const selectedChapter = ref(props.loadedSelectedChapter.name);
 
 const isOn = ref(false);
-const enableSharing = async() => {
+const enableSharing = async () => {
     await axios.get(props.subject.slug + "/sharing/users")
-          .then(response => {
-              users.value  = response.data;
-          })
+        .then(response => {
+            users.value = response.data;
+        })
     sharing.value = true;
 }
 const onScroll = () => {
     if (window.scrollY > 120) {
         showSearchMobile.value = true;
         isOn.value = true;
-    }
-    else {
-        if(isOn) {
+    } else {
+        if (isOn) {
             isOn.value = false;
             showSearchMobile.value = false;
         }
     }
 }
 const fetchData = () => {
-    selectedChapter.value !== null ? selectedChapter.value = null : null;
     Inertia.get(route('subject.show', props.subject.slug), {page: page.value}, {
         preserveState: true, onSuccess: (response) => {
             props.chapters = response.props.chapters;
@@ -130,28 +116,18 @@ const fetchData = () => {
 }
 </script>
 <style scoped lang="scss">
-selection {
-    gap: 2.5em;
-
-    .v-card {
-        flex: 1 1 auto;
-        width: 260px !important;
-        min-height: 14em !important;
-
-        .text-h4 {
-            text-wrap: balance;
-        }
-
-        .v-card-actions {
-            .v-btn {
-                border-radius: 0.5em !important;
-            }
-        }
+@use 'vuetify/lib/styles/settings/variables' as *;
+.v-sheet{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    @media #{map-get($display-breakpoints, 'md-and-down')} {
+        grid-template-columns: 1fr 1fr;
     }
-}
-
-.v-select {
-    max-width: 150px;
+    @media #{map-get($display-breakpoints, 'sm-and-down')} {
+        grid-template-columns: 1fr;
+        align-items: center;
+        justify-content: center;
+    }
 }
 
 .v-dialog {

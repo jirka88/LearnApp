@@ -51,13 +51,8 @@ class SubjectController extends Controller
             return $chapter->toArray();
         });
         $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / $this->ItemsInPages);
-        $loadedSelectedChapter = Chapter::where('name', $request->select)->first();
 
-        if($loadedSelectedChapter == null) {
-            $loadedSelectedChapter = '';
-        }
-        $AllChapter = $subject->Chapter()->pluck("name");
-        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'AllChapter', 'loadedSelectedChapter'));
+        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
     }
     /**
      * Redirect k formuláři k vytvoření předmětu

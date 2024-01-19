@@ -1,16 +1,27 @@
 
 <template>
     <div class="d-flex justify-end align-center search" :class="{'justify-center pb-4': $vuetify.display.xs}">
-        <v-autocomplete
+        <v-menu
+
+        >
+        <template v-slot:activator="{ props }">
+        <v-text-field
             v-model="search"
+            v-bind="props"
             variant="outlined"
-            :items="selectedChapters"
-            item-title="name"
-            item-value="id"
             class="search"
             hide-details
             prepend-inner-icon="mdi-folder-search-outline">
-        </v-autocomplete>
+        </v-text-field>
+            </template>
+
+            <v-list>
+                <v-list-item v-for="(item, index) in searchResult"
+                :key="index" class="text-center">
+                    {{item}}
+                </v-list-item>
+            </v-list>
+        </v-menu>
     </div>
 </template>
 
@@ -18,34 +29,17 @@
 import {ref, watch} from "vue";
 import axios from "axios";
 
-const props = defineProps({ subject: Object, selectedChapters: Object})
+const props = defineProps({ subject: Object})
 const search = ref('');
+const searchResult = ref([]);
 watch(search, async(val) =>{
     if(val !== null) {
         await axios.get(`/dashboard/manager/subject/${props.subject.slug}/select?select=${search.value}`)
             .then(response => {
-                 console.log(response.data);
+                 searchResult.value = response.data;
             })
     }
 })
-
-/*watch(props.selectedChapter, async () => {
-    props.selectedChapterShow.value = props.chapters.find(x => x.name === props.selectedChapter.value);
-    if (selectedChapterShow.value === undefined) {
-        await axios.get(`/dashboard/manager/subject/${props.subject.slug}/select?select=${selectedChapter.value}`)
-            .then(response => {
-                selectedChapterShow.value = response.data;
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-        if(selectedChapterShow.value.loadedSelectedChapter === null)  {
-            return;
-        }
-    }
-    router.push(`?select=${selectedChapter.value}`);
-});*/
 </script>
 
 <style scoped lang="scss">
