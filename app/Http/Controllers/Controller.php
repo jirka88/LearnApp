@@ -60,8 +60,8 @@ class Controller extends BaseController
     public function share(Request $request)
     {
         $customMessages = [
-            'users.required' => 'Je nutné vyplnit uživatele.',
-            'permission.required' => 'Musíte vyplnit oprávnění'
+            'users.required' => __('share.warning.required_user'),
+            'permission.required' =>  __('share.warning.required_permission')
         ];
         $validated = $request->validate([
             'users' => 'required',
@@ -69,13 +69,13 @@ class Controller extends BaseController
             'subject' => 'required'
         ], $customMessages);
 
-        $sendMessage = 'Žádost o sdílení byla zaslána!';
+        $sendMessage = __('share.warning.send');
         foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
             if ($user->patritions()->where("partition_id", $validated['subject'])->first() == null) {
                 $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
             } else {
-                $sendMessage = 'Žádost o sdílení byla už zaslána!';
+                $sendMessage = __('share.warning.again_send');
             }
         }
         return redirect()->back()->with('successUpdate', $sendMessage);

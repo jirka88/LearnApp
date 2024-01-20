@@ -3,7 +3,7 @@
     <component :is="DashboardLayout">
         <div class="creatingChapter primary-bg d-flex justify-center align-center">
             <v-container class="px-8">
-                <BackBtn :url="route('subject.show', slug)"/>
+                <BackBtn :url="route('subject.show', chapter.partition.slug)"/>
                 <form class="pa-8 mt-4 w-100 d-flex flex-column"  @submit.prevent="editChapter">
                     <h1 class="py-4">Editace kapitoly</h1>
                     <v-text-field

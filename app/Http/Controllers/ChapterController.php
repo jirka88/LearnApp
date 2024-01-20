@@ -73,8 +73,9 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function edit(Request $request, $slug, $chapter) {
-        $chapterModel = new Chapter();
-        $chapter =  $chapterModel->getChapter($chapter)->Partition()->with(['Users' => function ($query2) {
+        $chapterModel = app('App\Models\Chapter');
+        $chapter = $chapterModel->getChapter($chapter);
+        $chapter->with(['Partition.Users' => function ($query2) {
                 $query2->find(auth()->user()->id);
             }])->first();
         $this->authorize('update', $chapter);
@@ -88,7 +89,7 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
-        $chapterModel = new Chapter();
+        $chapterModel = app('App\Models\Chapter');
         $chapter = $chapterModel->getChapter($slug);
         $this->authorize('update', $chapter);
         $chapter->update([
@@ -111,11 +112,12 @@ class ChapterController extends Controller
         $chapterDelete->delete();
         return to_route('subject.show', $slug);
     }
-    public function selectChapter(Request $request) {
+    public function selectChapter(Request $request, $slug) {
         $sort = $request->input('select');
+        $subject = Partition::where('slug', $slug)->pluck('id')->first();
         $chapter = [];
         if($sort !== null) {
-            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->select('name', 'perex','slug')->get();
+            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject)->select('name', 'perex','slug')->get();
         }
         if(count($chapter) === 0) {
             $chapter = 'Nic nenalezeno!';

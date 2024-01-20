@@ -3,7 +3,7 @@ import {Link} from "@inertiajs/inertia-vue3";
 import {ref} from "vue";
 import {Inertia} from "@inertiajs/inertia";
 
-defineProps({chapter: Object, subject: Object, key: Number})
+const props = defineProps({chapter: Object, subject: Object, key: Number})
 const status = ref(false);
 const activeChapter = ref("");
 const enableDialog = (chapter) => {

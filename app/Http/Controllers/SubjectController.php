@@ -35,6 +35,7 @@ class SubjectController extends Controller
      */
     public function show(Request $request, $slug) {
         $subject = Partition::where('slug', $slug)->first();
+
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
 
         if($pShare === null) {
