@@ -108,22 +108,28 @@ class ChapterController extends Controller
      * @return void
      */
     public function destroy(Request $request, $slug, $chapter) {
-        $chapterDelete = Chapter::where('slug', $chapter)->first();
+        $chapterModel = app('App\Models\Chapter');
+        $chapterDelete = $chapterModel->getChapter($chapter);
         $chapterDelete->delete();
         return to_route('subject.show', $slug);
     }
+
+    /**
+     * Vyhledání kapitol
+     * @param Request $request
+     * @param $slug
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function selectChapter(Request $request, $slug) {
         $sort = $request->input('select');
-        $subject = Partition::where('slug', $slug)->pluck('id')->first();
+        $subject_id = Partition::where('slug', $slug)->pluck('id')->first();
         $chapter = [];
         if($sort !== null) {
-            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject)->select('name', 'perex','slug')->get();
+            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject_id)->select('name', 'perex','slug')->get();
         }
         if(count($chapter) === 0) {
             $chapter = 'Nic nenalezeno!';
         }
-
-
         return response()->json(["search" => $chapter]);
     }
 }

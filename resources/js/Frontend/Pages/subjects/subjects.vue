@@ -11,8 +11,8 @@
                             </v-btn>
                         </Link>
                         <v-select
-                            @update:modelValue="filtred"
                             v-model="filtr"
+                            @update:modelValue="filtred"
                             :items="items"
                             item-title="state"
                             item-value="id"
@@ -37,13 +37,13 @@
                         </tr>
                         </thead>
                         <tbody v-if="subjectsShow.length !== 0">
-                            <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
+                           <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
                                 <td class="font-weight-bold"  v-if="$page.props.permission.view">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
                                 <td>{{subjectData.chapter_count}}</td>
                                 <td>
-                                    <Link :href="route('subject.edit', [subjectData.slug])">
+                                    <Link :href="route('subject.edit',{subject: subjectData.slug})">
                                         <v-btn
                                     color="green"
                                     append-icon="mdi-pencil"
@@ -123,9 +123,9 @@ const form = useForm();
 const dialog = ref(false);
 const subjectId = ref();
 const subjectName = ref();
-const filtr = ref({state: 'Výchozí', id: 'default'});
 const page = ref(1);
-const props = defineProps({subjects: Object, pages: Number});
+const props = defineProps({subjects: Object, pages: Number, sort: String});
+const filtr = ref({state: 'Výchozí', id: 'default'});
 const subjectsShow = ref(props.subjects);
 const setId = (id, name) => {
     dialog.value = true;
@@ -142,23 +142,17 @@ const fetchData = () => {
         subjectsShow.value = response.props.subjects;
     }});
 }
-const filtred = () => {
-    const sort = filtr.value.id;
-
-    axios.get(`/dashboard/manager/subjects/sort?sort=${sort}`)
+const filtred = async() => {
+    router.push(`?sort=${filtr.value.id}`);
+    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.id}`)
         .then(response => {
-            console.log(response.data)
-            subjectsShow.value = response.data;
-            router.push(`?sort=${sort}`);
+            subjectsShow.value = response.data.data;
         })
-        .catch(error => {
-            console.error(error);
-        });
 }
 const items = markRaw(
     [{state: 'Výchozí', id: 'default'},
-    {state: 'Sestupně', id: 'ASC'},
-    {state: 'Vzestupně', id: 'DESC'}]
+            {state: 'Sestupně', id: 'ASC'},
+            {state: 'Vzestupně', id: 'DESC'}]
 );
 </script>
 

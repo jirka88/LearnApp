@@ -6,6 +6,7 @@ use App\Http\Components\Localization;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
+use \App\Http\Components\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -28,13 +29,7 @@ class Controller extends BaseController
     public function sort(Request $request)
     {
         $sort = $request->input('sort', 'default');
-        if ($sort !== 'default') {
-            $subjects = Partition::orderBy('name', $sort)->where('created_by', auth()->user()->id)->paginate(20);
-            return response()->json($subjects);
-        } else {
-            $subjects = Partition::where('created_by', auth()->user()->id)->paginate(20);
-            return response()->json($subjects);
-        }
+        return Filter::sorting($sort);
     }
 
     /**

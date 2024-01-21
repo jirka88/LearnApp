@@ -21,11 +21,17 @@ class SubjectController extends Controller
      * Vrácení všech předmětů
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $subjects = Partition::withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
+        $sort = $request->input('sort');
+        if($sort) {
+            $subjects = Partition::orderBy('name', $sort)->withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
+        }
+        else {
+            $subjects = Partition::withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
+        }
         $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
-        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages]);
+        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort]);
     }
 
     /**
