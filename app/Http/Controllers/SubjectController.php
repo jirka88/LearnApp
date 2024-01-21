@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\Filter;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
@@ -24,7 +25,7 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $sort = $request->input('sort');
-        if($sort) {
+        if($sort && $sort !== Filter::DEFAULT_VALUE) {
             $subjects = Partition::orderBy('name', $sort)->withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
         }
         else {

@@ -137,7 +137,8 @@ class Admin extends Controller
      */
     public function getUserSubjects($slug)
     {
-        $user = User::where('slug', $slug)->first();
+        $user = app('App\Models\User');
+        $user = $user->getUserBySlug($slug);
         $this->authorize('view', $user);
         $subjects = User::with(['patritions' => function ($query) {
             $query->withCount('chapter');
@@ -153,7 +154,8 @@ class Admin extends Controller
      */
     public function createUserSubject($slug)
     {
-        $user = User::where('slug', $slug)->first();
+        $user = app('App\Models\User');
+        $user = $user->getUserBySlug($slug);
         $this->authorize('view', $user);
         $url = "/dashboard/admin/controll/" . $user->slug . "/subject/create";
         return Inertia::render('subjects/createSubjects', compact('url'));
@@ -167,7 +169,8 @@ class Admin extends Controller
      */
     public function storeUserSubject($slug, SubjectRequest $subjectRequest)
     {
-        $user = User::where('slug', $slug)->first();
+        $user = app('App\Models\User');
+        $user = $user->getUserBySlug($slug);
         $subject = $subjectRequest->only("name");
         $subject["icon"] = $subjectRequest->icon["iconName"];
         $subject["created_by"] = $user->id;

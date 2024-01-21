@@ -45,6 +45,9 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
+    public function getUserBySlug($slug) : ?User {
+        return User::where('slug', $slug)->first();
+    }
     public function roles() : BelongsTo {
         return $this->belongsTo(Roles::class, 'role_id');
     }

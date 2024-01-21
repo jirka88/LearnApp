@@ -4,6 +4,7 @@ use App\Models\Partition;
 use Illuminate\Http\JsonResponse;
 
 class Filter {
+    public const DEFAULT_VALUE = 'default';
     public static function sorting($sort) : JsonResponse {
         if ($sort !== 'default') {
             $subjects = Partition::orderBy('name', $sort)->where('created_by', auth()->user()->id)->paginate(20);

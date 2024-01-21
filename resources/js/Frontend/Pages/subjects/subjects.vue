@@ -115,7 +115,7 @@ import  {Link, useForm} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import inertia from "@inertiajs/inertia";
-import {markRaw, ref} from "vue";
+import {markRaw, onMounted, ref} from "vue";
 import { useRouter } from 'vue-router';
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 const router = useRouter()
@@ -127,6 +127,20 @@ const page = ref(1);
 const props = defineProps({subjects: Object, pages: Number, sort: String});
 const filtr = ref({state: 'Výchozí', id: 'default'});
 const subjectsShow = ref(props.subjects);
+
+const items = markRaw(
+    [{state: 'Výchozí', id: 'default'},
+        {state: 'Sestupně', id: 'ASC'},
+        {state: 'Vzestupně', id: 'DESC'}]
+);
+
+onMounted(() =>{
+    let urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.get('sort') !== null) {
+        const sortValue = items.find(item => item.id === urlParams.get('sort'));
+        filtr.value = sortValue;
+    }
+})
 const setId = (id, name) => {
     dialog.value = true;
     subjectId.value = id;
@@ -143,17 +157,12 @@ const fetchData = () => {
     }});
 }
 const filtred = async() => {
-    router.push(`?sort=${filtr.value.id}`);
+    await router.push(`?sort=${filtr.value.id}`);
     await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.id}`)
         .then(response => {
             subjectsShow.value = response.data.data;
         })
 }
-const items = markRaw(
-    [{state: 'Výchozí', id: 'default'},
-            {state: 'Sestupně', id: 'ASC'},
-            {state: 'Vzestupně', id: 'DESC'}]
-);
 </script>
 
 <style scoped lang="scss">

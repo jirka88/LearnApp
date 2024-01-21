@@ -11,7 +11,7 @@ return [
         'required_user' => 'Je nutné vyplnit uživatele',
         'required_permission' => 'Musíte vyplnit oprávnění',
         'send' => 'Žádost o sdílení byla zaslána!',
-        'again_send' => 'Žádost o sdílení byla už zaslána!'
+        'again_send' => 'Žádost o sdílení byla už zaslána!',
     ]
 
 ];

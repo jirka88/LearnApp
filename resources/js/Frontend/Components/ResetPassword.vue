@@ -32,7 +32,7 @@
                    class="btn d-flex"
                    :class="{'w-100': $vuetify.display.smAndDown}"
             >
-                Změnit heslo!
+                {{$t('userAccount.change_password')}}!
             </v-btn>
         </v-form>
     </fieldset>
