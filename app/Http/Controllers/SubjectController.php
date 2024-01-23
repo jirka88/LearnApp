@@ -16,7 +16,7 @@ use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
-    public $ItemsInPages = 20;
+    private $ItemsInPages = 20;
 
     /**
      * Vrácení všech předmětů
@@ -26,10 +26,15 @@ class SubjectController extends Controller
     {
         $sort = $request->input('sort');
         if($sort && $sort !== Filter::DEFAULT_VALUE) {
-            $subjects = Partition::orderBy('name', $sort)->withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
+            $subjects = Partition::orderBy('name', $sort)
+                ->withCount('Chapter')
+                ->paginate($this->ItemsInPages)
+                ->where('created_by', auth()->user()->id);
         }
         else {
-            $subjects = Partition::withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
+            $subjects = Partition::withCount('Chapter')
+                ->paginate($this->ItemsInPages)
+                ->where('created_by', auth()->user()->id);
         }
         $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
         return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort]);

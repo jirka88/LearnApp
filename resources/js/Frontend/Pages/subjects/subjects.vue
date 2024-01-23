@@ -116,9 +116,8 @@ import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import inertia from "@inertiajs/inertia";
 import {markRaw, onMounted, ref} from "vue";
-import { useRouter } from 'vue-router';
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
-const router = useRouter()
+import { useUrlSearchParams } from '@vueuse/core';
 const form = useForm();
 const dialog = ref(false);
 const subjectId = ref();
@@ -135,9 +134,9 @@ const items = markRaw(
 );
 
 onMounted(() =>{
-    let urlParams = new URLSearchParams(window.location.search);
-    if(urlParams.get('sort') !== null) {
-        const sortValue = items.find(item => item.id === urlParams.get('sort'));
+    const params = useUrlSearchParams('history')
+    if(params.sort !== null) {
+        const sortValue = items.find(item => item.id === params.sort);
         filtr.value = sortValue;
     }
 })
@@ -157,7 +156,8 @@ const fetchData = () => {
     }});
 }
 const filtred = async() => {
-    await router.push(`?sort=${filtr.value.id}`);
+    const params = useUrlSearchParams('history')
+    params.sort = filtr.value.id;
     await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.id}`)
         .then(response => {
             subjectsShow.value = response.data.data;

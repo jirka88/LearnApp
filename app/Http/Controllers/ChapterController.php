@@ -128,7 +128,7 @@ class ChapterController extends Controller
             $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject_id)->select('name', 'perex','slug')->get();
         }
         if(count($chapter) === 0) {
-            $chapter = 'Nic nenalezeno!';
+            $chapter = ['item' => 'Nic nenalezeno!'];
         }
         return response()->json(["search" => $chapter]);
     }

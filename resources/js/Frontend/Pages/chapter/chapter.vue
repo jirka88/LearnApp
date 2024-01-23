@@ -3,7 +3,7 @@
         <main class="primary-bg">
             <v-container>
                 <div class="chapter pa-10 elevation-20">
-                    <div class="d-flex gp-em-05">
+                    <div class="d-flex ga-2">
                         <BackBtn class="pb-4" :url="route('subject.show', slug)" background='green' data-aos="zoom-in"
                                  data-aos-duration="400"/>
                         <Link v-if="chapter.partition.users[0].permission.permission_id != 1"
