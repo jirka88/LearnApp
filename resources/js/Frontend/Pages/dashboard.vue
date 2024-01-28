@@ -6,6 +6,7 @@ import {defineAsyncComponent, markRaw, ref} from "vue";
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
 import {isActiveToast, statusToast, toastShow, toastStatus} from "../../Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+import DialogChangeColorTheme from "@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue";
 const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
 
 const props = defineProps(['stats'])
@@ -28,6 +29,11 @@ const toastFetch = (value) => {
     toastShow(true);
     toastStatus(value);
 }
+const themeModal = ref(false);
+const setColorTheme = () =>{
+    themeModal.value = true;
+}
+
 </script>
 
 <template>
@@ -103,6 +109,7 @@ const toastFetch = (value) => {
                         <v-sheet
                             :elevation="8"
                             border
+                            min-height="10em"
                             rounded
                              class="py-8 px-8 d-flex justify-center align-center flex-column">
                             <div class="text-h6 font-weight-bold">{{$t('dashboard.restrict_register')}}</div>
@@ -113,8 +120,15 @@ const toastFetch = (value) => {
                         <v-sheet
                             :elevation="8"
                             border
+                            min-height="10em"
                             rounded
+                            class="py-8 px-8 d-flex justify-center align-center"
                         >
+                            <v-btn
+                                @click="setColorTheme"
+                                color="green">
+                                Změnit barvu aplikace
+                            </v-btn>
                         </v-sheet>
                     </v-col>
                     <v-col>
@@ -126,6 +140,7 @@ const toastFetch = (value) => {
                         </v-sheet>
                     </v-col>
                 </v-row>
+                <DialogChangeColorTheme v-model="themeModal" @close="themeModal = false"></DialogChangeColorTheme>
                 <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;  restrictRegister = stats.restrictRegister;" @fetchIsSuccess="toastFetch"></DialogRegisterRestrict>
             </template>
         </v-container>

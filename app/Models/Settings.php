@@ -7,7 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Settings extends Model
 {
-    protected $fillable = ['RestrictedRegistration'];
+    protected $fillable = [
+        'RestrictedRegistration',
+        'color'
+        ];
     protected $casts = ['RestrictedRegistration' => 'boolean'];
     public $timestamps = false;
 

@@ -4,7 +4,7 @@
         persistent
         width="auto"
     >
-        <v-form @submit.prevent="sharingToUsers(); $page.props.flash.messageUpdate = ''">
+        <v-form @submit.prevent="sharingToUsers(); $page.props.flash.message = ''">
             <v-card>
                 <v-card-title class="text-h5 text-center">
                     {{$t('share.title')}}
@@ -47,7 +47,7 @@
                 <v-card-actions class="margin-center d-flex justify-center">
                     <v-btn
                         class="bg-white"
-                        @click="emit('close'); $page.props.flash.messageUpdate = ''"
+                        @click="emit('close'); $page.props.flash.message = ''"
                         size="x-large"
                     >
                        {{$t('global.close')}}

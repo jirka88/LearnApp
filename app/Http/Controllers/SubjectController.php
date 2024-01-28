@@ -27,7 +27,7 @@ class SubjectController extends Controller
         $sort = $request->input('sort');
         if($sort && $sort !== Filter::DEFAULT_VALUE) {
             $subjects = Partition::orderBy('name', $sort)
-                ->withCount('Chapter')
+                ->append('chapter_count')
                 ->paginate($this->ItemsInPages)
                 ->where('created_by', auth()->user()->id);
         }

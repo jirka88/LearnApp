@@ -1,10 +1,9 @@
-//colors
-@use "colors" as color;
+
 .primary-bg {
-    background: color.$primary-bg !important;
+    background: rgb(var(--v-theme-accentCustom)) !important;
 }
 .cl-primary {
-    color: color.$primary-bg !important;
+    color: #4398f0;
 }
 
 .width-vw-85 {

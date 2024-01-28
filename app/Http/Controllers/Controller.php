@@ -56,7 +56,7 @@ class Controller extends BaseController
     {
         $customMessages = [
             'users.required' => __('share.warning.required_user'),
-            'permission.required' =>  __('share.warning.required_permission')
+            'permission.required' => __('share.warning.required_permission')
         ];
         $validated = $request->validate([
             'users' => 'required',
@@ -73,7 +73,7 @@ class Controller extends BaseController
                 $sendMessage = __('share.warning.again_send');
             }
         }
-        return redirect()->back()->with('successUpdate', $sendMessage);
+        return redirect()->back()->with('message', $sendMessage);
     }
 
     /**
@@ -82,12 +82,12 @@ class Controller extends BaseController
      */
     public function showShare()
     {
-        $subjects = User::with(['patritions' => function ($query) {
-            $query->where('accepted', false);
-            $query->with(['Users' => function ($query2) {
+        $subjects = User::find(auth()->user()->id)
+            ->patritions()
+            ->where('accepted', false)
+            ->with(['Users' => function ($query2) {
                 $query2->select('email', 'firstname');
-            }]);
-        }])->find(auth()->user()->id);
+            }])->get();
         return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
 
@@ -116,11 +116,16 @@ class Controller extends BaseController
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
         return redirect()->back();
     }
-    public function changeLanguage(Request $request, $language) {
-        if(in_array($language, Localization::$supportedLanguages )) {
+
+    public function changeLanguage(Request $request, $language)
+    {
+        if (in_array($language, Localization::$supportedLanguages)) {
             Localization::setLocale($language);
         }
         return Redirect()->back();
+    }
+    public function showStatsShare() {
+        return Inertia::render('subjects/sharedSubjects');
     }
 
 }

@@ -25,8 +25,8 @@
                           @click:append="show2 = !show2"
                           variant="outlined"></v-text-field>
             <p class="text-center text-red">{{ props.errors.msg }}</p>
-            <p v-if="$page.props.flash.messagePasswordReset" class="text-center text-green">
-                {{ $page.props.flash.messagePasswordReset }}</p>
+            <p v-if="$page.props.flash.message" class="text-center text-green">
+                {{ $page.props.flash.message }}</p>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"

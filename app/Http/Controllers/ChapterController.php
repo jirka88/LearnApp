@@ -53,7 +53,7 @@ class ChapterController extends Controller
             return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
         if(auth()->user()->licences->id == 1 && $partition->Chapter()->count() > Licences::standartUserChaptersInPartitions) {
-            return redirect()->back()->with(["LicenceLimitations" => "Přesáhnut limit!"]);
+            return redirect()->back()->with(["message" => "Přesáhnut limit!"]);
         }
         Chapter::create([
             "name" => $chapterRequest->name,

@@ -92,7 +92,7 @@
                 </tr>
                 </tbody>
             </table>
-            <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.messageUpdate : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
+            <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"

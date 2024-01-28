@@ -20,16 +20,22 @@
                         :rules="[rules.required, rules.perexLength]"
                         required
                     ></v-text-field>
-                    <QuillEditor v-model:content="form.contentChapter" theme="snow" toolbar="full" content-type="html"/>
-                    <span class="text-center text-red py-4 font-weight-bold" v-if="errors.content">{{ errors.content }}</span>
+                    <v-no-ssr>
+                        <QuillEditor v-model:content="form.contentChapter" theme="snow" toolbar="full"
+                                     content-type="html"/>
+                    </v-no-ssr>
+                    <span class="text-center text-red py-4 font-weight-bold" v-if="errors.content">{{
+                            errors.content
+                        }}</span>
                     <span class="text-center text-red py-4 font-weight-bold" v-if="errors.name">{{ errors.name }}</span>
-                    <span class="text-center text-red py-4 font-weight-bold" v-if="$page.props.flash.messageLicenceLimitations">{{$page.props.flash.messageLicenceLimitations}}</span>
+                    <span class="text-center text-red py-4 font-weight-bold"
+                          v-if="$page.props.flash.message">{{ $page.props.flash.message }}</span>
                     <v-btn type="submit"
                            color="blue"
                            class="btn d-flex my-4"
                            :class="{'w-100': $vuetify.display.smAndDown}"
                     >
-                        {{$t('global.created')}}!
+                        {{ $t('global.created') }}!
                     </v-btn>
                 </form>
             </v-container>
@@ -89,6 +95,7 @@ const createChapter = () => {
 :deep(.ql-snow) {
     border: 1px solid black;
 }
+
 :deep(.v-messages__message) {
     padding-bottom: 1.2em;
     text-align: left !important;

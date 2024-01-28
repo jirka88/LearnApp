@@ -23,8 +23,8 @@
             >
                 {{$t('global.edit')}}
             </v-btn>
-            <p v-if="$page.props.flash.messageShare" class="text-center text-green pt-4">
-                {{ $page.props.flash.messageShare }}</p>
+            <p v-if="$page.props.flash.message" class="text-center text-green pt-4">
+                {{ $page.props.flash.message }}</p>
         </v-form>
     </fieldset>
 </template>

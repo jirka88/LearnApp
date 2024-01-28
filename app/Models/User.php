@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -33,6 +34,7 @@ class User extends Authenticatable
         'password',
         'remember_token'
     ];
+    protected $append = ['get_count_users'];
     public function sluggable() : array
     {
         return [
@@ -44,6 +46,12 @@ class User extends Authenticatable
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+    protected function getCountUsers():Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->all()->count()
+        );
     }
     public function getUserBySlug($slug) : ?User {
         return User::where('slug', $slug)->first();

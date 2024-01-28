@@ -54,6 +54,11 @@
                             </v-list-item>
                         </Link>
                     </v-list-group>
+                    <Link :href="route('share.show')">
+                        <v-list-item prepend-icon="mdi-share" title="Zobrazit sdílení"
+                                     value="zobrazit sdílení">
+                        </v-list-item>
+                    </Link>
                     <Link :href="route('share.view')"
                           v-if="$page.props.user.subjects.some(subject => subject.permission.accepted == 0)">
                         <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"

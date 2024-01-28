@@ -54,8 +54,8 @@
             ></v-pagination>
         </v-container>
         <Toastify
-            v-if="$page.props.flash.messageUpdate ? true : false"
-            :text="$page.props.flash.messageUpdate"
+            v-if="$page.props.flash.message ? true : false"
+            :text="$page.props.flash.message"
             variant="success"
             :time="3000"></Toastify>
     </component>

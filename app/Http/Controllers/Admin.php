@@ -76,7 +76,7 @@ class Admin extends Controller
             'active' => $active,
             'licences_id' => $licence
         ]);
-        return redirect()->back()->with('successUpdate', __('validation.custom.update'));
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 
     /**
@@ -114,7 +114,7 @@ class Admin extends Controller
             "licences_id" => $adminCreateUser->licence["id"],
             "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
         ]);
-        return to_route('admin')->with('successUpdate', 'Uživatel byl úspěšně vytvořen!');
+        return to_route('admin')->with('message', 'Uživatel byl úspěšně vytvořen!');
     }
 
     /**
@@ -182,19 +182,24 @@ class Admin extends Controller
 
     public function getStats()
     {
-        $userCount = User::all()->count();
-        $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
-        $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
-        $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
-        $allChapters = Chapter::all()->count();
-        $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
-        $stats = ([
-            'users' =>  $userCount,
-            'operators' => $operatosCount,
-            'normalUsers' => $userNormalCount,
-            'chapters' => $allChapters,
-            'testersCount' => $testersCount,
-            'restrictRegister' => $restrictRegister]);
+        if(auth()->user()->role_id == 1) {
+            $userCount = User::all()->count();
+            $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
+            $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
+            $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
+            $allChapters = Chapter::all()->count();
+            $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
+            $stats = ([
+                'users' =>  $userCount,
+                'operators' => $operatosCount,
+                'normalUsers' => $userNormalCount,
+                'chapters' => $allChapters,
+                'testersCount' => $testersCount,
+                'restrictRegister' => $restrictRegister]);
+        }
+        else {
+            $stats = null;
+        }
         return $stats;
     }
 
@@ -204,7 +209,12 @@ class Admin extends Controller
      */
     public function changeRestriction($register) {
         $this->authorize('viewAdmin', auth()->user());
-        Settings::find(1)->update(['RestrictedRegistration' =>   $register === "true" ? 1 : 0]);
+        Settings::find(1)->update(['RestrictedRegistration' => $register === "true" ? 1 : 0]);
+        return redirect()->back();
+    }
+    public function changeTheme($color) {
+        $this->authorize('viewAdmin', auth()->user());
+        Settings::find(1)->update(['color' => $color]);
         return redirect()->back();
     }
 }

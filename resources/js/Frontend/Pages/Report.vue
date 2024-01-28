@@ -24,8 +24,9 @@
 </component>
 </template>
 <script setup>
-import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
+
 import {useForm} from "@inertiajs/inertia-vue3";
+import DashboardLayout from "../layouts/DashboardLayout.vue";
 
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',

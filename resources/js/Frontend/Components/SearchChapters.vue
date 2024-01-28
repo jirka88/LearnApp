@@ -13,17 +13,17 @@
             </template>
             <v-list>
                 <v-list-item v-for="(item, index) in searchResult.search"
-                             :key="index" class="py-0">
+                             :key="index" class="py-0 px-0" max-width="20em">
                     <div class="py-2 px-4" v-if="searchResult.search.length > 0">
                         <Link v-if="item.slug" :href="route('chapter.show', {slug: subject.slug, chapter: item.slug})">
                             <div class="text-4 font-weight-bold">{{ item.name }}</div>
                             <p class="text-subtitle-2">{{ item.perex }}</p>
                         </Link>
+                        <v-divider v-if="searchResult.search.length !== index + 1 "></v-divider>
                     </div>
                     <div class="text-center py-2 px-4 font-weight-bold" v-else>
                         {{searchResult.search.item}}
                     </div>
-                    <v-divider></v-divider>
                 </v-list-item>
             </v-list>
         </v-menu>
