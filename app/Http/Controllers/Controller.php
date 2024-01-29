@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Components\Localization;
 use App\Models\Partition;
+use App\Models\Permission;
 use App\Models\Roles;
 use App\Models\User;
 use \App\Http\Components\Filter;
@@ -105,6 +106,18 @@ class Controller extends BaseController
     }
 
     /**
+     * Odstranění sdílení
+     * @param Request $request
+     * @return void
+     */
+    public function deleteShared($slug, $user) {
+        $subject = Partition::where('slug', $slug)->first();
+        $user = User::find($user);
+        $user->patritions()->detach($subject->id);
+        return redirect()->back();
+    }
+
+    /**
      * Přijmutí sdílení
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -125,7 +138,15 @@ class Controller extends BaseController
         return Redirect()->back();
     }
     public function showStatsShare() {
-        return Inertia::render('subjects/sharedSubjects');
+        $subjects = User::with(['patritions.users' => function ($query) {
+             $query->whereNot('user_id', auth()->user()->id)->get();
+        }])->find(auth()->user()->id);
+        $subjects->patritions->each(function ($subject) {
+            $subject->users->each(function ($user) {
+                $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
+            });
+        });
+        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects]);
     }
 
 }

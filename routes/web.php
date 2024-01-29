@@ -54,6 +54,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
     Route::post("/sharing/subjects", [Controller::class, 'acceptShare'])->name('share.accept');
     Route::get('/sharing/show', [Controller::class, 'showStatsShare'])->name('share.show');
+    Route::delete('/sharing/subjects/{slug}/user/{user}', [Controller::class, 'deleteShared'])->name('sharing.delete');
     Route::delete("/sharing/subjects/{slug}", [Controller::class, 'deleteShare'])->name('share.delete');
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
