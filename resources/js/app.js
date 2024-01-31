@@ -17,7 +17,6 @@ import { usePage } from '@inertiajs/vue3'
 const page = usePage()
 
 const accentColor = computed(() => {
-    console.log(page.props)
     if(page.props) {
         return page.props.settings.theme.color;
     }

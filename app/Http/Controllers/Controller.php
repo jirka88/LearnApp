@@ -137,6 +137,11 @@ class Controller extends BaseController
         }
         return Redirect()->back();
     }
+
+    /**
+     * Zobrazí pod uživateleme všechny jeho sdílení
+     * @return \Inertia\Response
+     */
     public function showStatsShare() {
         $subjects = User::with(['patritions.users' => function ($query) {
              $query->whereNot('user_id', auth()->user()->id)->get();
@@ -146,7 +151,20 @@ class Controller extends BaseController
                 $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
             });
         });
-        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects]);
+        $permission = Permission::all();
+        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permission' => $permission]);
+    }
+
+    /**
+     * Úprava sdílení
+     * @param Request $request
+     * @return void
+     */
+    public function editShare(Request $request) {
+        $user = User::where('email', $request->input('email'))->first();
+        $dr = $request->input('permission');
+        $subject = Partition::find($request->input('subject'));
+        $user->patritions()->updateExistingPivot($subject->id,['permission_id' => $dr['id']]);
     }
 
 }

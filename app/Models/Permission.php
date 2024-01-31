@@ -10,6 +10,7 @@ class Permission extends Model
 {
     use HasFactory;
     protected $fillable = ['permission'];
+    protected $casts = ['accepted'=> 'boolean'];
     public $timestamps = false;
 
     public function userPartitions():HasMany {

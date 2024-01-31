@@ -8,12 +8,19 @@
                      :key="subject.id">
                 <thead>
                 <tr>
-                    <th colspan="4" class="font-weight-bold text-subtitle-1"> {{ subject.name }}</th>
+                    <th colspan="6" class="font-weight-bold text-subtitle-1 text-decoration-underline"> {{
+                            subject.name
+                        }}
+                    </th>
                 </tr>
-                <tr>
+                <tr v-if="subject.users.length > 0">
+                    <th>
+                        <v-img height="2em" :src="arrow"></v-img>
+                    </th>
                     <th class="font-weight-bold">Jméno a příjmení:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Zvolené oprávnění</th>
+                    <th class="font-weight-bold">Status:</th>
                     <th class="font-weight-bold">Nastavení:</th>
                 </tr>
                 </thead>
@@ -23,17 +30,34 @@
                     :key="user.id"
                 >
                 <tr class="pa-8">
+                    <td>
+                        <v-img height="2em" :src="arrow"></v-img>
+                    </td>
                     <td><p>{{ user.firstname }} {{ user.lastname }}</p></td>
                     <td><p class="text-subtitle-2">{{ user.email }}</p></td>
+                    <td>
+                        <v-chip variant="flat" :color="user.permission.accepted  !== '0' ? 'green' : 'red'">
+                            {{user.permission.accepted !== '0' ? 'Přijmuto' : 'Nepotvrzeno'}}
+                        </v-chip>
+                    </td>
                     <td>{{ user.permission.name }}</td>
                     <td>
-                        <v-btn
-                            variant="flat"
-                            color="red"
-                            icon="mdi-trash-can"
-                            @click="deleteShare(subject.slug, user.id)"
-                        >
-                        </v-btn>
+                        <div class="d-flex ga-2">
+                            <v-btn
+                                variant="flat"
+                                color="blue"
+                                icon="mdi-pencil"
+                                @click="showEditShare(user, subject)"
+                            >
+                            </v-btn>
+                            <v-btn
+                                variant="flat"
+                                color="red"
+                                icon="mdi-trash-can"
+                                @click="deleteShare(subject.slug, user.id)"
+                            >
+                            </v-btn>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -43,6 +67,11 @@
                 </tr>
                 </tbody>
             </v-table>
+            <shareForm v-if="shareFormActive"
+                       :active="shareFormActive"
+                       :detail="usr"
+                       :permission="permission"
+                       @close="shareFormActive = false"></shareForm>
         </v-container>
     </component>
 </template>
@@ -50,8 +79,18 @@
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {Inertia} from "@inertiajs/inertia";
-defineProps({subjects: Object})
+import arrow from "./../../../../assets/ui/arrow-down-right.svg"
+import {defineAsyncComponent, ref} from "vue";
 
+const shareFormActive = ref(false);
+const ShareForm = defineAsyncComponent(() => import("@/Frontend/Components/shareForm.vue"));
+const usr = ref({});
+defineProps({subjects: Object, permission: Object})
+
+const showEditShare = (user, subject) => {
+    usr.value = {user: user, subject: subject};
+    shareFormActive.value = true;
+}
 const deleteShare = (slug, user) => {
     Inertia.delete(route('sharing.delete', {slug: slug, user: user}))
 }

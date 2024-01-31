@@ -9,5 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserPartition extends Model
 {
+    protected $casts = ['permission_id' => 'integer'];
     use HasFactory;
 }

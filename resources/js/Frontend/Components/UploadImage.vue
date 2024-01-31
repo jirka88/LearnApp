@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import {BoundingBox, CircleStencil, Cropper, Preview} from 'vue-advanced-cropper';
+import { CircleStencil, Cropper, Preview} from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import {useForm} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
