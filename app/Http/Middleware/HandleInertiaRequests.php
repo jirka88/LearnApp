@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Settings;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -39,10 +40,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
                 'flash' => [
-                    'messagePasswordReset' => session('successReset'),
-                    'messageUpdate' => session('successUpdate'),
-                    'messageShare' => session('successShare'),
-                    'messageLicenceLimitations' => session("LicenceLimitations")
+                    'message' => session('message'),
                 ],
                 'user' => [
                     'id' => auth()->user()->id ?? '',
@@ -54,11 +52,14 @@ class HandleInertiaRequests extends Middleware
                     'licences' => auth()->user()->licences->id ?? '',
                     'image' => auth()->user()->image ?? ''
                 ],
-            'permission' => [
-                'view' => in_array(auth()->user()?->role_id, [1,2]),
-                'administrator_view' => auth()->user()?->role_id == 1,
-                'operator_view' => auth()->user()?->role_id == 2,
-            ]
+                'permission' => [
+                    'view' => in_array(auth()->user()?->role_id, [1,2]),
+                    'administrator_view' => auth()->user()?->role_id == 1,
+                    'operator_view' => auth()->user()?->role_id == 2,
+                ],
+                'settings' => [
+                    'theme' => Settings::get('color')->first(),
+                ]
 
         ]);
     }

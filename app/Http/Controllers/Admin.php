@@ -10,6 +10,7 @@ use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
+use App\Models\settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class Admin extends Controller
             'active' => $active,
             'licences_id' => $licence
         ]);
-        return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 
     /**
@@ -113,7 +114,7 @@ class Admin extends Controller
             "licences_id" => $adminCreateUser->licence["id"],
             "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
         ]);
-        return to_route('admin')->with('successUpdate', 'Uživatel byl úspěšně vytvořen!');
+        return to_route('admin')->with('message', 'Uživatel byl úspěšně vytvořen!');
     }
 
     /**
@@ -136,7 +137,8 @@ class Admin extends Controller
      */
     public function getUserSubjects($slug)
     {
-        $user = User::where('slug', $slug)->first();
+        $user = app('App\Models\User');
+        $user = $user->getUserBySlug($slug);
         $this->authorize('view', $user);
         $subjects = User::with(['patritions' => function ($query) {
             $query->withCount('chapter');
@@ -152,7 +154,8 @@ class Admin extends Controller
      */
     public function createUserSubject($slug)
     {
-        $user = User::where('slug', $slug)->first();
+        $user = app('App\Models\User');
+        $user = $user->getUserBySlug($slug);
         $this->authorize('view', $user);
         $url = "/dashboard/admin/controll/" . $user->slug . "/subject/create";
         return Inertia::render('subjects/createSubjects', compact('url'));
@@ -166,7 +169,8 @@ class Admin extends Controller
      */
     public function storeUserSubject($slug, SubjectRequest $subjectRequest)
     {
-        $user = User::where('slug', $slug)->first();
+        $user = app('App\Models\User');
+        $user = $user->getUserBySlug($slug);
         $subject = $subjectRequest->only("name");
         $subject["icon"] = $subjectRequest->icon["iconName"];
         $subject["created_by"] = $user->id;
@@ -178,17 +182,39 @@ class Admin extends Controller
 
     public function getStats()
     {
-        $userCount = User::all()->count();
-        $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
-        $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
-        $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
-        $allChapters = Chapter::all()->count();
-        $stats = ([
-            'users' =>  $userCount,
-            'operators' => $operatosCount,
-            'normalUsers' => $userNormalCount,
-            'chapters' => $allChapters,
-            'testersCount' => $testersCount]);
+        if(auth()->user()->role_id == 1) {
+            $userCount = User::all()->count();
+            $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
+            $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
+            $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
+            $allChapters = Chapter::all()->count();
+            $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
+            $stats = ([
+                'users' =>  $userCount,
+                'operators' => $operatosCount,
+                'normalUsers' => $userNormalCount,
+                'chapters' => $allChapters,
+                'testersCount' => $testersCount,
+                'restrictRegister' => $restrictRegister]);
+        }
+        else {
+            $stats = null;
+        }
         return $stats;
+    }
+
+    /**
+     * Povolí/zákáže registraci do aplikace
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function changeRestriction($register) {
+        $this->authorize('viewAdmin', auth()->user());
+        Settings::find(1)->update(['RestrictedRegistration' => $register === "true" ? 1 : 0]);
+        return redirect()->back();
+    }
+    public function changeTheme($color) {
+        $this->authorize('viewAdmin', auth()->user());
+        Settings::find(1)->update(['color' => $color]);
+        return redirect()->back();
     }
 }

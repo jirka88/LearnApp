@@ -25,19 +25,14 @@ use Illuminate\Support\Facades\Session;
 */
 
 Route::inertia('/', 'app');
-Route::post('/language', function()  {
-    $validated = request()->validate([
-        'language' => ['required'],
-    ]);
-    App::setLocale($validated['language']);
-    Session::put('locale', $validated['language']);
-})->name('language');
+Route::post('/language/{language}',[Controller::class, 'changeLanguage'])->name('language');
 
 Route::group(['middleware' => ['guest']], function() {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
+    Route::get('/passwordreset', [LoginController::class, 'passwordReset'])->name('reset');
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
@@ -58,6 +53,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::post("/sharing/users", [Controller::class, 'share'])->name('share');
     Route::get("/sharing/subjects", [Controller::class, 'showShare'])->name('share.view');
     Route::post("/sharing/subjects", [Controller::class, 'acceptShare'])->name('share.accept');
+    Route::get('/sharing/show', [Controller::class, 'showStatsShare'])->name('share.show');
+    Route::put('/sharing/edit', [Controller::class, 'editShare'])->name('share.edit');
+    Route::delete('/sharing/subjects/{slug}/user/{user}', [Controller::class, 'deleteShared'])->name('sharing.delete');
     Route::delete("/sharing/subjects/{slug}", [Controller::class, 'deleteShare'])->name('share.delete');
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
@@ -72,6 +70,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::post('/controll/{slug}/subject/create', [Admin::class, 'storeUserSubject'])->name('user.storeSubject');
         route::get('controll/user/create', [Admin::class, 'create'])->name('user.create');
         route::post('controll/user/create', [Admin::class, 'store'])->name('user.store');
+        route::put('/controll/registration/{register}', [Admin::class, 'changeRestriction'])->name('register.restriction');
+        route::put('/controll/theme/{color}', [Admin::class, 'changeTheme'])->name('theme');
     });
 });
 

@@ -10,15 +10,27 @@ class AdminPolicy
 {
     use HandlesAuthorization;
     //user -> ten kdo to dělá, model -> to koho se to týká
+
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
+     * Oprávnění pro správce a operátora
+     * @param User $user
+     * @return bool
      */
     public function viewAny(User $user)
     {
         if($user->role_id == Roles::ADMIN || $user->role_id == Roles::OPERATOR) {
+            return true;
+        }
+        return false;
+    }
+    /**
+     * Oprávnění pro správce
+     * @param User $user
+     * @return bool
+     */
+    public function viewAdmin(User $user)
+    {
+        if($user->role_id == Roles::ADMIN) {
             return true;
         }
         return false;

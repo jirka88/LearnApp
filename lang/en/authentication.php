@@ -14,5 +14,6 @@ return [
     'login' => 'Login',
     'loginBtn' => 'Login!',
     'remember' => 'Remember me',
-    'forget' => 'Forget password?'
+    'forget' => 'Forget password?',
+    'restricted' => 'Registration is restricted!'
 ];

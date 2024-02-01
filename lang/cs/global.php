@@ -8,5 +8,8 @@ return [
     'surname' => 'Příjmení',
     'close' => 'Zavři',
     'create_user' => 'Vytvořit uživatele',
-    'created' => 'Vytvořit'
+    'created' => 'Vytvořit',
+    'delete' => 'Vymazat',
+    'setting' => 'Nastavení',
+    'change' => 'Změnit'
 ];

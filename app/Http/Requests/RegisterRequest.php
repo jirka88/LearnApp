@@ -35,17 +35,11 @@ class RegisterRequest extends FormRequest
     }
     public function messages() {
         return [
-            'firstname.required' => "Jméno je povinné pole.",
-            'firstname.min' => 'Vaše jméno je příliš krátké.',
-            'firstname.max' => 'Jméno je příliš dlouhé.',
-            'email.required' => '0',
-            'email.email' => 'E-mail musí být platný.',
-            'email.unique' => 'E-mail je již registrován.',
+            'firstname.min' => trans('validation.min.string', ['attribute' => __('authentication.register.name'), 'min' => 3]),
+            'email.unique' => ['unique' => __('validation.custom.email.registered')],
             'email.max' => 'E-mail může mít maximálně 320 znaků.',
-            'password_confirm.required' => 'Potvrzení hesla je povinné pole.',
-            'password.min' => 'Heslo musí mít alespoň 8 znaků.',
             'password_confirm.same' => 'Potvrzení hesla se neshoduje s heslem.',
             'confirm.accepted' => 'Musíte souhlasit ze zpracováním údajů!',
-        ];
+            ];
     }
 }

@@ -1,6 +1,5 @@
 <script setup>
 import setLanguage from "../../setLanguage";
-
 setLanguage();
 </script>
 
@@ -9,7 +8,3 @@ setLanguage();
 
     </slot>
 </template>
-
-<style scoped lang="scss">
-
-</style>

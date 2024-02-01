@@ -1,6 +1,6 @@
 <script setup>
 import {ref} from "vue";
-import {BoundingBox, CircleStencil, Cropper, Preview} from 'vue-advanced-cropper';
+import { CircleStencil, Cropper, Preview} from 'vue-advanced-cropper';
 import 'vue-advanced-cropper/dist/style.css';
 import {useForm} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
@@ -127,7 +127,7 @@ const deleteImage = (id) => {
                     v-if="$page.props.user.image"
                 color="red"
                 @click="deleteImage($page.props.user.id)">
-                    Vymazat!
+                    {{$t('global.delete')}}!
                 </v-btn>
             </v-form>
         </v-card>

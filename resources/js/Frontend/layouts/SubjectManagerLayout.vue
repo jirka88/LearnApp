@@ -3,7 +3,7 @@
         <AdminLayout>
             <div class="menuSubject pa-0">
                 <v-container class="pt-0 pb-0">
-                    <div class="content d-flex justify-center align-center gp-em-05 w-100"
+                    <div class="content d-flex justify-center align-center ga-1 w-100"
                          :class="{'flex-column': $vuetify.display.smAndDown}">
                         <v-col cols="auto">
                             <Link :href="route('subject.index')">

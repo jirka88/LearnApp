@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\Filter;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
@@ -15,17 +16,28 @@ use Inertia\Inertia;
 
 class SubjectController extends Controller
 {
-    public $ItemsInPages = 20;
+    private $ItemsInPages = 20;
 
     /**
      * Vrácení všech předmětů
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $subjects = Partition::withCount('Chapter')->paginate(20)->where('created_by', auth()->user()->id);
+        $sort = $request->input('sort');
+        if($sort && $sort !== Filter::DEFAULT_VALUE) {
+            $subjects = Partition::orderBy('name', $sort)
+                ->append('chapter_count')
+                ->paginate($this->ItemsInPages)
+                ->where('created_by', auth()->user()->id);
+        }
+        else {
+            $subjects = Partition::withCount('Chapter')
+                ->paginate($this->ItemsInPages)
+                ->where('created_by', auth()->user()->id);
+        }
         $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
-        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages]);
+        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort]);
     }
 
     /**
@@ -35,6 +47,7 @@ class SubjectController extends Controller
      */
     public function show(Request $request, $slug) {
         $subject = Partition::where('slug', $slug)->first();
+
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
 
         if($pShare === null) {
@@ -51,13 +64,8 @@ class SubjectController extends Controller
             return $chapter->toArray();
         });
         $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / $this->ItemsInPages);
-        $loadedSelectedChapter = Chapter::where('name', $request->select)->first();
 
-        if($loadedSelectedChapter == null) {
-            $loadedSelectedChapter = '';
-        }
-        $AllChapter = $subject->Chapter()->pluck("name");
-        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'AllChapter', 'loadedSelectedChapter'));
+        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
     }
     /**
      * Redirect k formuláři k vytvoření předmětu

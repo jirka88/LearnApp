@@ -1,9 +1,10 @@
 <template>
     <component :is="DashboardLayout">
+        {{subjects}}
         <div class="vh-calc">
             <v-main class="pa-5 d-flex flex-wrap" :class="{'justify-center': $vuetify.display.smAndDown}">
                 <v-card
-                    v-for="subject in subjects.patritions" :key="subject.id"
+                    v-for="subject in subjects" :key="subject.id"
                     class="pa-2 d-flex flex-column elevation-20"
                     max-width="344"
                 >
@@ -13,16 +14,16 @@
                         </p>
                         <div class="text--primary">
                             Žádost o sdílení od uživalele:
-                            <div class="font-weight-bold">{{ subject.users[0].email }}</div>
+                            <div class="font-weight-bold">{{ subject.users.email }}</div>
                             <br>
                         </div>
-                        <div class="text--primary font-weight-bold" v-if="subject.permission.permission_id == 1">
+                        <div class=" font-weight-bold" v-if="subject.permission.permission_id == 1">
                             S právem ke čtení<br>
                         </div>
-                        <div class="text--primary  font-weight-bold" v-if="subject.permission.permission_id == 2">
+                        <div class=" font-weight-bold" v-if="subject.permission.permission_id == 2">
                             S právem ke čtení a úpravě<br>
                         </div>
-                        <div class="text--primary  font-weight-bold" v-if="subject.permission.permission_id == 3">
+                        <div class="  font-weight-bold" v-if="subject.permission.permission_id == 3">
                             S právem plnou kontrolou<br>
                         </div>
                     </v-card-text>

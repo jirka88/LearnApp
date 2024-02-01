@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\Localization;
 use App\Models\Partition;
+use App\Models\Permission;
 use App\Models\Roles;
 use App\Models\User;
+use \App\Http\Components\Filter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class Controller extends BaseController
@@ -25,13 +30,7 @@ class Controller extends BaseController
     public function sort(Request $request)
     {
         $sort = $request->input('sort', 'default');
-        if ($sort !== 'default') {
-            $subjects = Partition::orderBy('name', $sort)->where('created_by', auth()->user()->id)->paginate(20);
-            return response()->json($subjects);
-        } else {
-            $subjects = Partition::where('created_by', auth()->user()->id)->paginate(20);
-            return response()->json($subjects);
-        }
+        return Filter::sorting($sort);
     }
 
     /**
@@ -57,8 +56,8 @@ class Controller extends BaseController
     public function share(Request $request)
     {
         $customMessages = [
-            'users.required' => 'Je nutné vyplnit uživatele.',
-            'permission.required' => 'Musíte vyplnit oprávnění'
+            'users.required' => __('share.warning.required_user'),
+            'permission.required' => __('share.warning.required_permission')
         ];
         $validated = $request->validate([
             'users' => 'required',
@@ -66,16 +65,16 @@ class Controller extends BaseController
             'subject' => 'required'
         ], $customMessages);
 
-        $sendMessage = 'Žádost o sdílení byla zaslána!';
+        $sendMessage = __('share.warning.send');
         foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
             if ($user->patritions()->where("partition_id", $validated['subject'])->first() == null) {
                 $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
             } else {
-                $sendMessage = 'Žádost o sdílení byla už zaslána!';
+                $sendMessage = __('share.warning.again_send');
             }
         }
-        return redirect()->back()->with('successUpdate', $sendMessage);
+        return redirect()->back()->with('message', $sendMessage);
     }
 
     /**
@@ -84,12 +83,12 @@ class Controller extends BaseController
      */
     public function showShare()
     {
-        $subjects = User::with(['patritions' => function ($query) {
-            $query->where('accepted', false);
-            $query->with(['Users' => function ($query2) {
+        $subjects = User::find(auth()->user()->id)
+            ->patritions()
+            ->where('accepted', false)
+            ->with(['Users' => function ($query2) {
                 $query2->select('email', 'firstname');
-            }]);
-        }])->find(auth()->user()->id);
+            }])->get();
         return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
 
@@ -107,6 +106,18 @@ class Controller extends BaseController
     }
 
     /**
+     * Odstranění sdílení
+     * @param Request $request
+     * @return void
+     */
+    public function deleteShared($slug, $user) {
+        $subject = Partition::where('slug', $slug)->first();
+        $user = User::find($user);
+        $user->patritions()->detach($subject->id);
+        return redirect()->back();
+    }
+
+    /**
      * Přijmutí sdílení
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
@@ -117,6 +128,43 @@ class Controller extends BaseController
         $user = User::find(auth()->user()->id);
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
         return redirect()->back();
+    }
+
+    public function changeLanguage(Request $request, $language)
+    {
+        if (in_array($language, Localization::$supportedLanguages)) {
+            Localization::setLocale($language);
+        }
+        return Redirect()->back();
+    }
+
+    /**
+     * Zobrazí pod uživateleme všechny jeho sdílení
+     * @return \Inertia\Response
+     */
+    public function showStatsShare() {
+        $subjects = User::with(['patritions.users' => function ($query) {
+             $query->whereNot('user_id', auth()->user()->id)->get();
+        }])->find(auth()->user()->id);
+        $subjects->patritions->each(function ($subject) {
+            $subject->users->each(function ($user) {
+                $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
+            });
+        });
+        $permission = Permission::all();
+        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permission' => $permission]);
+    }
+
+    /**
+     * Úprava sdílení
+     * @param Request $request
+     * @return void
+     */
+    public function editShare(Request $request) {
+        $user = User::where('email', $request->input('email'))->first();
+        $dr = $request->input('permission');
+        $subject = Partition::find($request->input('subject'));
+        $user->patritions()->updateExistingPivot($subject->id,['permission_id' => $dr['id']]);
     }
 
 }

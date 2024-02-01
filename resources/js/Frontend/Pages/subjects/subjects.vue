@@ -1,7 +1,7 @@
 <template>
     <component :is="DashboardLayout">
         <v-container class="pa-0">
-            <div class="d-flex flex-column pa-5 gp-em-4">
+            <div class="d-flex flex-column pa-5 ga-6">
                 <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
                     <div class="btns d-flex align-center">
                         <Link :href="route('subject.create')">
@@ -11,8 +11,8 @@
                             </v-btn>
                         </Link>
                         <v-select
-                            @update:modelValue="filtred"
                             v-model="filtr"
+                            @update:modelValue="filtred"
                             :items="items"
                             item-title="state"
                             item-value="id"
@@ -29,7 +29,7 @@
                         <thead>
                         <tr class="pa-8">
                             <th class="font-weight-bold" v-if="$page.props.permission.view">ID:</th>
-                            <th class="font-weight-bold">Název:</th>
+                            <th class="font-weight-bold">{{$t('global.name')}}:</th>
                             <th class="font-weight-bold">Ikona:</th>
                             <th class="font-weight-bold">Počet kapitol:</th>
                             <th class="font-weight-bold" >Editace:</th>
@@ -37,13 +37,13 @@
                         </tr>
                         </thead>
                         <tbody v-if="subjectsShow.length !== 0">
-                            <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
+                           <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
                                 <td class="font-weight-bold"  v-if="$page.props.permission.view">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
                                 <td>{{subjectData.chapter_count}}</td>
                                 <td>
-                                    <Link :href="route('subject.edit', [subjectData.slug])">
+                                    <Link :href="route('subject.edit',{subject: subjectData.slug})">
                                         <v-btn
                                     color="green"
                                     append-icon="mdi-pencil"
@@ -65,7 +65,7 @@
                             </tr>
                         </tbody>
                     </v-table>
-                <div class="text-center pb-8">
+                <div v-if="pages" class="text-center pb-8">
                     <v-pagination
                         v-model="page"
                         :length="pages"
@@ -115,18 +115,31 @@ import  {Link, useForm} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import inertia from "@inertiajs/inertia";
-import {markRaw, ref} from "vue";
-import { useRouter } from 'vue-router';
+import {markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
-const router = useRouter()
+import { useUrlSearchParams } from '@vueuse/core';
 const form = useForm();
 const dialog = ref(false);
 const subjectId = ref();
 const subjectName = ref();
-const filtr = ref({state: 'Výchozí', id: 'default'});
 const page = ref(1);
-const props = defineProps({subjects: Object, pages: Number});
+const props = defineProps({subjects: Object, pages: Number, sort: String});
+const filtr = ref({state: 'Výchozí', id: 'default'});
 const subjectsShow = ref(props.subjects);
+
+const items = markRaw(
+    [{state: 'Výchozí', id: 'default'},
+        {state: 'Sestupně', id: 'ASC'},
+        {state: 'Vzestupně', id: 'DESC'}]
+);
+
+onMounted(() =>{
+    const params = useUrlSearchParams('history')
+    if(params.sort !== null) {
+        const sortValue = items.find(item => item.id === params.sort);
+        filtr.value = sortValue;
+    }
+})
 const setId = (id, name) => {
     dialog.value = true;
     subjectId.value = id;
@@ -142,24 +155,14 @@ const fetchData = () => {
         subjectsShow.value = response.props.subjects;
     }});
 }
-const filtred = () => {
-    const sort = filtr.value.id;
-
-    axios.get(`/dashboard/manager/subjects/sort?sort=${sort}`)
+const filtred = async() => {
+    const params = useUrlSearchParams('history')
+    params.sort = filtr.value.id;
+    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.id}`)
         .then(response => {
-            console.log(response.data)
-            subjectsShow.value = response.data;
-            router.push(`?sort=${sort}`);
+            subjectsShow.value = response.data.data;
         })
-        .catch(error => {
-            console.error(error);
-        });
 }
-const items = markRaw(
-    [{state: 'Výchozí', id: 'default'},
-    {state: 'Sestupně', id: 'ASC'},
-    {state: 'Vzestupně', id: 'DESC'}]
-);
 </script>
 
 <style scoped lang="scss">

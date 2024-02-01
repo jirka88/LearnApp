@@ -2,7 +2,6 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import i18n from "laravel-vue-i18n/vite";
-
 export default defineConfig({
     plugins: [
         laravel({
@@ -10,6 +9,7 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/app.js',
             ],
+            ssr: 'resources/js/ssr.js',
             refresh: true,
         }),
         vue({
@@ -24,9 +24,12 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm-bundler.js',
             //ziggy: 'vendor/tightenco/ziggy/dist',
             ziggy: 'vendor/tightenco/ziggy/dist/vue.es.js'
         },
     },
+    ssr: {
+        noExternal: [ /\.css$/, /^vuetify/ ],
+    },
+
 });

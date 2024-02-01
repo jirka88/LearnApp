@@ -1,11 +1,10 @@
-import {createApp, h, onBeforeMount} from 'vue'
+import {createApp, h} from 'vue'
 import {createInertiaApp} from '@inertiajs/inertia-vue3'
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m'
 import "../css/app.scss"
-import "../css/colors.scss"
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import { aliases, mdi } from "vuetify/lib/iconsets/mdi";
+import { aliases, mdi } from "vuetify/iconsets/mdi";
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import "@mdi/font/css/materialdesignicons.css";
@@ -13,6 +12,17 @@ import {InertiaProgress} from "@inertiajs/progress"; // Ensure you are using css
 import { createRouter, createWebHistory } from 'vue-router';
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3'
+const page = usePage()
+
+const accentColor = computed(() => {
+    if(page.props) {
+        return page.props.settings.theme.color;
+    }
+    return '#4398f0'
+});
+
 const routes = [
     {}
 ];
@@ -26,6 +36,19 @@ const vuetify= createVuetify({
         sets: {
             mdi,
         },
+    },
+    theme: {
+        options: {
+            customProperties: true
+        },
+        themes: {
+            light: {
+                variables: {},
+                colors: {
+                    accentCustom: accentColor,
+                }
+            }
+        }
     },
     components,
     directives,

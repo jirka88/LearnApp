@@ -2,8 +2,7 @@
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">Nastavení sdílení:</legend>
         <v-form @submit.prevent="changeShare">
-            <div class="text-body-1 pb-8">Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete
-                přijímat od žádného uživatele sekci zaškrtněntě možnost<strong> NE.</strong></div>
+            <div class="text-body-1 pb-8">{{$t('userAccount.shareInfo')}} <span class="font-weight-bold">{{$t('global.no')}}.</span></div>
             <v-select
                 v-model="form.share"
                 :items="items"
@@ -24,8 +23,8 @@
             >
                 {{$t('global.edit')}}
             </v-btn>
-            <p v-if="$page.props.flash.messageShare" class="text-center text-green pt-4">
-                {{ $page.props.flash.messageShare }}</p>
+            <p v-if="$page.props.flash.message" class="text-center text-green pt-4">
+                {{ $page.props.flash.message }}</p>
         </v-form>
     </fieldset>
 </template>

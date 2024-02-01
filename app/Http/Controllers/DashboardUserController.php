@@ -53,7 +53,7 @@ class DashboardUserController extends Controller
             'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
-        return redirect()->back()->with('successUpdate', 'Aktualizace proběhla úspěšně!');
+        return redirect()->back()->with('message', 'Aktualizace úspěšná!');
     }
 
     /**
@@ -71,7 +71,7 @@ class DashboardUserController extends Controller
         User::find(auth()->user()->id)->update([
             'password' => $passwordResetRequest->newPassword,
         ]);
-        return redirect()->back()->with('successReset', 'Heslo bylo úspěšně změněno!');
+        return redirect()->back()->with('message', 'Heslo bylo úspěšně změněno!');
     }
 
     /**
@@ -90,7 +90,7 @@ class DashboardUserController extends Controller
             'canShare' => $validated['share']['id']
         ]);
 
-        return redirect()->back()->with('successShare', 'Sdílení bylo změněno!');
+        return redirect()->back()->with('message', 'Sdílení bylo změněno!');
     }
 
     /**

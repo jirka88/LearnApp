@@ -1,83 +1,186 @@
 <script setup>
 import DashboardLayout from "../layouts/DashboardLayout.vue";
 import Chart from 'chart.js/auto';
-import { Bar } from 'vue-chartjs'
-import {markRaw, ref} from "vue";
+import {Bar} from 'vue-chartjs'
+import {defineAsyncComponent, markRaw, ref} from "vue";
+import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
+import {isActiveToast, statusToast, toastShow, toastStatus} from "../../Toast";
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+import DialogChangeColorTheme from "@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue";
+const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
+
 const props = defineProps(['stats'])
 
+const restrictRegister = ref(props.stats.restrictRegister);
+
+const restrictRegisterModal = ref(false);
+
 const chartOptions = markRaw[{
-    responsive: true}
-]
-const chartData = ref({datasets: [ {data: [props.stats.normalUsers, props.stats.testersCount , props.stats.operators], label: 'Uživatelé'}],labels: ["Běžný uživatelé", "Testeři", "Operátoři"]});
+    responsive: true
+}
+    ]
+const chartData = ref({
+    datasets: [{
+        data: [props.stats.normalUsers, props.stats.testersCount, props.stats.operators],
+        label: 'Uživatelé'
+    }], labels: ["Běžný uživatelé", "Testeři", "Operátoři"]
+});
+const toastFetch = (value) => {
+    toastShow(true);
+    toastStatus(value);
+}
+const themeModal = ref(false);
+const setColorTheme = () =>{
+    themeModal.value = true;
+}
 
 </script>
 
 <template>
     <component :is="DashboardLayout">
-            <v-container class="py-8">
-                <template v-if="$page.props.user.role.id === 1">
-                    <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">{{$t('dashboard.stats')}}</h1>
-                    <div class="py-4 d-flex flex-column">
-                        <Bar
-                            id="my-chart-id"
-                            :options="chartOptions"
-                            :data="chartData"
-                        />
-                        <div class="d-flex w-100 ga-4 py-8 text-center" :class="{'flex-column': $vuetify.display.mdAndDown}" >
-                            <v-card elevation="4">
-                                <v-card-title class="font-weight-bold">
-                                    {{$t('dashboard.users')}}:
-                                </v-card-title>
-                                <v-card-text>
-                                    {{stats.users}}
-                                </v-card-text>
-                            </v-card>
-                            <v-card elevation="4">
-                                <v-card-title class="font-weight-bold">
-                                    {{$t('dashboard.operators')}}:
-                                </v-card-title>
-                                <v-card-text>
-                                    {{stats.operators}}
-                                </v-card-text>
-                            </v-card>
-                            <v-card elevation="4">
-                                <v-card-title class="font-weight-bold">
-                                    {{$t('dashboard.testers')}}:
-                                </v-card-title>
-                                <v-card-text>
-                                    {{stats.testersCount}}
-                                </v-card-text>
-                            </v-card>
-                            <v-card elevation="4">
-                                <v-card-title class="font-weight-bold">
-                                    {{$t('dashboard.normal_users')}}:
-                                </v-card-title>
-                                <v-card-text>
-                                    {{stats.normalUsers}}
-                                </v-card-text>
-                            </v-card>
-                        </div>
+        <v-container class="py-8">
+            <template v-if="$page.props.user.role.id === 1">
+                <div class="d-flex ga-6 flex-column dashboard">
+                    <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
+                        {{ $t('dashboard.stats') }}</h1>
+                    <Toastify v-if="isActiveToast" :text="statusToast ? $t('validation.custom.update') : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
+                    <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
+                        <v-col>
+                            <WelcomeBox></WelcomeBox>
+                        </v-col>
+                        <v-col>
+                            <v-sheet
+                                :elevation="8"
+                                :height="80"
+                                border
+                                rounded
+                                class="d-flex justify-center align-center flex-column py-2"
+                            >
+                                <div class="text-h5 font-weight-bold">LearnApp</div>
+                                <a href="http://github.com" class="underlineLink" target="_blank">Github</a>
+                            </v-sheet>
+                        </v-col>
+                    </v-row>
+                </div>
+                <div class="py-4 d-flex flex-column">
+                    <Bar
+                        id="my-chart-id"
+                        :options="chartOptions"
+                        :data="chartData"
+                    />
+                    <div class="d-flex w-100 ga-4 py-8 text-center"
+                         :class="{'flex-column': $vuetify.display.mdAndDown}">
+                        <v-card elevation="4">
+                            <v-card-title class="font-weight-bold">
+                                {{ $t('dashboard.users') }}:
+                            </v-card-title>
+                            <v-card-text>
+                                {{ stats.users }}
+                            </v-card-text>
+                        </v-card>
+                        <v-card elevation="4">
+                            <v-card-title class="font-weight-bold">
+                                {{ $t('dashboard.operators') }}:
+                            </v-card-title>
+                            <v-card-text>
+                                {{ stats.operators }}
+                            </v-card-text>
+                        </v-card>
+                        <v-card elevation="4">
+                            <v-card-title class="font-weight-bold">
+                                {{ $t('dashboard.testers') }}:
+                            </v-card-title>
+                            <v-card-text>
+                                {{ stats.testersCount }}
+                            </v-card-text>
+                        </v-card>
+                        <v-card elevation="4">
+                            <v-card-title class="font-weight-bold">
+                                {{ $t('dashboard.normal_users') }}:
+                            </v-card-title>
+                            <v-card-text>
+                                {{ stats.normalUsers }}
+                            </v-card-text>
+                        </v-card>
                     </div>
-                </template>
-            </v-container>
+                </div>
+                <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
+                    <v-col>
+                        <v-sheet
+                            :elevation="8"
+                            border
+                            min-height="10em"
+                            rounded
+                             class="py-8 px-8 d-flex justify-center align-center flex-column">
+                            <div class="text-h6 font-weight-bold">{{$t('dashboard.restrict_register')}}</div>
+                            <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)"  hide-details></v-switch>
+                        </v-sheet>
+                    </v-col>
+                    <v-col>
+                        <v-sheet
+                            :elevation="8"
+                            border
+                            min-height="10em"
+                            rounded
+                            class="py-8 px-8 d-flex justify-center align-center"
+                        >
+                            <v-btn
+                                @click="setColorTheme"
+                                color="green">
+                                Změnit barvu aplikace
+                            </v-btn>
+                        </v-sheet>
+                    </v-col>
+                    <v-col>
+                        <v-sheet
+                            :elevation="8"
+                            border
+                            rounded
+                        >
+                        </v-sheet>
+                    </v-col>
+                </v-row>
+                <DialogChangeColorTheme v-model="themeModal" @close="themeModal = false"></DialogChangeColorTheme>
+                <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;  restrictRegister = stats.restrictRegister;" @fetchIsSuccess="toastFetch"></DialogRegisterRestrict>
+            </template>
+        </v-container>
     </component>
 </template>
 
 <style lang="scss">
-.v-app-bar{
+.v-app-bar {
     .v-icon {
         color: black !important;
     }
 }
+
 .v-card {
     box-sizing: border-box;
     padding: 4em 0 !important;
     flex-grow: 1;
+
     .v-card-text {
         font-size: 1.4em;
     }
 }
 #my-chart-id {
     max-height: 500px !important;
+}
+.v-switch__track {
+    background: red !important;
+}
+.underlineLink:before {
+    position: absolute;
+    content: '';
+    bottom: 0;
+    width: 100%;
+    height: 0.1em;
+    background-color: #4398f0;
+    transition: opacity 300ms, transform 300ms;
+    transform: scale(0);
+    transform-origin: center;
+}
+.underlineLink:hover:before {
+    transform: scale(1) !important;
 }
 </style>

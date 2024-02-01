@@ -12,5 +12,8 @@ return [
     'password_reset' => 'Resetování hesla',
     'information_user' => 'Uživatelské informace',
     'upload_profile_image' => 'Nahraj profilovou fotku',
-    'image' => 'Profilovka'
+    'image' => 'Profilovka',
+    'share' => 'Sdílení',
+    'shareInfo' => "Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete přijímat od žádného uživatele sekci zaškrtněte možnost ",
+    'change_password' => 'Změnit heslo'
 ];

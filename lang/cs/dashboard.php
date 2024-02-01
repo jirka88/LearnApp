@@ -1,6 +1,6 @@
 <?php
 return [
-    'stats' => 'Statistiky: ',
+    'stats' => 'Dashboard ',
     'home' => 'Domů',
     'all_users' => 'Všichni uživatelé',
     'set_profile' => 'Nastavení profilu',
@@ -11,5 +11,8 @@ return [
     'operators' => 'Operátoři',
     'testers' => 'Testeři',
     'normal_users' => 'Běžné uživatelé',
-    'organization' => 'Organizace'
+    'organization' => 'Organizace',
+    'welcome' => 'Vítejte',
+    'sign_out' => 'Odhlásit se',
+    'restrict_register' => 'Omezit registraci'
 ];

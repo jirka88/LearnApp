@@ -12,6 +12,8 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
+use function Symfony\Component\String\b;
+
 class ChapterController extends Controller
 {
     public function show(Request $request, $slug, $chapterName) {
@@ -51,7 +53,7 @@ class ChapterController extends Controller
             return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
         if(auth()->user()->licences->id == 1 && $partition->Chapter()->count() > Licences::standartUserChaptersInPartitions) {
-            return redirect()->back()->with(["LicenceLimitations" => "Přesáhnut limit!"]);
+            return redirect()->back()->with(["message" => "Přesáhnut limit!"]);
         }
         Chapter::create([
             "name" => $chapterRequest->name,
@@ -71,14 +73,13 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function edit(Request $request, $slug, $chapter) {
-        $chapter = Chapter::where("slug", $chapter)->with(["partition" => function ($query) {
-            $query->with(['Users' => function ($query2) {
+        $chapterModel = app('App\Models\Chapter');
+        $chapter = $chapterModel->getChapter($chapter);
+        $chapter->with(['Partition.Users' => function ($query2) {
                 $query2->find(auth()->user()->id);
             }])->first();
-        }])->first();
-
         $this->authorize('update', $chapter);
-        return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $slug]);
+        return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
     }
 
     /**
@@ -88,7 +89,8 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
-        $chapter = Chapter::where("slug", $chapterRequest->slug)->first();
+        $chapterModel = app('App\Models\Chapter');
+        $chapter = $chapterModel->getChapter($slug);
         $this->authorize('update', $chapter);
         $chapter->update([
             'name' => $chapterRequest->name,
@@ -96,7 +98,7 @@ class ChapterController extends Controller
             'context' => $chapterRequest->contentChapter,
             'slug' => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
         ]);
-        return to_route('subject.show', $slug);
+        return to_route('subject.show', $chapter->Partition()->find($chapter->partition_id)->slug);
     }
     /**
      * Vymazání kapitoly
@@ -106,14 +108,28 @@ class ChapterController extends Controller
      * @return void
      */
     public function destroy(Request $request, $slug, $chapter) {
-        $chapterDelete = Chapter::where('slug', $chapter)->first();
+        $chapterModel = app('App\Models\Chapter');
+        $chapterDelete = $chapterModel->getChapter($chapter);
         $chapterDelete->delete();
         return to_route('subject.show', $slug);
     }
-    public function selectChapter(Request $request) {
+
+    /**
+     * Vyhledání kapitol
+     * @param Request $request
+     * @param $slug
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function selectChapter(Request $request, $slug) {
         $sort = $request->input('select');
-        //echo route('chapter.select', [$sort]);
-        $chapter = Chapter::where('name', $sort)->select('name', 'perex', 'id', 'slug')->first();
-        return response()->json(["loadedSelectedChapter" => $chapter]);
+        $subject_id = Partition::where('slug', $slug)->pluck('id')->first();
+        $chapter = [];
+        if($sort !== null) {
+            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject_id)->select('name', 'perex','slug')->get();
+        }
+        if(count($chapter) === 0) {
+            $chapter = ['item' => 'Nic nenalezeno!'];
+        }
+        return response()->json(["search" => $chapter]);
     }
 }

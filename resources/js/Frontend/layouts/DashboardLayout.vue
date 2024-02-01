@@ -13,7 +13,7 @@
                             :title="$page.props.user.firstname"
                             nav
                             height="64"
-                            class=" d-flex align-center"
+                            class=" d-flex align-center ga-2"
                         >
                             <div class="text-subtitle-2">{{ $page.props.user.email }}</div>
                         </v-list-item>
@@ -22,7 +22,7 @@
                 <v-divider></v-divider>
                 <v-list density="compact" nav>
                     <Link :href="route('dashboard')">
-                        <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')" :value="$t('dashboard.home')"></v-list-item>
+                        <v-list-item  prepend-icon="mdi-home-city" :title="$t('dashboard.home')" :value="$t('dashboard.home')" active-class="bg-primary"></v-list-item>
                     </Link>
                     <Link v-if="$page.props.permission.view" :href="route('admin')">
                         <v-list-item prepend-icon="mdi-account-cog"  :title="$t('dashboard.all_users')"
@@ -54,6 +54,11 @@
                             </v-list-item>
                         </Link>
                     </v-list-group>
+                    <Link :href="route('share.show')">
+                        <v-list-item prepend-icon="mdi-share" title="Zobrazit sdílení"
+                                     value="zobrazit sdílení">
+                        </v-list-item>
+                    </Link>
                     <Link :href="route('share.view')"
                           v-if="$page.props.user.subjects.some(subject => subject.permission.accepted == 0)">
                         <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"
@@ -125,7 +130,7 @@ const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO
 const languages = [{language: 'Česky', ISO: 'cs'}, {language: 'English', ISO: 'en'}]
 
 const changeLanguage = () => {
-    Inertia.post('/language', {'language': select.value.ISO})
+    Inertia.post(route('language', {'language': select.value.ISO}));
     localStorage.setItem('langTitle', select.value.language);
     localStorage.setItem('lang', select.value.ISO);
     loadLanguageAsync(select.value.ISO);
@@ -140,19 +145,16 @@ const changeLanguage = () => {
         font-size: 1.2em !important;
     }
 }
-
 .v-app-bar {
     gap: 6em;
 
     .v-icon {
         color: black !important;
     }
-
     .v-select {
         max-width: 10em;
     }
 }
-
 .v-list-item {
     padding: 0.7em !important;
 }
@@ -170,13 +172,11 @@ const changeLanguage = () => {
 .v-list-item--active {
     background: gray;
 }
-
 .v-footer {
     .move {
         transition: .8s;
         margin-left: 255px;
     }
-
     .move-back {
         transition: .8s;
     }

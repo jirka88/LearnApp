@@ -1,7 +1,8 @@
 <template>
     <component :is="DashboardLayout">
         <v-container>
-            <div v-if="this.$page.props.permission.view" class="btns d-flex align-center py-8">
+            <Breadcrumbs :items="[{title: 'Uživatelé', disabled: true }]"></Breadcrumbs>
+            <div v-if="$page.props.permission.view" class="btns d-flex align-center py-8">
                 <Link :href="route('adminuser.create')"  data-aos="zoom-in"
                       data-aos-duration="400">
                     <v-btn
@@ -30,7 +31,7 @@
                     <th class="font-weight-bold">Licence:</th>
                     <th class="font-weight-bold">{{$t('dashboard.active')}}:</th>
                     <th class="font-weight-bold">Předměty:</th>
-                    <th class="font-weight-bold">Nastavení:</th>
+                    <th class="font-weight-bold">{{$t('global.setting')}}:</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,15 +48,15 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.roles.role }}</td>
                     <td>{{ user.licences.Licence }}</td>
-                    <td class="text-uppercase">{{ user.active == 1 ? $t('global.yes') : "global.no" }}</td>
-                    <td v-if="user.id == this.$page.props.user.id || this.$page.props.permission.administrator_view">
+                    <td class="text-uppercase">{{ user.active == 1 ? $t('global.yes') : $t("global.no") }}</td>
+                    <td v-if="user.id == $page.props.user.id || $page.props.permission.administrator_view">
                         <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">
                                 {{$t('global.show')}}
                             </v-btn>
                         </Link>
                     </td>
-                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && this.$page.props.permission.operator_view">
+                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && $page.props.permission.operator_view">
                         <Link :href="route('adminuser.subjects', user.slug)">
                             <v-btn class="bg-green">
                                 {{$t('global.show')}}
@@ -63,17 +64,17 @@
                         </Link>
                     </td>
                     <td v-else></td>
-                    <td v-if="this.$page.props.permission.administrator_view || user.id == this.$page.props.user.id" class="d-flex align-center gp-em-05">
+                    <td v-if="$page.props.permission.administrator_view || user.id == $page.props.user.id" class="d-flex align-center ga-2">
                         <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
-                            <v-btn v-if="user.id !== this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
+                        <v-btn v-if="user.id !== $page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
                     </td>
-                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && this.$page.props.permission.operator_view" class="d-flex align-center gp-em-05">
+                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && $page.props.permission.operator_view" class="d-flex align-center ga-2">
                         <Link :href="route('adminuser.edit', user.slug)">
                             <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                         </Link>
-                        <v-btn v-if="user.id !== this.$page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
+                        <v-btn v-if="user.id !== $page.props.user.id"  class="bg-red" icon="mdi-trash-can" @click="enableDialog(user)"></v-btn>
                     </td>
                     <td v-else></td>
                 </tr>
@@ -101,6 +102,7 @@ const status = ref(false);
 const page = ref(1);
 const props = defineProps({users: Object, pages: Object});
 import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
+import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')

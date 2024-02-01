@@ -1,7 +1,7 @@
 <template>
     <component :is="DashboardLayout">
         <v-container>
-            <div class="d-flex flex-column pa-4 gp-em-2">
+            <div class="d-flex flex-column pa-4 ga-4">
                 <div>
                 <p class="text-h5">Předměty uživatele: {{subjects.firstname}} - {{subjects.email}}</p>
                 <v-divider></v-divider>
@@ -20,7 +20,7 @@
                         <thead>
                         <tr>
                             <th class="font-weight-bold">ID:</th>
-                            <th class="font-weight-bold">Název:</th>
+                            <th class="font-weight-bold">{{$t('global.name')}}:</th>
                             <th class="font-weight-bold">Ikona:</th>
                             <th class="font-weight-bold">Počet kapitol:</th>
                             <th class="font-weight-bold">Zobrazit:</th>

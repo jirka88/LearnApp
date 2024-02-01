@@ -8,5 +8,8 @@ return [
     'surname' => 'Surname',
     'close' => 'Close',
     'create_user' => 'Create user',
-    'created' => 'Create'
+    'created' => 'Create',
+    'delete' => 'Delete',
+    'setting' => 'Settings',
+    'change' => 'Change'
 ];

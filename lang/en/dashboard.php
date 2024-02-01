@@ -1,6 +1,6 @@
 <?php
 return [
-    'stats' => 'Stats: ',
+    'stats' => 'Dashboard ',
     'home' => 'Home',
     'all_users' => 'All users',
     'set_profile' => 'Set profile',
@@ -11,5 +11,8 @@ return [
     'operators' => 'Operators',
     'testers' => 'Testers',
     'normal_users' => 'Normal users',
-    'organization' => 'Organization'
+    'organization' => 'Organization',
+    'welcome' => 'Welcome',
+    'sign_out' => 'Sign out',
+    'restrict_register' => 'Restrict register'
 ];

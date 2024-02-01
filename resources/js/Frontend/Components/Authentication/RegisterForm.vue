@@ -17,6 +17,9 @@
                 variant="outlined"
                 :label="$t('authentication.register.name')"
                 :rules="[rules.required, rules.firstnameLength]"
+                :error="form.errors.firstname"
+                :error-messages="form.errors.firstname"
+                @input="form.errors.firstname ? delete form.errors.firstname : ''"
                 required/>
             <v-text-field
                 v-model="form.lastname"
@@ -69,7 +72,8 @@
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
             <span class="text-center text-red">{{form.errors.confirm}}</span>
-            <span class="text-center text-red">{{form.errors.email !== "0" ? form.errors.email : ''}}</span>
+            <Toastify v-if="isActiveToast" :text="form.errors.email?.unique" variant="error" :time="3000"
+                      @close="isActiveToast = false"></Toastify>
             <v-btn
                 type="submit"
                 color="blue"
@@ -94,7 +98,10 @@ const show = ref('');
 const show1 = ref('');
 const confirm = ref(false);
 const dialog = ref(false);
-const Dialog = defineAsyncComponent(() => import('./Dialog.vue'));
+const Dialog = defineAsyncComponent(() => import('../DialogAgree.vue'));
+import {isActiveToast, toastShow} from "@/Toast";
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+
 
 const items = markRaw([
     {state: 'Osobní účet', value: '1'},
@@ -150,7 +157,13 @@ const setDialog = () =>{
 }
 const register = () => {
     off.value = true
-    form.post(route('register'));
+    form.post(route('register'), {
+        onError: () =>{
+            if(form.errors.email.unique !== undefined) {
+                toastShow(true)
+            }
+        }
+    });
     off.value = false
 }
 </script>

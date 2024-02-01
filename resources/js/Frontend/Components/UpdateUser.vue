@@ -92,8 +92,7 @@
                 </tr>
                 </tbody>
             </table>
-            <p v-if="$page.props.flash.messageUpdate" class="text-center pt-4 font-weight-bold text-green">
-                {{ $page.props.flash.messageUpdate }}</p>
+            <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"
@@ -108,6 +107,8 @@
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
 import {markRaw} from "vue";
+import {isActiveToast, statusToast, toastShow, toastStatus} from "@/Toast";
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
 const form = useForm({
     firstname: props.usr.firstname,
@@ -138,11 +139,26 @@ const status = markRaw([
 const updateUser = async (id) => {
     form.put('/dashboard/user'), {
         onSuccess: () => {
+            toastShow(true);
+            toastStatus(true);
+        },
+        onError: () =>{
+            toastShow(true);
+            toastStatus(false);
         }
     }
 }
 const updateAdminUser = async(id) => {
-    form.put(route('adminuser.update', id));
+    form.put(route('adminuser.update', id), {
+        onSuccess: () => {
+            toastShow(true);
+            toastStatus(true);
+        },
+        onError: () => {
+            toastShow(true);
+            toastStatus(false);
+        }
+    })
 }
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',
