@@ -31,6 +31,7 @@
 - Lze organizaci nasdílet určitému uživateli
 - **Tři základní oprávnění**: číst/zápis/plná kontrola
 - Po sdílení určitému uživateli musí uživatel potvrdit sdílení
+- jednotlivé sdílení lze dále spravovat
 
 ## Poznámky
 
@@ -41,7 +42,8 @@
 - Umožněno spravovat uživatelé i jejich organizace
 - Možnost deaktivovat uživatele
 - Možnost vytvořit uživatele bez nutnosti registrace
-- Náhlížení do grafu a statisktik
+- Náhlížení do grafu a statisktik (Dashboard)
+- Přístup ke globálním nastavení aplikace
 
 ## Licence
 
@@ -56,9 +58,7 @@
 
 # TO DO
 
-- Lepší propracování frontendu (Dashboard)
 - Optimalizace komponent
-- Lepší vyhledávaní poznámek
 - Přidání vlastních statistik běžnému uživateli
 - Přidání více možností pro testera
 - Možnost zapomenuté heslo
