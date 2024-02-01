@@ -13,7 +13,6 @@ use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class Admin extends Controller

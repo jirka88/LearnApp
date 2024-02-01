@@ -8,14 +8,11 @@ use App\Models\Permission;
 use App\Models\Roles;
 use App\Models\User;
 use \App\Http\Components\Filter;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
 class Controller extends BaseController
