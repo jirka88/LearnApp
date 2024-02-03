@@ -211,6 +211,13 @@ class Admin extends Controller
         Settings::find(1)->update(['RestrictedRegistration' => $register === "true" ? 1 : 0]);
         return redirect()->back();
     }
+
+    /**
+     * Nastaví barvu celé aplikace
+     * @param $color
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function changeTheme($color) {
         $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['color' => $color]);

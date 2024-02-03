@@ -16,7 +16,7 @@
                              :key="index" class="py-0 px-0" max-width="20em">
                     <div class="py-2 px-4" v-if="searchResult.search.length > 0">
                         <Link v-if="item.slug" :href="route('chapter.show', {slug: subject.slug, chapter: item.slug})">
-                            <div class="text-4 font-weight-bold">{{ item.name }}</div>
+                            <div v-html="highlightText(item.name)" class="text-4 font-weight-bold"></div>
                             <p class="text-subtitle-2">{{ item.perex }}</p>
                         </Link>
                         <v-divider v-if="searchResult.search.length !== index + 1 "></v-divider>
@@ -46,6 +46,10 @@ watch(search, async (val) => {
             })
     }
 })
+const highlightText = (text) =>{
+    const regex = new RegExp(search.value, 'gi');
+    return text.replace(regex,'<span style="background-color: #EFEFEF; ">$&</span>');
+}
 </script>
 
 <style scoped lang="scss">

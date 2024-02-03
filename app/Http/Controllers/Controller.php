@@ -61,7 +61,6 @@ class Controller extends BaseController
             'permission' => 'required',
             'subject' => 'required'
         ], $customMessages);
-
         $sendMessage = __('share.warning.send');
         foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
@@ -141,7 +140,7 @@ class Controller extends BaseController
      */
     public function showStatsShare() {
         $subjects = User::with(['patritions.users' => function ($query) {
-             $query->whereNot('user_id', auth()->user()->id)->get();
+             $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
         }])->find(auth()->user()->id);
         $subjects->patritions->each(function ($subject) {
             $subject->users->each(function ($user) {
@@ -163,5 +162,19 @@ class Controller extends BaseController
         $subject = Partition::find($request->input('subject'));
         $user->patritions()->updateExistingPivot($subject->id,['permission_id' => $dr['id']]);
     }
+    public function searchUser(Request $request) {
+        $search = $request->input('select');
+        $user = [];
+        if(isset($search)) {
+            $user = User::where('canShare' , 1)
+                ->whereNotIn('id', [auth()->user()->id, Roles::ADMIN])
+                ->where(function ($query) use ($search){
+                $query->where('firstname', 'LIKE', '%'. $search . '%')
+                    ->orWhere('lastname', 'LIKE', '%'. $search . '%')
+                    ->orWhere('email', 'LIKE', '%'. $search . '%')->get();
+            })->select('firstname', 'lastname', 'image', 'email')->get();
+        }
+        return response()->json($user);
 
+    }
 }
