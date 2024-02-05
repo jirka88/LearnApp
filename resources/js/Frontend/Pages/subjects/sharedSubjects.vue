@@ -56,7 +56,7 @@
                                 variant="flat"
                                 color="red"
                                 icon="mdi-trash-can"
-                                @click="deleteShare(subject.slug, user.id)"
+                                @click="deleteShare(subject.slug, user.permission.user_id)"
                             >
                             </v-btn>
                         </div>
@@ -66,7 +66,10 @@
                 <tbody v-else>
                 <v-divider></v-divider>
                 <tr>
-                    <td>Nesdíleno s nikým!</td>
+                    <td width="2em">
+                        <v-img height="2em" min-width="1em" :src="arrow"></v-img>
+                    </td>
+                    <td colspan="5">Nesdíleno s nikým!</td>
                 </tr>
                 </tbody>
             </v-table>
@@ -97,6 +100,7 @@ const showEditShare = (user, subject) => {
     shareFormActive.value = true;
 }
 const deleteShare = (slug, user) => {
+    console.log(user)
     Inertia.delete(route('sharing.delete', {slug: slug, user: user}))
 }
 </script>
