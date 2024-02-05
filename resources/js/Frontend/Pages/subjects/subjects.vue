@@ -16,7 +16,7 @@
                             :items="items"
                             item-title="state"
                             item-value="id"
-                            label="Select"
+                            label="Výchozí"
                             persistent-hint
                             return-object
                             hide-details
