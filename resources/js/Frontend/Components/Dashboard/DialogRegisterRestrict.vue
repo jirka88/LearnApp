@@ -34,7 +34,7 @@ const close = () => {
     emit('close');
 }
 const changeRestrict = () => {
-    Inertia.put(route('adminregister.restriction',{register: props?.restricted}), {},{
+    Inertia.put(route('adminregister.restriction',{register: props.restricted}), {},{
         onSuccess: () => {
            emit('fetchIsSuccess', true);
            close();

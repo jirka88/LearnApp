@@ -11,8 +11,10 @@ class Settings extends Model
         'RestrictedRegistration',
         'color'
         ];
-    protected $casts = ['RestrictedRegistration' => 'boolean'];
     public $timestamps = false;
+    protected $casts = [
+        'RestrictedRegistration' => 'boolean'
+    ];
 
     use HasFactory;
 }
