@@ -52,7 +52,7 @@
 import AdminLayout from "../../layouts/DashboardLayout.vue";
 import UpdateUser from "../../Components/UpdateUser.vue";
 import ResetPassword from "../../Components/ResetPassword.vue";
-import {defineAsyncComponent, ref} from "vue";
+import {defineAsyncComponent, ref, watch} from "vue";
 import ShareOptions from "@/Frontend/Components/shareOptions.vue";
 import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
 const UploadImage = defineAsyncComponent(() =>
@@ -63,7 +63,10 @@ import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 const tab = ref(null);
 const isActive = ref(false);
 defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
-
+import {toastShow} from "@/Toast";
+watch(tab, (val) => {
+    toastShow(false);
+});
 const showChangeAvatar = () => {
     isActive.value = true;
 }

@@ -25,8 +25,7 @@
                           @click:append="show2 = !show2"
                           variant="outlined"></v-text-field>
             <p class="text-center text-red">{{ props.errors.msg }}</p>
-            <p v-if="$page.props.flash.message" class="text-center text-green">
-                {{ $page.props.flash.message }}</p>
+            <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"
@@ -40,10 +39,12 @@
 <script setup>
 import {ref} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 
 const show1 = ref('');
 const show2 = ref('');
 const props = defineProps({'usr': Object, errors: Object})
+import {isActiveToast, statusToast, toastShow, toastStatus} from "@/Toast";
 
 const formPassword = useForm({
     oldPassword: '',
@@ -53,7 +54,13 @@ const formPassword = useForm({
 const changePassword = async () => {
     formPassword.put('/dashboard/user/changePassword', {
         onSuccess: () => {
+            toastShow(true);
+            toastStatus(true);
             formPassword.reset();
+        },
+        onError: () => {
+            toastShow(true);
+            toastStatus(false);
         }
     });
 }

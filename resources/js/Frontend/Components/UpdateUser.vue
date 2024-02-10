@@ -109,7 +109,7 @@ import {useForm} from "@inertiajs/inertia-vue3";
 import {markRaw} from "vue";
 import {isActiveToast, statusToast, toastShow, toastStatus} from "@/Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
-const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
+const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array});
 const form = useForm({
     firstname: props.usr.firstname,
     lastname: props.usr.lastname,

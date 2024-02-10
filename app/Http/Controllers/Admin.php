@@ -209,7 +209,7 @@ class Admin extends Controller
     public function changeRestriction($register) {
         $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['RestrictedRegistration' => $register === "true" ? 1 : 0]);
-        return redirect()->back();
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 
     /**
@@ -221,6 +221,6 @@ class Admin extends Controller
     public function changeTheme($color) {
         $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['color' => $color]);
-        return redirect()->back();
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 }
