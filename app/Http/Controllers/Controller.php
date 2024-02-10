@@ -141,14 +141,18 @@ class Controller extends BaseController
     public function showStatsShare() {
         $subjects = User::with(['patritions.users' => function ($query) {
              $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
-        }])->find(auth()->user()->id);
+        }])->select('id')->find(auth()->user()->id);
         $subjects->patritions->each(function ($subject) {
             $subject->users->each(function ($user) {
                 $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
             });
         });
+        $subjects->patritions = $subjects->patritions->sortByDesc(function ($patrition) {
+            return $patrition->users->isNotEmpty();
+        })->values();
         $permission = Permission::all();
-        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permission' => $permission]);
+
+        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects->patritions, 'permission' => $permission]);
     }
 
     /**

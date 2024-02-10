@@ -4,7 +4,7 @@
             <div class="d-flex flex-column py-5 ga-6">
                 <Breadcrumbs :items="[{title: 'Sdílení', disabled: true }]"></Breadcrumbs>
             </div>
-            <v-table v-for="subject in subjects.patritions"
+            <v-table v-for="subject in subjects"
                      :key="subject.id">
                 <thead>
                 <tr>
@@ -31,19 +31,19 @@
                     :key="user.id"
                 >
                 <tr class="pa-8">
-                    <td>
-                        <v-img height="2em" min-width="1em" :src="arrow"></v-img>
+                    <td width="5%">
+                        <v-img height="2em" min-width="1em" max-width:="2em" :src="arrow"></v-img>
                     </td>
                     <td width="2em"><v-img class="border-100"  max-height="3em" min-width="3em" max-width="3em" :src="user.image ? '/storage/' + user.image : undefinedPicture"></v-img></td>
-                    <td><p>{{ user.firstname }} {{ user.lastname }}</p></td>
-                    <td><p class="text-subtitle-2">{{ user.email }}</p></td>
-                    <td>
+                    <td width="20%"><p>{{ user.firstname }} {{ user.lastname }}</p></td>
+                    <td  width="20%"><p class="text-subtitle-2">{{ user.email }}</p></td>
+                    <td  width="25%">
                         <v-chip variant="flat" :color="user.permission.accepted  !== '0' ? 'green' : 'red'">
                             {{user.permission.accepted !== '0' ? 'Přijmuto' : 'Nepotvrzeno'}}
                         </v-chip>
                     </td>
-                    <td>{{ user.permission.name }}</td>
-                    <td>
+                    <td  width="25%">{{ user.permission.name }}</td>
+                    <td >
                         <div class="d-flex ga-2">
                             <v-btn
                                 variant="flat"
@@ -100,7 +100,6 @@ const showEditShare = (user, subject) => {
     shareFormActive.value = true;
 }
 const deleteShare = (slug, user) => {
-    console.log(user)
     Inertia.delete(route('sharing.delete', {slug: slug, user: user}))
 }
 </script>

@@ -56,6 +56,7 @@ const form = useForm({
 
 const changeShare = () => {
     form.put(route('share.edit'));
+    emit('close')
 }
 </script>
 <style scoped lang="scss">
