@@ -25,18 +25,16 @@
 </template>
 
 <script setup>
-import {useForm} from "@inertiajs/inertia-vue3";
+import {Inertia} from "@inertiajs/inertia";
 
 const props = defineProps({ Path: String, Obj: Object, Type: String, Description: String} )
-const form = useForm();
 const emit = defineEmits(['close']);
 const close = () => {
     emit('close');
 }
 const destroy = (id) =>{
-    form.delete(route(props.Path, id));
+    Inertia.delete(route(props.Path, id));
     emit('close');
-    this.$forceUpdate();
 }
 </script>
 

@@ -35,7 +35,8 @@
                     :subject="subject"
                     :errors="errors"
                     :users="users"
-                    @close="sharing = false"></DialogShare>
+                    @close="sharing = false"
+                />
                     <ChapterPreview
                         v-for="chapter in chapters" :key="chapter.id"
                         :chapter="chapter"

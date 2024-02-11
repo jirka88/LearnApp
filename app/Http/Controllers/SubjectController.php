@@ -132,9 +132,10 @@ class SubjectController extends Controller
     /**
      * Vymazání předmětu
      * @param Partition $subject
-     * @return void
+     * @return RedirectResponse
      */
     public function destroy(Partition $subject) {
         $subject->delete();
+        return redirect()->back();
     }
 }

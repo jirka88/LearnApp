@@ -36,8 +36,8 @@
                             <th class="font-weight-bold">Smazání:</th>
                         </tr>
                         </thead>
-                        <tbody v-if="subjectsShow.length !== 0">
-                           <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
+                        <tbody v-if="subjects.length !== 0">
+                           <tr class="pa-8" v-for="subjectData in subjects" :key="subjectData.id">
                                 <td class="font-weight-bold"  v-if="$page.props.permission.view">{{subjectData.id}}</td>
                                 <td class="font-weight-bold">{{subjectData.name}}</td>
                                 <td><v-chip><v-icon>{{subjectData.icon}}</v-icon></v-chip></td>
@@ -78,54 +78,38 @@
             </div>
         </v-container>
         <v-row justify="center">
-            <v-dialog
-                v-model="dialog"
-                persistent
-                width="auto"
+        <DialogDelete v-model="dialog"
+                      :subject="subject"
+                        @close="dialog = false">
+            <v-btn
+                class="bg-red"
+                @click="destroySubject()"
+                size="x-large"
             >
-                <v-card>
-                    <v-card-title class="text-h5 text-center">
-                        Opravdu si přejete smazat předmět <strong>{{subjectName}}</strong>
-                    </v-card-title>
-                    <v-card-text class="text-center">Tato akce je nenávratná. S mazáním předmětu dojde k smázání i všech kapitol patřící pod předmět!</v-card-text>
-                    <v-card-actions class="margin-center">
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            class="bg-white"
-                            @click="dialog = false"
-                            size="x-large"
-                        >
-                            Zřušit
-                        </v-btn>
-                        <v-btn
-                            class="bg-red"
-                            @click="destroySubject(subjectId)"
-                            size="x-large"
-                        >
-                            Smazat!
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+                Smazat!
+            </v-btn>
+        </DialogDelete>
         </v-row>
     </component>
 </template>
 <script setup>
-import  {Link, useForm} from "@inertiajs/inertia-vue3";
+import  {Link} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
-import inertia from "@inertiajs/inertia";
-import {markRaw, onMounted, ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
+import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import { useUrlSearchParams } from '@vueuse/core';
-const form = useForm();
+const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/UI/DialogBeforeDelete.vue"));
+
 const dialog = ref(false);
-const subjectId = ref();
-const subjectName = ref();
+const subject = ref({
+  subjectName: '',
+  subjectId: ''
+});
 const page = ref(1);
 const props = defineProps({subjects: Object, pages: Number, sort: String});
 const filtr = ref({state: 'Výchozí', id: 'default'});
-const subjectsShow = ref(props.subjects);
 
 const items = markRaw(
     [{state: 'Výchozí', id: 'default'},
@@ -142,16 +126,16 @@ onMounted(() =>{
 })
 const setId = (id, name) => {
     dialog.value = true;
-    subjectId.value = id;
-    subjectName.value = name;
+    subject.value.subjectId = id;
+    subject.value.subjectName = name;
 }
-const destroySubject = (id) => {
-    form.delete(route('subject.destroy', id));
+const destroySubject = () => {
+    Inertia.delete(route('subject.destroy', subject.value.subjectId));
     dialog.value = false;
 }
 
 const fetchData = () => {
-    inertia.Inertia.get(route('subject.index'),{page: page.value}, {preserveState: true, onSuccess: (response) => {
+    Inertia.get(route('subject.index'),{page: page.value}, {preserveState: true, onSuccess: (response) => {
         subjectsShow.value = response.props.subjects;
     }});
 }
