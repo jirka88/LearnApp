@@ -25,7 +25,7 @@ class ChapterRequest extends FormRequest
     {
         return [
             "name" => "required|max:20",
-            "perex" => "required|max:50",
+            "perex" => "max:50",
             "contentChapter" => "required",
             "slug" => "required"
         ];

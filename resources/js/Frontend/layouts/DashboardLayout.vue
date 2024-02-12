@@ -84,7 +84,7 @@
                     </Link>
                 </v-list>
             </v-navigation-drawer>
-            <v-app-bar clipped-left>
+            <v-app-bar>
                 <v-btn v-if="$vuetify.display.lgAndUp" :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'"
                        @click.stop="drawer = !drawer"></v-btn>
                 <v-btn v-if="$vuetify.display.mdAndDown" icon="mdi-format-list-bulleted"

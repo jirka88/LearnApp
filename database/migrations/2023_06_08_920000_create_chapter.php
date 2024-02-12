@@ -19,7 +19,8 @@ return new class extends Migration
                     ->unique();
             $table->string('slug')
                 ->unique();
-            $table->string('perex', 50);
+            $table->string('perex', 50)
+                ->nullable();
             $table->longText('context');
             $table->foreignId('partition_id')
                 ->constrained('partitions', 'id')
