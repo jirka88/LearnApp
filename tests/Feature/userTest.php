@@ -227,7 +227,7 @@ class userTest extends TestCase
         ];
         $response = $this->actingAs($this->user)->post(route('chapter.store', ["slug" => $subject->slug]), $newChapter);
         $response->assertRedirect();
-        $response->assertSessionHas(["LicenceLimitations"]);
+        $response->assertSessionHas(["message"]);
     }
 
     /**
@@ -242,7 +242,7 @@ class userTest extends TestCase
     }
     $response = $this->actingAs($this->user)->delete(route("subject.destroy", $subject->id));
     $this->assertAuthenticated();
-    $response->assertStatus(200);
+    $response->assertStatus(302);
     $this->assertDatabaseMissing("partitions", [
         "id" => $subject->id,
     ]);

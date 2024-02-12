@@ -13,6 +13,7 @@ use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class Admin extends Controller
@@ -207,8 +208,9 @@ class Admin extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function changeRestriction($register) {
+        $value = filter_var($register,FILTER_VALIDATE_BOOLEAN);
         $this->authorize('viewAdmin', auth()->user());
-        Settings::find(1)->update(['RestrictedRegistration' => $register === "true" ? 1 : 0]);
+        Settings::find(1)->update(['RestrictedRegistration' => $value]);
         return redirect()->back()->with('message', __('validation.custom.update'));
     }
 

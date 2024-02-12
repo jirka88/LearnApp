@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LicenceSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(PermissionSeeder::class);
-        $this->call(DashboardSeeder::class);
+        $this->call(SettingsSeeder::class);
         //$this->call(UserSeeder::class);
 
         // \App\Models\User::factory(10)->create();
