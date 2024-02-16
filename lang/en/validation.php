@@ -167,7 +167,9 @@ return [
             'registered' => 'Email is registered!',
         ],
         'update' => 'Update success',
-        'error' => 'Something went wrong :('
+        'error' => 'Something went wrong :(',
+        'create' => 'created successfully!',
+        'deleted' => 'Succesfully deleted'
     ],
 
     /*

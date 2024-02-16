@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\Localization;
 use App\Models\Partition;
 use App\Models\Permission;
 use App\Models\Roles;
 use App\Models\User;
-use \App\Http\Components\Filter;
+use \App\Http\Components\Filters;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -26,8 +27,10 @@ class Controller extends BaseController
      */
     public function sort(Request $request)
     {
+
         $sort = $request->input('sort', 'default');
-        return Filter::sorting($sort);
+        $filter = new FilterSubjectSort();
+        return response()->json(["search" => $filter->sorting($sort)]);
     }
 
     /**

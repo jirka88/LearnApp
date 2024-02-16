@@ -167,7 +167,9 @@ return [
             'registered' => 'Email je registrován!',
         ],
         'update' => 'Aktualizace úspěšná',
-        'error' => 'Něco se nepovedlo :('
+        'error' => 'Něco se nepovedlo :(',
+        'create' => 'Úspěšně vytvořeno!',
+        'deleted' => 'Úspěšně smazáno'
     ],
 
     /*

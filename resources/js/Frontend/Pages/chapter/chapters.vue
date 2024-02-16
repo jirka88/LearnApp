@@ -110,7 +110,8 @@ const onScroll = () => {
 }
 const fetchData = () => {
     Inertia.get(route('subject.show', props.subject.slug), {page: page.value}, {
-        preserveState: true, onSuccess: (response) => {
+        preserveState: true,
+        onSuccess: (response) => {
             props.chapters = response.props.chapters;
         }
     });

@@ -55,7 +55,7 @@
 </template>
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import SearchUser from "@/Frontend/Components/SearchUser.vue";
 
 const props = defineProps({subject: Object, errors: Object, users: Object })
@@ -82,7 +82,6 @@ const sharingToUsers = () => {
     form.post(route('share'), {
         onSuccess: () => {
             selectedUsers.value = null;
-
         }
     })
 }
