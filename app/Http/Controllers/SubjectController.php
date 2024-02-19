@@ -83,9 +83,8 @@ class SubjectController extends Controller
             return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
         else {
-            $subject = $subjectRequest->only('name');
+            $subject = $subjectRequest->only('name', 'icon');
             $subject['created_by'] = auth()->user()->id;
-            $subject['icon'] = $subjectRequest->icon["iconName"];
             $subject['slug'] = SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name);
             $subjectT = Partition::create($subject);
 

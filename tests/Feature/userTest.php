@@ -182,7 +182,7 @@ class userTest extends TestCase
     public function test_user_can_create_subject() {
         $subject = [
           'name' => fake()->text(10),
-          'icon' => ['iconName' => fake()->text(20)]
+          'icon' => fake()->text(5)
         ];
         $response = $this->actingAs($this->user)->post(route('subject.store', $subject));
         $this->assertAuthenticated();
