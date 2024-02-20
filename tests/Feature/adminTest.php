@@ -120,4 +120,16 @@ class adminTest extends TestCase
             'email' => $user['email']
         ]);
     }
+    /**
+     * Admin může změnit politiku registrace
+     */
+    public function test_admin_can_change_registration_on_off() {
+        $status = fake()->boolean();
+        $response = $this->actingAs($this->user)->put(route('adminregister.restriction', $status));
+        $this->assertAuthenticated();
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('settings', [
+            'RestrictedRegistration' => $status
+        ]);
+    }
 }

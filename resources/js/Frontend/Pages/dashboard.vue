@@ -5,7 +5,7 @@ import {Bar} from 'vue-chartjs'
 import {defineAsyncComponent, markRaw, ref} from "vue";
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
 import {isActiveToast, statusToast, toastShow, toastStatus} from "../../Toast";
-import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+const Toastify = defineAsyncComponent(() => import ("@/Frontend/Components/UI/Toastify.vue"));
 import DialogChangeColorTheme from "@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue";
 const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
 
@@ -43,7 +43,7 @@ const setColorTheme = () =>{
                 <div class="d-flex ga-6 flex-column dashboard">
                     <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
                         {{ $t('dashboard.stats') }}</h1>
-                    <Toastify v-if="isActiveToast" :text="statusToast ? $t('validation.custom.update') : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
+                    <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
                     <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
                         <v-col>
                             <WelcomeBox></WelcomeBox>

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\Localization;
 use App\Models\Partition;
 use App\Models\Permission;
 use App\Models\Roles;
 use App\Models\User;
-use \App\Http\Components\Filter;
+use \App\Http\Components\Filters;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -20,14 +21,16 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /***
-     * Sortování (provizorní)
+     * Sortování
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function sort(Request $request)
     {
+
         $sort = $request->input('sort', 'default');
-        return Filter::sorting($sort);
+        $filter = new FilterSubjectSort();
+        return response()->json(["search" => $filter->sorting($sort)]);
     }
 
     /**
@@ -61,7 +64,6 @@ class Controller extends BaseController
             'permission' => 'required',
             'subject' => 'required'
         ], $customMessages);
-
         $sendMessage = __('share.warning.send');
         foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
@@ -141,15 +143,19 @@ class Controller extends BaseController
      */
     public function showStatsShare() {
         $subjects = User::with(['patritions.users' => function ($query) {
-             $query->whereNot('user_id', auth()->user()->id)->get();
-        }])->find(auth()->user()->id);
+             $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
+        }])->select('id')->find(auth()->user()->id);
         $subjects->patritions->each(function ($subject) {
             $subject->users->each(function ($user) {
                 $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
             });
         });
+        $subjects->patritions = $subjects->patritions->sortByDesc(function ($patrition) {
+            return $patrition->users->isNotEmpty();
+        })->values();
         $permission = Permission::all();
-        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permission' => $permission]);
+
+        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects->patritions, 'permission' => $permission]);
     }
 
     /**
@@ -163,5 +169,19 @@ class Controller extends BaseController
         $subject = Partition::find($request->input('subject'));
         $user->patritions()->updateExistingPivot($subject->id,['permission_id' => $dr['id']]);
     }
+    public function searchUser(Request $request) {
+        $search = $request->input('select');
+        $user = [];
+        if(isset($search)) {
+            $user = User::where('canShare' , 1)
+                ->whereNotIn('id', [auth()->user()->id, Roles::ADMIN])
+                ->where(function ($query) use ($search){
+                $query->where('firstname', 'LIKE', '%'. $search . '%')
+                    ->orWhere('lastname', 'LIKE', '%'. $search . '%')
+                    ->orWhere('email', 'LIKE', '%'. $search . '%')->get();
+            })->select('firstname', 'lastname', 'image', 'email')->get();
+        }
+        return response()->json($user);
 
+    }
 }

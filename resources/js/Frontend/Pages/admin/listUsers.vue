@@ -10,8 +10,8 @@
                         {{$t('global.create_user')}}
                     </v-btn>
                 </Link>
-
             </div>
+            <Toastify v-if="$page.props.flash.message" :text="$page.props.flash.message" variant="success" :time="3000"></Toastify>
             <v-dialog
                 v-model="status"
                 persistent
@@ -101,8 +101,10 @@ const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
 const props = defineProps({users: Object, pages: Object});
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
+import {isActiveToast, statusToast} from "@/Toast";
 
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')

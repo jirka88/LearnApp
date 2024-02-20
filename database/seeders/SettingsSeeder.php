@@ -6,7 +6,7 @@ use App\Models\Settings;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DashboardSeeder extends Seeder
+class SettingsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,7 +15,9 @@ class DashboardSeeder extends Seeder
      */
     public function run()
     {
-        $restrict = ['RestrictedRegistration' => 0];
-        Settings::create($restrict);
+        $settings = [
+            'RestrictedRegistration' => 0,
+            'color' => '#398f0'];
+        Settings::create($settings);
     }
 }

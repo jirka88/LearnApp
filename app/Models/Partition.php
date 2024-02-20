@@ -16,7 +16,7 @@ class Partition extends Model
     use Sluggable;
     protected $fillable = ['name', 'created_by', 'icon', 'slug'];
 
-    protected $append = ['chapter_count'];
+    protected $appends = ['chapter_count'];
     public function sluggable() : array
     {
         return [

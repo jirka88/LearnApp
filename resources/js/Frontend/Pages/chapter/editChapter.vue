@@ -16,8 +16,7 @@
                         v-model="form.perex"
                         variant="outlined"
                         label="Perex"
-                        :rules="[rules.required, rules.perexLength]"
-                        required
+                        :rules="[rules.perexLength]"
                     ></v-text-field>
                     <v-no-ssr>
                         <QuillEditor v-model:content="form.contentChapter" theme="snow" toolbar="full"

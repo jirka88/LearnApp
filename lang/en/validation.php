@@ -166,7 +166,10 @@ return [
         'email' => [
             'registered' => 'Email is registered!',
         ],
-        'update' => 'Update success'
+        'update' => 'Update success',
+        'error' => 'Something went wrong :(',
+        'create' => 'created successfully!',
+        'deleted' => 'Succesfully deleted'
     ],
 
     /*

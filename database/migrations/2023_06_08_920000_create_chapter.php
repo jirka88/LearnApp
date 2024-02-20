@@ -17,11 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('name',20)
                     ->unique();
-            $table->string('perex', 50);
-            $table->longText('context');
             $table->string('slug')
-                ->unique()
-                ->after('name');
+                ->unique();
+            $table->string('perex', 50)
+                ->nullable();
+            $table->longText('context');
             $table->foreignId('partition_id')
                 ->constrained('partitions', 'id')
             ->cascadeOnDelete()

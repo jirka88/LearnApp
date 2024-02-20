@@ -182,7 +182,7 @@ class userTest extends TestCase
     public function test_user_can_create_subject() {
         $subject = [
           'name' => fake()->text(10),
-          'icon' => ['iconName' => fake()->text(20)]
+          'icon' => fake()->text(5)
         ];
         $response = $this->actingAs($this->user)->post(route('subject.store', $subject));
         $this->assertAuthenticated();
@@ -227,7 +227,7 @@ class userTest extends TestCase
         ];
         $response = $this->actingAs($this->user)->post(route('chapter.store', ["slug" => $subject->slug]), $newChapter);
         $response->assertRedirect();
-        $response->assertSessionHas(["LicenceLimitations"]);
+        $response->assertSessionHas(["message"]);
     }
 
     /**
@@ -242,7 +242,7 @@ class userTest extends TestCase
     }
     $response = $this->actingAs($this->user)->delete(route("subject.destroy", $subject->id));
     $this->assertAuthenticated();
-    $response->assertStatus(200);
+    $response->assertStatus(302);
     $this->assertDatabaseMissing("partitions", [
         "id" => $subject->id,
     ]);
@@ -304,7 +304,7 @@ class userTest extends TestCase
    }
 
     /**
-     * získání všech aktivních uživatelů
+     * získání aktivních uživatelů
      * @return void
      */
    public function test_user_can_access_to_list_of_active_user_for_sharing_subject() {
@@ -313,4 +313,15 @@ class userTest extends TestCase
        $this->assertAuthenticated();
        $response->assertStatus(200);
    }
+   public function test_user_can_sort_subjects() {
+       for ($i = 0; $i <= Licences::standartUserPartitions; $i++) {
+           $subject = $this->createSubject($this->user);
+           $subject->Users()->attach($this->user->id);
+       }
+       $sort = $this->getSort();
+       $response = $this->actingAs($this->user)->get(route('subject.sort', $sort));
+       $this->assertAuthenticated();
+       $response->assertStatus(200);
+   }
+
 }

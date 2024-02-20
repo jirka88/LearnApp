@@ -18,8 +18,9 @@
                 :label="$t('authentication.register.name')"
                 :rules="[rules.required, rules.firstnameLength]"
                 :error="form.errors.firstname"
-                :error-messages="form.errors.firstname"
+                :error-messages="form.errors.firstname?.min"
                 @input="form.errors.firstname ? delete form.errors.firstname : ''"
+                autofocus
                 required/>
             <v-text-field
                 v-model="form.lastname"
@@ -33,7 +34,7 @@
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
-                :rules="[rules.email, rules.required]"
+                :rules="[rules.email, rules.required, rules.emailLength]"
                 required
             ></v-text-field>
             <v-text-field
@@ -72,7 +73,7 @@
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
             <span class="text-center text-red">{{form.errors.confirm}}</span>
-            <Toastify v-if="isActiveToast" :text="form.errors.email?.unique" variant="error" :time="3000"
+            <Toastify v-if="isActiveToast" :text="form.errors.email?.unique ?? form.errors.token" variant="error" :time="3000"
                       @close="isActiveToast = false"></Toastify>
             <v-btn
                 type="submit"
@@ -83,6 +84,10 @@
             >
                 Registrovat!
             </v-btn>
+            <p class="mt-4"> Tato stránka je chráněna reCAPTCHA a Google
+            <a class="text-decoration-underline text-cyan" href="https://policies.google.com/privacy">Privacy Policy</a> a
+            <a class="text-decoration-underline text-cyan" href="https://policies.google.com/terms">Terms of Service</a> potvrzení.</p>
+
         </v-container>
     </v-form>
 
@@ -101,7 +106,8 @@ const dialog = ref(false);
 const Dialog = defineAsyncComponent(() => import('../DialogAgree.vue'));
 import {isActiveToast, toastShow} from "@/Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
-
+import { useReCaptcha } from 'vue-recaptcha-v3'
+const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 
 const items = markRaw([
     {state: 'Osobní účet', value: '1'},
@@ -118,13 +124,15 @@ const form = useForm({
     password: '',
     type: {state: 'Osobní účet', value: '1'},
     password_confirm: '',
-    confirm: ''
+    confirm: '',
+    token: ''
 });
 
 const rules = {
     required: value => !!value || 'Nutné vyplnit!',
     firstnameLength: v => v.length < 25 || 'Jméno je příliš dlouhé!',
     lastnameLength: v => v.length < 50 ||'Příjmení je příliš dlouhé!',
+    emailLength: v => v.length < 64 || 'Email je příliš dlouhý!',
     email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'E-mail musí být validní!',
     password: v => {
         const missingElements = [];
@@ -155,11 +163,14 @@ const rules = {
 const setDialog = () =>{
         dialog.value = !dialog.value;
 }
-const register = () => {
+const register = async () => {
+    await recaptchaLoaded()
+    const token = await executeRecaptcha('login')
+    form.token = token;
     off.value = true
     form.post(route('register'), {
-        onError: () =>{
-            if(form.errors.email.unique !== undefined) {
+        onError: () => {
+            if (form.errors?.email?.unique !== undefined || form.errors.token) {
                 toastShow(true)
             }
         }

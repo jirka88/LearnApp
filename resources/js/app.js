@@ -15,6 +15,7 @@ import 'aos/dist/aos.css'
 import { computed } from 'vue';
 import { usePage } from '@inertiajs/vue3'
 const page = usePage()
+import { VueReCaptcha, useReCaptcha } from 'vue-recaptcha-v3'
 
 const accentColor = computed(() => {
     if(page.props) {
@@ -26,6 +27,7 @@ const accentColor = computed(() => {
 const routes = [
     {}
 ];
+
 import { i18nVue } from 'laravel-vue-i18n'
 import setLanguage from "./setLanguage";
 
@@ -76,6 +78,7 @@ createInertiaApp({
                 }
             })
             .use(router)
+            .use(VueReCaptcha, { siteKey: '6LdpIXMpAAAAAHM1GBYAPAv884fSC7_hCwx8JPW9' ,loaderOptions:{autoHideBadge: true, useRecaptchaNet: true }})
             .mount(el)
     },
 }).then(() => {

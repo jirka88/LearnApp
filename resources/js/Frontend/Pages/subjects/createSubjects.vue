@@ -4,11 +4,12 @@
                  :class="{'w-85': $vuetify.display.smAndDown,
                             'w-95': $vuetify.display.xs}">
                 <v-form class="pa-6 bg-white" @submit.prevent="createSubject" >
-                    <p class="text-h1 font-weight-bold">Vytvořit {{this.$page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět'}}</p>
+                    <p class="text-h1 font-weight-bold">Vytvořit {{$page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět'}}</p>
                     <v-text-field
                         v-model="form.name"
                         prepend-inner-icon="mdi-email"
                         variant="outlined"
+                        autofocus
                         :label="$t('global.name')"
                         :rules="[rules.required, rules.minName, rules.maxName]"
                     ></v-text-field>
@@ -18,8 +19,23 @@
                         :items="icons"
                         item-title="iconName"
                         label="Ikona">
+                        <template v-slot:selection="{ item, index }">
+                            <div class="d-flex justify-content-center align-items-center ga-2">
+                                <v-icon :icon="item.title"></v-icon>
+                                {{ item.title }}
+                            </div>
+                        </template>
+                        <template v-slot:item="{ item, props }">
+                            <v-list-item v-bind="props">
+                                <template #title>
+                                    <div class="d-flex justify-content-center align-items-center ga-2">
+                                        <v-icon :icon="item.title"></v-icon>
+                                        {{ item.title }}
+                                    </div>
+                                </template>
+                            </v-list-item>
+                        </template>
                     </v-select>
-
                     <v-btn
                         type="submit"
                         color="blue"
@@ -44,11 +60,11 @@ const props = defineProps({usr: Object, url: String, errors: Object});
 const creating = ref(false);
 const form = useForm({
     name: '',
-    icon: {iconName: 'mdi-text-long'}
+    icon: 'mdi-text-long'
 })
 
 const createSubject = async() =>{
-    creating.value= true;
+    creating.value = true;
     if(props.url === undefined) {
         form.post("/dashboard/manager/subject/", {
             onSuccess: () => {

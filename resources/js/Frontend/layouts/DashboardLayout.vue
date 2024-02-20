@@ -22,10 +22,11 @@
                 <v-divider></v-divider>
                 <v-list density="compact" nav>
                     <Link :href="route('dashboard')">
-                        <v-list-item  prepend-icon="mdi-home-city" :title="$t('dashboard.home')" :value="$t('dashboard.home')" active-class="bg-primary"></v-list-item>
+                        <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')"
+                                     :value="$t('dashboard.home')" active-class="bg-primary"></v-list-item>
                     </Link>
                     <Link v-if="$page.props.permission.view" :href="route('admin')">
-                        <v-list-item prepend-icon="mdi-account-cog"  :title="$t('dashboard.all_users')"
+                        <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.all_users')"
                                      :value="$t('dashboard.all_users')"></v-list-item>
                     </Link>
                     <v-list-group id="group">
@@ -54,7 +55,9 @@
                             </v-list-item>
                         </Link>
                     </v-list-group>
-                    <Link :href="route('share.show')">
+                    <Link :href="route('share.show')"
+                          v-if="$page.props.user.sharedSubjects > 0"
+                    >
                         <v-list-item prepend-icon="mdi-share" title="Zobrazit sdílení"
                                      value="zobrazit sdílení">
                         </v-list-item>
@@ -82,7 +85,7 @@
                     </Link>
                 </v-list>
             </v-navigation-drawer>
-            <v-app-bar clipped-left>
+            <v-app-bar>
                 <v-btn v-if="$vuetify.display.lgAndUp" :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'"
                        @click.stop="drawer = !drawer"></v-btn>
                 <v-btn v-if="$vuetify.display.mdAndDown" icon="mdi-format-list-bulleted"
@@ -92,12 +95,28 @@
                     v-model="select"
                     @update:modelValue="changeLanguage"
                     :items="languages"
-                    item-title="language"
-                    item-value="ISO"
+                    :item-props="itemProps"
                     variant="outlined"
                     hide-details
                     return-object
-                ></v-select>
+                >
+                    <template v-slot:selection="{ item}">
+                        <div class="d-flex justify-content-center align-items-center ga-2">
+                            <v-img width="2em" max-height="2em" :src="item.raw.image"/>
+                            {{ item.title }}
+                        </div>
+                    </template>
+                    <template v-slot:item="{ item, props }">
+                        <v-list-item v-bind="props">
+                            <template #title>
+                                <div class="d-flex justify-content-center align-items-center ga-2">
+                                    <v-img max-width="2em" max-height="2em" :src="item.raw.image"/>
+                                    {{ item.title }}
+                                </div>
+                            </template>
+                        </v-list-item>
+                    </template>
+                </v-select>
                 <Link :href="route('logout')">
                     <v-btn icon>
                         <v-icon>mdi-export</v-icon>
@@ -123,20 +142,32 @@ import {loadLanguageAsync} from 'laravel-vue-i18n';
 import Base from "./../Pages/Base.vue"
 import {Inertia} from "@inertiajs/inertia";
 import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg';
+import czechFlag from "./../../../assets/ui/flags/czech.svg"
+import britishFlag from "./../../../assets/ui/flags/united_kingdom.svg"
+
 const drawer = ref(true);
 
-const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs'});
+const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs', 'image': localStorage.getItem('langImage') || czechFlag});
 
-const languages = [{language: 'Česky', ISO: 'cs'}, {language: 'English', ISO: 'en'}]
+const languages = [
+    {language: 'Česky', ISO: 'cs', image: czechFlag}, {
+        language: 'English',
+        ISO: 'en',
+        image: britishFlag
+    }]
 
 const changeLanguage = () => {
     Inertia.post(route('language', {'language': select.value.ISO}));
     localStorage.setItem('langTitle', select.value.language);
     localStorage.setItem('lang', select.value.ISO);
+    localStorage.setItem('langImage', select.value.image)
     loadLanguageAsync(select.value.ISO);
-
 }
-
+const itemProps = (item) =>{
+    return {title: item.language,
+        ISO: item.ISO,
+        image: item.image}
+}
 </script>
 
 <style lang="scss">
@@ -145,16 +176,19 @@ const changeLanguage = () => {
         font-size: 1.2em !important;
     }
 }
+
 .v-app-bar {
     gap: 6em;
 
     .v-icon {
         color: black !important;
     }
+
     .v-select {
         max-width: 10em;
     }
 }
+
 .v-list-item {
     padding: 0.7em !important;
 }
@@ -172,11 +206,13 @@ const changeLanguage = () => {
 .v-list-item--active {
     background: gray;
 }
+
 .v-footer {
     .move {
         transition: .8s;
         margin-left: 255px;
     }
+
     .move-back {
         transition: .8s;
     }

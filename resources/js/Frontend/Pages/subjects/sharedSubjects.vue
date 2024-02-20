@@ -1,22 +1,23 @@
 <template>
     <component :is="DashboardLayout">
         <v-container>
-            <div class="d-flex flex-column pa-5 ga-6">
+            <div class="d-flex flex-column py-5 ga-6">
                 <Breadcrumbs :items="[{title: 'Sdílení', disabled: true }]"></Breadcrumbs>
             </div>
-            <v-table v-for="subject in subjects.patritions"
+            <v-table v-for="subject in subjects"
                      :key="subject.id">
                 <thead>
                 <tr>
-                    <th colspan="6" class="font-weight-bold text-subtitle-1 text-decoration-underline"> {{
+                    <Link :href="route('subject.show',{subject: subject.slug} )"> <th colspan="6" class="font-weight-bold text-subtitle-1 text-decoration-underline"> {{
                             subject.name
                         }}
-                    </th>
+                    </th></Link>
                 </tr>
                 <tr v-if="subject.users.length > 0">
                     <th>
-                        <v-img height="2em" :src="arrow"></v-img>
+                        <v-img min-height="1em" max-height="2em" min-width="1em" :src="arrow"></v-img>
                     </th>
+                    <th></th>
                     <th class="font-weight-bold">Jméno a příjmení:</th>
                     <th class="font-weight-bold">Email:</th>
                     <th class="font-weight-bold">Zvolené oprávnění</th>
@@ -30,17 +31,18 @@
                     :key="user.id"
                 >
                 <tr class="pa-8">
-                    <td>
-                        <v-img height="2em" :src="arrow"></v-img>
+                    <td width="5%">
+                        <v-img height="2em" min-width="1em" max-width:="2em" :src="arrow"></v-img>
                     </td>
-                    <td><p>{{ user.firstname }} {{ user.lastname }}</p></td>
-                    <td><p class="text-subtitle-2">{{ user.email }}</p></td>
-                    <td>
-                        <v-chip variant="flat" :color="user.permission.accepted  !== '0' ? 'green' : 'red'">
-                            {{user.permission.accepted !== '0' ? 'Přijmuto' : 'Nepotvrzeno'}}
+                    <td width="2em"><v-img class="border-100"  max-height="3em" min-width="3em" max-width="3em" :src="user.image ? '/storage/' + user.image : undefinedPicture"></v-img></td>
+                    <td width="20%"><p>{{ user.firstname }} {{ user.lastname }}</p></td>
+                    <td width="20%"><p class="text-subtitle-2">{{ user.email }}</p></td>
+                    <td width="25%">
+                        <v-chip variant="flat" :color="user.permission.accepted  !== 0 ? 'green' : 'red'">
+                            {{user.permission.accepted !== 0 ? 'Přijmuto' : 'Nepotvrzeno'}}
                         </v-chip>
                     </td>
-                    <td>{{ user.permission.name }}</td>
+                    <td width="25%">{{ user.permission.name }}</td>
                     <td>
                         <div class="d-flex ga-2">
                             <v-btn
@@ -54,7 +56,7 @@
                                 variant="flat"
                                 color="red"
                                 icon="mdi-trash-can"
-                                @click="deleteShare(subject.slug, user.id)"
+                                @click="deleteShare(subject.slug, user.permission.user_id)"
                             >
                             </v-btn>
                         </div>
@@ -62,8 +64,12 @@
                 </tr>
                 </tbody>
                 <tbody v-else>
+                <v-divider></v-divider>
                 <tr>
-                    <td>Nesdíleno s nikým!</td>
+                    <td width="2em">
+                        <v-img height="2em" min-width="1em" :src="arrow"></v-img>
+                    </td>
+                    <td colspan="5">Nesdíleno s nikým!</td>
                 </tr>
                 </tbody>
             </v-table>
@@ -81,6 +87,8 @@ import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {Inertia} from "@inertiajs/inertia";
 import arrow from "./../../../../assets/ui/arrow-down-right.svg"
 import {defineAsyncComponent, ref} from "vue";
+import {Link} from "@inertiajs/inertia-vue3";
+import undefinedPicture from './../../../../assets/user/Default_pfp.svg'
 
 const shareFormActive = ref(false);
 const ShareForm = defineAsyncComponent(() => import("@/Frontend/Components/shareForm.vue"));

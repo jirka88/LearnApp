@@ -13,6 +13,7 @@ use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class Admin extends Controller
@@ -207,13 +208,21 @@ class Admin extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function changeRestriction($register) {
+        $value = filter_var($register,FILTER_VALIDATE_BOOLEAN);
         $this->authorize('viewAdmin', auth()->user());
-        Settings::find(1)->update(['RestrictedRegistration' => $register === "true" ? 1 : 0]);
-        return redirect()->back();
+        Settings::find(1)->update(['RestrictedRegistration' => $value]);
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
+
+    /**
+     * Nastaví barvu celé aplikace
+     * @param $color
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function changeTheme($color) {
         $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['color' => $color]);
-        return redirect()->back();
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 }

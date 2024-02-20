@@ -8,8 +8,8 @@
                 :items="[{title: 'předměty', disabled: false, to: route('subject.index') }, {title: subject.name, disabled: true }]"></Breadcrumbs>
             <div class="d-flex justify-content-between align-center py-5"
                  :class="{'flex-column-reverse': $vuetify.display.xs}">
-                <div class="d-flex flex-1-1-100 flex-wrap ga-6"
-                     :class="{'justify-center': $vuetify.display.xs}">
+                <div class="d-flex flex-1-1-100 flex-wrap"
+                     :class="[{'justify-center ga-4': $vuetify.display.xs}, {'ga-6': $vuetify.display.smAndUp}]">
                     <Link v-if="subject.permission.permission_id != 1" :href="route('chapter.create', subject.slug )"
                           data-aos="zoom-in" data-aos-duration="400">
                         <v-btn
@@ -35,7 +35,8 @@
                     :subject="subject"
                     :errors="errors"
                     :users="users"
-                    @close="sharing = false"></DialogShare>
+                    @close="sharing = false"
+                />
                     <ChapterPreview
                         v-for="chapter in chapters" :key="chapter.id"
                         :chapter="chapter"
@@ -109,7 +110,8 @@ const onScroll = () => {
 }
 const fetchData = () => {
     Inertia.get(route('subject.show', props.subject.slug), {page: page.value}, {
-        preserveState: true, onSuccess: (response) => {
+        preserveState: true,
+        onSuccess: (response) => {
             props.chapters = response.props.chapters;
         }
     });

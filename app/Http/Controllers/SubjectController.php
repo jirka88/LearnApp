@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Components\Filter;
+use App\Http\Components\Filters;
+use App\Http\Components\FilterSubjectSort;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
@@ -13,6 +14,7 @@ use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use function Symfony\Component\String\b;
 
 class SubjectController extends Controller
 {
@@ -25,17 +27,8 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $sort = $request->input('sort');
-        if($sort && $sort !== Filter::DEFAULT_VALUE) {
-            $subjects = Partition::orderBy('name', $sort)
-                ->append('chapter_count')
-                ->paginate($this->ItemsInPages)
-                ->where('created_by', auth()->user()->id);
-        }
-        else {
-            $subjects = Partition::withCount('Chapter')
-                ->paginate($this->ItemsInPages)
-                ->where('created_by', auth()->user()->id);
-        }
+        $filter = new FilterSubjectSort();
+        $subjects = $filter->sorting($sort);
         $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
         return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort]);
     }
@@ -90,14 +83,13 @@ class SubjectController extends Controller
             return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
         else {
-            $subject = $subjectRequest->only('name');
+            $subject = $subjectRequest->only('name', 'icon');
             $subject['created_by'] = auth()->user()->id;
-            $subject['icon'] = $subjectRequest->icon["iconName"];
             $subject['slug'] = SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name);
             $subjectT = Partition::create($subject);
 
             $user->patritions()->attach($subjectT->id);
-            return to_route('subject.index');
+            return to_route('subject.index')->with(['message' => __('validation.custom.create')]);
         }
 
     }
@@ -132,9 +124,10 @@ class SubjectController extends Controller
     /**
      * Vymazání předmětu
      * @param Partition $subject
-     * @return void
+     * @return RedirectResponse
      */
     public function destroy(Partition $subject) {
         $subject->delete();
+        return redirect()->back()->with(['message' => __('validation.custom.deleted')]);
     }
 }

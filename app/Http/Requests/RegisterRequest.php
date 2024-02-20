@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ReCaptcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -26,19 +27,19 @@ class RegisterRequest extends FormRequest
         return [
             'firstname' => 'required|min:3|max:25',
             'lastname' => 'required|max:50',
-            'email' => 'required|email|unique:users|max:320',
+            'email' => 'required|email|unique:users|max:64',
             'type' => 'required',
             'password' => 'required|min:8',
             'password_confirm' => 'required|same:password',
             'confirm' => 'accepted',
+            'token' => [new ReCaptcha]
         ];
     }
     public function messages() {
         return [
             'firstname.min' => trans('validation.min.string', ['attribute' => __('authentication.register.name'), 'min' => 3]),
             'email.unique' => ['unique' => __('validation.custom.email.registered')],
-            'email.max' => 'E-mail může mít maximálně 320 znaků.',
-            'password_confirm.same' => 'Potvrzení hesla se neshoduje s heslem.',
+            'email.max' => 'E-mail může mít maximálně 64 znaků.',
             'confirm.accepted' => 'Musíte souhlasit ze zpracováním údajů!',
             ];
     }

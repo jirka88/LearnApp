@@ -9,6 +9,7 @@
                 label="E-mail"
                 :rules="[rules.required, rules.email]"
                 required
+                autofocus
             ></v-text-field>
             <v-text-field
                 v-model="form.password"

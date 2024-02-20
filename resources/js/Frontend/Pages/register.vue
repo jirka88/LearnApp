@@ -49,15 +49,33 @@
 </template>
 
 <script setup>
-import {defineAsyncComponent, ref} from "vue";
+import {defineAsyncComponent, ref, watch} from "vue";
 import Layout from '../layouts/AuthLayout.vue'
 import RegisterForm from "../Components/Authentication/RegisterForm.vue"
 import LoginForm from "../Components/Authentication/LoginForm.vue"
+import {useRouter} from "vue-router";
+const router = useRouter()
 const ResetPassword = defineAsyncComponent(() =>import("@/Frontend/Components/Authentication/ResetPassword.vue"));
 //Register x login
 const props = defineProps(['value']);
 const tab = ref(props.value);
 
+watch((tab), (val) => {
+    switch(val) {
+        case 0: {
+            router.replace("/register")
+            break;
+        }
+        case 1: {
+            router.replace('/login')
+            break;
+        }
+        case 2: {
+            router.replace('/passwordreset')
+            break;
+        }
+    }
+})
 </script>
 
 <style lang="scss">

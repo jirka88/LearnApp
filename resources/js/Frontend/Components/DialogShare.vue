@@ -9,18 +9,7 @@
                 <v-card-title class="text-h5 text-center">
                     {{$t('share.title')}}
                 </v-card-title>
-                <v-autocomplete
-                    v-model="selectedUsers"
-                    chips
-                    variant="outlined"
-                    label="Emailová adresa uživatelů"
-                    :items="users.map(item => item.email)"
-                    multiple
-                    :error="errors.users"
-                    :error-messages="errors.users"
-                    class="pa-2"
-                >
-                </v-autocomplete>
+                <SearchUser @get-user="user"></SearchUser>
                 <p v-if="errors.permission" class="text-center pa-1 text-red">{{ errors.permission }}</p>
                 <div class="d-flex">
                     <v-checkbox
@@ -66,13 +55,14 @@
 </template>
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
-import axios from "axios";
-import {onBeforeMount, onMounted, ref, watch} from "vue";
+import {ref} from "vue";
+import SearchUser from "@/Frontend/Components/SearchUser.vue";
 
 const props = defineProps({subject: Object, errors: Object, users: Object })
 const emit = defineEmits(['close'])
 const selectedUsers = ref();
 const permission = ref();
+
 
 const form = useForm({
     users: selectedUsers,
@@ -80,6 +70,9 @@ const form = useForm({
     subject: props.subject.id
 });
 
+const user = (val) => {
+    form.users = val;
+}
 
 const rules = {
     required: v => v.length < 0 || "Musíte zadat uživatele",
