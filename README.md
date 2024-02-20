@@ -55,6 +55,7 @@
 - Role: Admin, Operátor, Tester
 - Chráněné routy podle rolí a uživatelů
 - Automatizované testy (Features - PhpUnit)
+- Filtrace dat (Default,ASC,DESC) 
 
 # TO DO
 
