@@ -36,14 +36,14 @@
                     </td>
                     <td width="2em"><v-img class="border-100"  max-height="3em" min-width="3em" max-width="3em" :src="user.image ? '/storage/' + user.image : undefinedPicture"></v-img></td>
                     <td width="20%"><p>{{ user.firstname }} {{ user.lastname }}</p></td>
-                    <td  width="20%"><p class="text-subtitle-2">{{ user.email }}</p></td>
-                    <td  width="25%">
+                    <td width="20%"><p class="text-subtitle-2">{{ user.email }}</p></td>
+                    <td width="25%">
                         <v-chip variant="flat" :color="user.permission.accepted  !== 0 ? 'green' : 'red'">
                             {{user.permission.accepted !== 0 ? 'Přijmuto' : 'Nepotvrzeno'}}
                         </v-chip>
                     </td>
-                    <td  width="25%">{{ user.permission.name }}</td>
-                    <td >
+                    <td width="25%">{{ user.permission.name }}</td>
+                    <td>
                         <div class="d-flex ga-2">
                             <v-btn
                                 variant="flat"
