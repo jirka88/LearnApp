@@ -33,7 +33,7 @@
                         <th class="font-weight-bold" v-if="$page.props.permission.view">ID:</th>
                         <th class="font-weight-bold">{{ $t('global.name') }}:</th>
                         <th class="font-weight-bold">Ikona:</th>
-                        <th class="font-weight-bold">Počet kapitol:</th>
+                        <th class="font-weight-bold">{{$t('global.chapter_count')}}:</th>
                         <th class="font-weight-bold">Editace:</th>
                         <th class="font-weight-bold">Smazání:</th>
                     </tr>
@@ -62,7 +62,7 @@
                                 color="red"
                                 append-icon="mdi-delete"
                                 @click="setId(subjectData.id, subjectData.name)"
-                            >Smazat!
+                            >{{$t('global.delete')}}!
                             </v-btn>
                         </td>
                     </tr>
@@ -118,7 +118,6 @@ import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
 const Toastify = defineAsyncComponent(() => import("@/Frontend/Components/UI/Toastify.vue"));
-
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/UI/DialogBeforeDelete.vue"));
 
 const dialog = ref(false);

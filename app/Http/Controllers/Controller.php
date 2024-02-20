@@ -21,7 +21,7 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /***
-     * Sortování (provizorní)
+     * Sortování
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */

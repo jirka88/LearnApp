@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\Chapter;
 use App\Models\Partition;
 use App\Models\User;
+use Faker\Factory;
 
 trait testTrait
 {
@@ -47,5 +48,14 @@ trait testTrait
             ]);
         }
         return $user;
+    }
+
+    /**
+     * Vratí SORT
+     * @return string
+     */
+    public function getSort() {
+        $ran = array("default", "ASC", "DESC");
+        return $ran[array_rand($ran, 1)];
     }
 }

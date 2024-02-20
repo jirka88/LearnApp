@@ -1,7 +1,8 @@
 <template>
     <component :is="DashboardLayout">
-        {{subjects}}
+        <v-container>
         <div class="vh-calc">
+            <Breadcrumbs :items="[{title: 'Nové sdílení', disabled: true }]"></Breadcrumbs>
             <v-main class="pa-5 d-flex flex-wrap" :class="{'justify-center': $vuetify.display.smAndDown}">
                 <v-card
                     v-for="subject in subjects" :key="subject.id"
@@ -48,6 +49,7 @@
                 </v-card>
             </v-main>
         </div>
+        </v-container>
     </component>
 </template>
 
@@ -55,6 +57,7 @@
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link, useForm} from "@inertiajs/inertia-vue3";
 import {ref} from "vue";
+import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 
 const props = defineProps({subjects: Object})
 const form = useForm();

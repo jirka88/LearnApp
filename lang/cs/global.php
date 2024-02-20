@@ -11,5 +11,6 @@ return [
     'created' => 'Vytvořit',
     'delete' => 'Vymazat',
     'setting' => 'Nastavení',
-    'change' => 'Změnit'
+    'change' => 'Změnit',
+    'chapter_count' => 'Počet kapitol'
 ];
