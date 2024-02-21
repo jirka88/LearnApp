@@ -9,7 +9,7 @@
                         v-model="form.name"
                         variant="outlined"
                         :label="$t('global.name')"
-                        :rules="[rules.required, rules.nameLength]"
+                        :rules="[rules.required, rules.chapterNameLength]"
                         required
                     ></v-text-field>
                     <v-text-field
@@ -43,6 +43,7 @@ import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {QuillEditor} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import BackBtn from "@/Frontend/Components/UI/BackBtn.vue";
+import rules from "./../../rules/rules"
 
 const props = defineProps({slug: String, chapter: Object, errors: Object})
 const form = useForm({
@@ -51,11 +52,6 @@ const form = useForm({
     contentChapter: props.chapter.context,
     slug: props.chapter.slug
 });
-const rules = {
-    required: value => !!value || 'Nutné vyplnit!',
-    nameLength: value => value.length <= 20 || "Název je příliš dlouhý!",
-    perexLength: value => value.length <= 50 || "Perex je příliš dlouhý!"
-}
 const editChapter = () => {
     form.put(route('chapter.update', {slug: props.slug, chapter: props.chapter.slug}), {
         onSuccess: () => {
