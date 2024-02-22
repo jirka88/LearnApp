@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Components\Filters;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
@@ -24,8 +25,8 @@ class Admin extends Controller
      */
     public function index()
     {
-        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(20);
-        $pages = ceil(count(User::all()) / 20);
+        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(Filters::ITEMS_IN_PAGE);
+        $pages = ceil(count(User::all()) / Filters::ITEMS_IN_PAGE);
         return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
     }
 

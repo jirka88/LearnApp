@@ -33,6 +33,7 @@ const setTheme = () => {
                     class="bg-white"
                     @click="close"
                     size="x-large"
+                    variant="outlined"
                 >
                     {{$t('global.close')}}
                 </v-btn>

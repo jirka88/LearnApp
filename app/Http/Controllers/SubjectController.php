@@ -13,12 +13,19 @@ use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Pagination\Paginator;
 use Inertia\Inertia;
 use function Symfony\Component\String\b;
 
 class SubjectController extends Controller
 {
     private $ItemsInPages = 20;
+    private function indexJson($sort) {
+        $filter = new FilterSubjectSort();
+        $subjects = $filter->sorting($sort);
+        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
+        return ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort];
+    }
 
     /**
      * Vrácení všech předmětů
@@ -27,10 +34,8 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $sort = $request->input('sort');
-        $filter = new FilterSubjectSort();
-        $subjects = $filter->sorting($sort);
-        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
-        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort]);
+        $arr = $this->indexJson($sort);
+        return Inertia::render('subjects/subjects', $arr);
     }
 
     /**
@@ -126,8 +131,10 @@ class SubjectController extends Controller
      * @param Partition $subject
      * @return RedirectResponse
      */
-    public function destroy(Partition $subject) {
+    public function destroy(Request $request, Partition $subject) {
+        $sort = "default";
         $subject->delete();
-        return redirect()->back()->with(['message' => __('validation.custom.deleted')]);
+        $arr = $this->indexJson($sort);
+        return redirect()->back()->with(['message' => __('validation.custom.deleted'), $arr]);
     }
 }

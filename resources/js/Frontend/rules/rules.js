@@ -29,7 +29,7 @@ const rules = {
         }
     },
     oldPassword: v => v.length > 0 || "Nutné zadat staré heslo!",
-    minSubjectLength: value => value > 3 || "Předmět musí mít delší název!",
+    minSubjectLength: value => value.length > 3 || "Předmět musí mít delší název!",
     chapterNameLength: value => value.length <= 20 || "Název je příliš dlouhý!",
     nameLength: value => value.length <= 20 || "Název je příliš dlouhý!",
     perexLength: value => value.length <= 50 || "Perex je příliš dlouhý!"

@@ -47,7 +47,7 @@
                                 <v-icon>{{ subjectData.icon }}</v-icon>
                             </v-chip>
                         </td>
-                        <td>{{ subjectData.chapter_count }}</td>
+                        <td class="font-weight-bold">{{ subjectData.chapter_count }}</td>
                         <td>
                             <Link :href="route('subject.edit',{subject: subjectData.slug})">
                                 <v-btn
@@ -97,7 +97,7 @@
                     @click="destroySubject()"
                     size="x-large"
                 >
-                    Smazat!
+                    {{$t('global.delete')}}
                 </v-btn>
             </DialogDelete>
         </v-row>
@@ -120,13 +120,14 @@ import {useUrlSearchParams} from '@vueuse/core';
 const Toastify = defineAsyncComponent(() => import("@/Frontend/Components/UI/Toastify.vue"));
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/UI/DialogBeforeDelete.vue"));
 
+const props = defineProps({subjects: Object, pages: Number, sort: String});
+
 const dialog = ref(false);
 const subject = ref({
     subjectName: '',
     subjectId: ''
 });
 const page = ref(1);
-const props = defineProps({subjects: Object, pages: Number, sort: String});
 const subjectsShow = ref(props.subjects);
 
 const filtr = ref({state: 'Výchozí', id: 'default'});
@@ -151,9 +152,8 @@ const setId = (id, name) => {
 }
 const destroySubject = () => {
     Inertia.delete(route('subject.destroy', subject.value.subjectId), {
-        preserveState: true, onSuccess: () => {
-            subjectsShow.value = Object.values(subjectsShow.value)
-                .filter(x => x.id !== subject.value.subjectId)
+        preserveState: true, onSuccess: (response) => {
+            subjectsShow.value = response.props.subjects;
             dialog.value = false;
         }
     });
@@ -162,7 +162,8 @@ const destroySubject = () => {
 const fetchData = () => {
     Inertia.get(route('subject.index'), {page: page.value}, {
         preserveState: true, onSuccess: (response) => {
-            props.subjects = response.props.subjects;
+            subjectsShow.value = response.props.subjects;
+            pages.value = response.props.pages;
         }
     });
 }
