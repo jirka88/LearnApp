@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Components\Filters;
 use App\Http\Components\FilterSubjectSort;
+use App\Http\Components\globalSettings;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
+use App\Traits\userTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
@@ -19,14 +21,7 @@ use function Symfony\Component\String\b;
 
 class SubjectController extends Controller
 {
-    private $ItemsInPages = 20;
-    private function indexJson($sort) {
-        $filter = new FilterSubjectSort();
-        $subjects = $filter->sorting($sort);
-        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
-        return ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort];
-    }
-
+    use userTrait;
     /**
      * Vrácení všech předmětů
      * @return \Inertia\Response
@@ -57,11 +52,11 @@ class SubjectController extends Controller
             $subject["permission"] = $pShare;
         }
         $this->authorize("view", $subject);
-        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate($this->ItemsInPages);
+        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate(globalSettings::ITEMS_IN_PAGE);
         $chapters = $chaptersSelect->map(function ($chapter) {
             return $chapter->toArray();
         });
-        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / $this->ItemsInPages);
+        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / globalSettings::ITEMS_IN_PAGE);
 
         return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
     }
@@ -127,7 +122,7 @@ class SubjectController extends Controller
     }
 
     /**
-     * Vymazání předmětu
+     * Vymazání předmětu a vrácení stávajících
      * @param Partition $subject
      * @return RedirectResponse
      */
