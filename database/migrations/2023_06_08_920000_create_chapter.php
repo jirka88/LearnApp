@@ -15,8 +15,7 @@ return new class extends Migration
     {
         Schema::create('chapters', function (Blueprint $table) {
             $table->id();
-            $table->string('name',20)
-                    ->unique();
+            $table->string('name',20);
             $table->string('slug')
                 ->unique();
             $table->string('perex', 50)

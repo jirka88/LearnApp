@@ -20,10 +20,11 @@ class ChapterController extends Controller
         $chapter = Chapter::where('slug', $chapterName)->with(['Partition.Users' => function ($query) {
           $query->where('user_id', auth()->user()->id);
         }])->first();
-        if(count($chapter->Partition->Users) === 0) {
+
+        if($chapter->Partition->Users) {
             if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
-                $chapter->Partition->Users[] = User::find($chapter->Partition->created_by);
-                $chapter->Partition->Users->first()["permission"] = ["permission_id" => null];
+                $chapter->Partition->Users = User::find($chapter->Partition->created_by);
+                $chapter->Partition->Users["permission"] = ["permission_id" => null];
             }
         }
         $this->authorize('view', $chapter);

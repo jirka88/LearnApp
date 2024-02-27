@@ -174,7 +174,7 @@ class Admin extends Controller
         $user = app('App\Models\User');
         $user = $user->getUserBySlug($slug);
         $subject = $subjectRequest->only("name");
-        $subject["icon"] = $subjectRequest->icon["iconName"];
+        $subject["icon"] = $subjectRequest->icon;
         $subject["created_by"] = $user->id;
         $subjectT = Partition::create($subject);
 
