@@ -4,7 +4,6 @@
             <v-container>
                 <div class="chapter pa-10 elevation-20">
                     <div class="d-flex ga-2">
-                        {{chapter.partition}}
                         <BackBtn class="pb-4" :url="route('subject.show', slug)" background='green' data-aos="zoom-in"
                                  data-aos-duration="400"/>
                         <Link v-if="chapter.partition.Users.permission.permission_id != 1"
