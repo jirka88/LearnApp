@@ -49,25 +49,69 @@ class userTest extends TestCase
         $response->assertRedirect('/dashboard');
     }
     /**
-     * Neúspěšná registrace uživatele
+     * Neúspěšná registrace uživatele - z důvodu špatného zadání hesla
      * @return void
      */
     public function test_register_user_denied()
     {
         $user = [
             'firstname' => fake()->firstName(),
-            'email' => 'navratil.jiri@atlas.cz',
+            'lastname' => fake()->lastName(),
+            'email' => fake()->email(),
             'type' => ['value' => fake()->numberBetween(1, 2)],
-            'password' => 'Aa123',
-            'password_confirm' => 'Aa12',
-            'confirm' => true,];
+            'password' => 'Aa123456#',
+            'password_confirm' => 'Aa12345',
+            'confirm' => fake()->boolean(),];
         $response = $this->post('/register', $user);
-        $this->assertDatabaseHas('users', [
+        $this->assertDatabaseMissing('users', [
             'email' => $user['email'],
         ]);
         $response->assertStatus(302);
         $response->assertSessionHasErrors();
     }
+    /**
+     * Neúspěšná registrace uživatele - z důvodu nezadání povinného atributu
+     * @return void
+     */
+    public function test_register_user_denied_attr()
+    {
+        $user = [
+            'firstname' => "",
+            'lastname' => "",
+            'email' => fake()->email(),
+            'type' => ['value' => fake()->numberBetween(1, 2)],
+            'password' => 'Aa123456#',
+            'password_confirm' => 'Aa12345#',
+            'confirm' => fake()->boolean(),];
+        $response = $this->post('/register', $user);
+        $this->assertDatabaseMissing('users', [
+            'email' => $user['email'],
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+    }
+    /**
+     * Neúspěšná registrace uživatele - z důvodu ochrany proti botům
+     * @return void
+     */
+    public function test_register_user_denied_token()
+    {
+        $user = [
+            'firstname' => fake()->firstName(),
+            'lastname' => fake()->lastName(),
+            'email' => fake()->email(),
+            'type' => ['value' => fake()->numberBetween(1, 2)],
+            'password' => 'Aa123456#',
+            'password_confirm' => 'Aa12345#',
+            'confirm' => fake()->boolean(),];
+        $response = $this->post('/register', $user);
+        $this->assertDatabaseMissing('users', [
+            'email' => $user['email'],
+        ]);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors();
+    }
+
 
     /**
      * Přihlášení uživatele
@@ -128,7 +172,7 @@ class userTest extends TestCase
     }
 
     /**
-     * Změnění nastavení sdílení
+     * Změna nastavení sdílení
      * @return void
      */
     public function test_user_share_change() {
@@ -313,6 +357,11 @@ class userTest extends TestCase
        $this->assertAuthenticated();
        $response->assertStatus(200);
    }
+
+    /**
+     * Uživatel si seřazuje jednotlivé předměty
+     * @return void
+     */
    public function test_user_can_sort_subjects() {
        for ($i = 0; $i <= Licences::standartUserPartitions; $i++) {
            $subject = $this->createSubject($this->user);

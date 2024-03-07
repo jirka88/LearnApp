@@ -17,6 +17,7 @@ trait testTrait
     public function createSubject($user) {
         $subject = Partition::factory()->create([
             "created_by" => $user,
+            "icon" => fake()->text(50),
         ]);
         return $subject;
     }
