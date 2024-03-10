@@ -48,7 +48,17 @@ class Handler extends ExceptionHandler
     public function register()
     {
         $this->reportable(function (Throwable $e) {
-            //
+
         });
+    }
+
+    public function render($request, Throwable $e)
+    {
+        $response = parent::render($request, $e);
+        $status = $response->status();
+            return match ($status) {
+                404 => redirect('dashboard/404'),
+                default => $response
+            };
     }
 }

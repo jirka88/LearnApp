@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +34,9 @@ Route::group(['middleware' => ['guest']], function() {
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
     Route::get('/passwordreset', [LoginController::class, 'passwordReset'])->name('reset');
+    Route::get('/404', function (Request $request){
+        return Inertia::render('errors/404')->toResponse($request)->setStatusCode(404);
+    });
 });
 Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
@@ -60,6 +64,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
     Route::get('/search/user', [Controller::class, 'searchUser'])->name('user.search');
+    Route::get('/404', function (Request $request){
+        return Inertia::render('errors/404')->toResponse($request)->setStatusCode(404);
+    });
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [Admin::class, 'index']);
@@ -75,5 +82,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::put('/controll/theme/{color}', [Admin::class, 'changeTheme'])->name('theme');
     });
 });
+
 
 

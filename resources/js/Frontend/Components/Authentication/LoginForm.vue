@@ -48,21 +48,15 @@
     </v-form>
 </template>
 <script setup>
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import {useForm, Link} from "@inertiajs/inertia-vue3";
 import {isActiveToast, toastShow} from "@/Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
-
+import rules from "./../../rules/rules"
 defineProps({errors: Object})
-
 
 const show = ref(false);
 const off = ref(false);
-
-const rules = {
-    required: v => !!v || 'Nutné vyplnit!',
-    email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'Musí být platná e-mailová adresa!',
-}
 
 const form = useForm({
     email: '',
@@ -85,15 +79,20 @@ const login = () => {
 </script>
 
 <style scoped lang="scss">
-.v-btn {
-    margin: 0 auto;
+.v-form {
+    .v-input:nth-child(2) {
+        padding-bottom: 1em !important;
+    }
+    :deep(.v-input__details):not(:has(.v-messages__message)) {
+        display: none;
+    }
+    .v-input:last-child :deep(.v-input__details) {
+        padding: 0 !important;
+    }
+    .v-btn {
+        margin: 0 auto;
+    }
 }
-
-:deep(.v-messages__message) {
-    padding-bottom: 1.2em !important;
-    transition: 0.3s;
-}
-
 .forgetPassword {
     color: gray;
     position: relative;

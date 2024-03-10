@@ -1,6 +1,6 @@
 <template>
     <component :is="DashboardLayout">
-        <main class="primary-bg">
+        <v-main class="primary-bg">
             <v-container>
                 <div class="chapter pa-10 elevation-20">
                     <div class="d-flex ga-2">
@@ -62,7 +62,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-        </main>
+        </v-main>
     </component>
 
 </template>

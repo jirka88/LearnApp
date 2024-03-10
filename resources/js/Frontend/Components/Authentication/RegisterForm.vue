@@ -10,7 +10,7 @@
     </v-row>
     <v-form @submit.prevent="register">
         <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
-            <h1 class="pa-5 text-center">Registrace</h1>
+            <h1 class="pa-5 text-center">{{$t('authentication.register.register')}}</h1>
             <v-text-field
                 v-model="form.firstname"
                 prepend-inner-icon="mdi-account"
