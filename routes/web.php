@@ -65,8 +65,12 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
     Route::get('/search/user', [Controller::class, 'searchUser'])->name('user.search');
     Route::get('/404', function (Request $request){
-        return Inertia::render('errors/404')->toResponse($request)->setStatusCode(404);
+        return Inertia::render('errors/auth/404')->toResponse($request)->setStatusCode(404);
     });
+    Route::get('/403', function (Request $request){
+        return Inertia::render('errors/auth/403')->toResponse($request)->setStatusCode(404);
+    });
+
 
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [Admin::class, 'index']);

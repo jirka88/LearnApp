@@ -39,7 +39,7 @@ class SubjectController extends Controller
      * @return \Inertia\Response
      */
     public function show(Request $request, $slug) {
-        $subject = Partition::where('slug', $slug)->first();
+        $subject = Partition::where('slug', $slug)->firstOrFail();
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
 
         if($pShare === null) {
@@ -100,7 +100,7 @@ class SubjectController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($slug) {
-        $subject = Partition::where('slug', $slug)->first();
+        $subject = Partition::where('slug', $slug)->firstOrFail();
         $this->authorize('update', $subject);
         return Inertia::render('subjects/editSubjects', compact('subject'));
     }
