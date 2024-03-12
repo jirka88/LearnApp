@@ -257,6 +257,7 @@ class userTest extends TestCase
         $response->assertSessionHasErrors(['msg']);
     }
     public function test_user_standart_cant_create_chapter_because_of_limit() {
+        $this->user->licences_id = 1;
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
         for($x = 0; $x <= Licences::standartUserChaptersInPartitions; $x++) {
@@ -271,7 +272,7 @@ class userTest extends TestCase
         ];
         $response = $this->actingAs($this->user)->post(route('chapter.store', ["slug" => $subject->slug]), $newChapter);
         $response->assertRedirect();
-        $response->assertSessionHas(["message"]);
+        $response->assertSessionHasErrors("message");
     }
 
     /**

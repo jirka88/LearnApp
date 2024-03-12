@@ -37,7 +37,7 @@
                         {{ $t('global.created') }}!
                     </v-btn>
                 </form>
-                <Toastify v-if="isActiveToast && form.errors.name" :text="form.errors.name" variant="error" :time="3000" @close="toastShow(false)"></Toastify>
+                <Toastify v-if="isActiveToast && (form.errors.name || form.errors.message)" :text="form.errors.name ? (form.errors.name + ' ') : '' + (form.errors.message ? form.errors.message : '')" variant="error" :time="3000" @close="toastShow(false)"></Toastify>
             </v-container>
         </div>
     </component>
