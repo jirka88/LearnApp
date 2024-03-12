@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\UserRoles;
 use App\Models\Roles;
 use Closure;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class is_admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->check() && (auth()->user()->role_id == Roles::ADMIN || auth()->user()->role_id == Roles::OPERATOR))   {
+        if(auth()->check() && (auth()->user()->role_id == UserRoles::ADMIN || auth()->user()->role_id == UserRoles::OPERATOR))   {
             return $next($request);
         }
         else {

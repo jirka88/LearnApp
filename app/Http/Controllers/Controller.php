@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\Localization;
 use App\Models\Partition;
@@ -40,7 +41,7 @@ class Controller extends BaseController
     public function showUsersForSharing(Request $request)
     {
         $subject = Partition::where("slug", $request->slug)->first();
-        $users = User::whereNotIn('id', [auth()->user()->id, Roles::ADMIN])
+        $users = User::whereNotIn('id', [auth()->user()->id, UserRoles::ADMIN])
             ->where('canShare', true)
             ->whereDoesntHave('patritions', function ($query) use ($subject) {
                 $query->where("partition_id", $subject->id);
@@ -174,7 +175,7 @@ class Controller extends BaseController
         $user = [];
         if(isset($search)) {
             $user = User::where('canShare' , 1)
-                ->whereNotIn('id', [auth()->user()->id, Roles::ADMIN])
+                ->whereNotIn('id', [auth()->user()->id, UserRoles::ADMIN])
                 ->where(function ($query) use ($search){
                 $query->where('firstname', 'LIKE', '%'. $search . '%')
                     ->orWhere('lastname', 'LIKE', '%'. $search . '%')

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Http\Components\Filters;
 use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\globalSettings;
@@ -22,6 +23,12 @@ use function Symfony\Component\String\b;
 class SubjectController extends Controller
 {
     use userTrait;
+    protected $subjectModel;
+
+    public function __construct(Partition $subjectModel)
+    {
+        $this->subjectModel = $subjectModel;
+    }
     /**
      * Vrácení všech předmětů
      * @return \Inertia\Response
@@ -39,11 +46,11 @@ class SubjectController extends Controller
      * @return \Inertia\Response
      */
     public function show(Request $request, $slug) {
-        $subject = Partition::where('slug', $slug)->firstOrFail();
+        $subject = $this->subjectModel->getSubjectBySlug($slug);
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
 
         if($pShare === null) {
-            if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
+            if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
             }
         }
@@ -100,7 +107,7 @@ class SubjectController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($slug) {
-        $subject = Partition::where('slug', $slug)->firstOrFail();
+        $subject = $this->subjectModel->getSubjectBySlug($slug);
         $this->authorize('update', $subject);
         return Inertia::render('subjects/editSubjects', compact('subject'));
     }

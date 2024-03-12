@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Http\Requests\ChapterRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
@@ -16,13 +17,27 @@ use function Symfony\Component\String\b;
 
 class ChapterController extends Controller
 {
+    protected $chapterModel;
+
+    public function __construct(Chapter $chapterModel)
+    {
+        $this->chapterModel = $chapterModel;
+    }
+    /**
+     * Vrácení kapitoly
+     * @param Request $request
+     * @param $slug
+     * @param $chapterName
+     * @return \Inertia\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function show(Request $request, $slug, $chapterName) {
-        $chapter = Chapter::where('slug', $chapterName)->with(['Partition.Users' => function ($query) {
+        $chapter = $this->chapterModel->getChapter($chapterName)->with(['Partition.Users' => function ($query) {
           $query->where('user_id', auth()->user()->id);
-        }])->first();
+        }])->firstOrFail();
 
         if($chapter->Partition->Users) {
-            if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
+            if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $chapter->Partition->Users = User::find($chapter->Partition->created_by);
                 $chapter->Partition->Users["permission"] = ["permission_id" => null];
             }
@@ -37,7 +52,7 @@ class ChapterController extends Controller
      */
     public function create($slug) {
         $user = User::with(['patritions' => function ($query) use ($slug) {
-            $query->where('slug', $slug)->first();
+            $query->where('slug', $slug)->firstOrFail();
         }])->find(auth()->user()->id);
         $this->authorize("create", $user);
         return Inertia::render('chapter/createChapter', ['slug' => $slug]);
@@ -49,7 +64,7 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(ChapterRequest $chapterRequest) {
-        $partition = Partition::where("slug", $chapterRequest->slug)->first();
+        $partition =  $this->chapterModel->getChapter($chapterRequest->slug);
         if(Chapter::where("partition_id", $partition->id)->where("name", $chapterRequest->name)->first() !== null) {
             return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
@@ -74,8 +89,7 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function edit(Request $request, $slug, $chapter) {
-        $chapterModel = app('App\Models\Chapter');
-        $chapter = $chapterModel->getChapter($chapter);
+        $chapter = $this->chapterModel->getChapter($chapter);
         $chapter->with(['Partition.Users' => function ($query2) {
                 $query2->find(auth()->user()->id);
             }])->first();
@@ -90,8 +104,7 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
-        $chapterModel = app('App\Models\Chapter');
-        $chapter = $chapterModel->getChapter($slug);
+        $chapter = $this->chapterModel->getChapter($slug);
         $this->authorize('update', $chapter);
         $chapter->update([
             'name' => $chapterRequest->name,
@@ -109,8 +122,7 @@ class ChapterController extends Controller
      * @return void
      */
     public function destroy(Request $request, $slug, $chapter) {
-        $chapterModel = app('App\Models\Chapter');
-        $chapterDelete = $chapterModel->getChapter($chapter);
+        $chapterDelete = $this->chapterModel->getChapter($chapter);
         $chapterDelete->delete();
         return to_route('subject.show', $slug);
     }

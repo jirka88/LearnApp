@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\UpdateRequest;
 use App\Models\AccountTypes;
@@ -22,21 +23,20 @@ class DashboardUserController extends Controller
      * @return \Inertia\Response
      */
     public function view() {
-        $id = auth()->user()->id;
-        $usr =  User::with(['roles', 'accountTypes', 'licences'])->find($id);
+        $usr =  User::with(['roles', 'accountTypes', 'licences'])->find(auth()->user()->id);
         $roles = [];
         $licences = [];
         $accountTypes = AccountTypes::all();
-        if(auth()->user()->role_id == Roles::ADMIN) {
+        if(auth()->user()->role_id == UserRoles::ADMIN) {
            $roles = Roles::all();
            $licences = Licences::all();
         }
-        else if(auth()->user()->role_id == Roles::OPERATOR) {
-            $roles = Roles::whereNot('id', Roles::ADMIN)->get();
+        else if(auth()->user()->role_id == UserRoles::OPERATOR) {
+            $roles = Roles::whereNot('id', UserRoles::ADMIN)->get();
             $licences = Licences::all();
         }
         else {
-            $roles = Roles::find(Roles::BASIC_USER)->get();
+            $roles = Roles::find(UserRoles::BASIC_USER)->get();
         }
         return Inertia::render('user/user', compact('usr', 'roles', 'accountTypes', 'licences'));
     }

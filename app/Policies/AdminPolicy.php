@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\UserRoles;
 use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class AdminPolicy
      */
     public function viewAny(User $user)
     {
-        if($user->role_id == Roles::ADMIN || $user->role_id == Roles::OPERATOR) {
+        if($user->role_id == UserRoles::ADMIN || $user->role_id == UserRoles::OPERATOR) {
             return true;
         }
         return false;
@@ -30,7 +31,7 @@ class AdminPolicy
      */
     public function viewAdmin(User $user)
     {
-        if($user->role_id == Roles::ADMIN) {
+        if($user->role_id == UserRoles::ADMIN) {
             return true;
         }
         return false;
@@ -46,12 +47,12 @@ class AdminPolicy
     public function view(User $user, User $model)
     {
         //admin
-        if($user->role_id == Roles::ADMIN) {
+        if($user->role_id == UserROles::ADMIN) {
             return true;
         }
         //operator
-        else if($user->role_id == Roles::OPERATOR) {
-            return $model->role_id != Roles::ADMIN && ($model->role_id != Roles::OPERATOR || $user->id == $model->id);
+        else if($user->role_id == UserRoles::OPERATOR) {
+            return $model->role_id != UserRoles::ADMIN && ($model->role_id != UserRoles::OPERATOR|| $user->id == $model->id);
         }
         else {
             return false;
@@ -65,10 +66,10 @@ class AdminPolicy
      */
     public function create(User $user, User $modal)
     {
-        if($user->role_id == Roles::ADMIN || $modal->patritions->first()?->created_by == $user->id || $modal->patritions->first()?->permission?->permission_id == 2 ||  $user->patritions->first()?->permission?->permission_id ==3) {
+        if($user->role_id == UserRoles::ADMIN|| $modal->patritions->first()?->created_by == $user->id || $modal->patritions->first()?->permission?->permission_id == 2 ||  $user->patritions->first()?->permission?->permission_id ==3) {
             return true;
         }
-        else if($user->role_id == Roles::OPERATOR && ($modal->role_id != Roles::ADMIN || $modal->role_id != Roles::OPERATOR)) {
+        else if($user->role_id == UserRoles::OPERATOR && ($modal->role_id != UserRoles::ADMIN|| $modal->role_id != UserRoles::OPERATOR)) {
                 return true;
         }
         else {

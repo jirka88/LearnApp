@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Http\Components\Filters;
 use App\Http\Components\globalSettings;
 use App\Http\Requests\AdminCreateUser;
@@ -61,7 +62,7 @@ class Admin extends Controller
     public function update(User $user, UpdateRequest $updateRequest)
     {
         $role = 0;
-        if (Roles::ADMIN == $user->role_id) {
+        if (UserRoles::ADMIN == $user->role_id) {
             $role = 1;
         } else {
             $role = $updateRequest->role['id'];
@@ -186,9 +187,9 @@ class Admin extends Controller
     {
         if(auth()->user()->role_id == 1) {
             $userCount = User::all()->count();
-            $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
-            $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
-            $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
+            $operatosCount = User::where('role_id', UserRoles::OPERATOR)->get()->count();
+            $userNormalCount = User::where('role_id', UserRoles::BASIC_USER)->get()->count();
+            $testersCount = User::where('role_id', UserRoles::TESTER)->get()->count();
             $allChapters = Chapter::all()->count();
             $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
             $stats = ([
