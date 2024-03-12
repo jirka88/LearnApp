@@ -12,12 +12,12 @@ class FilterSubjectSort extends Filters
     {
         if($sort && $sort !== Filters::DEFAULT_VALUE) {
             $subjects = Partition::orderBy('name', $sort)
-                ->paginate(self::ITEMS_IN_PAGE)
+                ->paginate(globalSettings::ITEMS_IN_PAGE)
                 ->where('created_by', auth()->user()->id)
                 ->append('chapter_count')->values();
         }
         else {
-            $subjects = Partition::paginate(self::ITEMS_IN_PAGE)
+            $subjects = Partition::paginate(globalSettings::ITEMS_IN_PAGE)
                 ->where('created_by', auth()->user()->id)
                 ->append('chapter_count');
         }

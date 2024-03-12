@@ -1,12 +1,12 @@
 <template>
     <component :is="DashboardLayout">
-        <main class="primary-bg">
+        <v-main class="primary-bg">
             <v-container>
                 <div class="chapter pa-10 elevation-20">
                     <div class="d-flex ga-2">
                         <BackBtn class="pb-4" :url="route('subject.show', slug)" background='green' data-aos="zoom-in"
                                  data-aos-duration="400"/>
-                        <Link v-if="chapter.partition.users[0].permission.permission_id != 1"
+                        <Link v-if="chapter.partition.Users.permission.permission_id != 1"
                               :href="route('chapter.edit',  {slug: slug, chapter: chapter.slug})" data-aos="zoom-in"
                               data-aos-duration="400">
                             <v-btn
@@ -17,7 +17,7 @@
                             </v-btn>
                         </Link>
                         <v-btn
-                            v-if="chapter.partition.users[0].permission.permission_id != 1"
+                            v-if="chapter.partition.Users.permission.permission_id != 1"
                             data-aos="zoom-in" data-aos-duration="400"
                             icon="mdi-trash-can"
                             variant="flat"
@@ -62,7 +62,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-        </main>
+        </v-main>
     </component>
 
 </template>

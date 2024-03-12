@@ -2,24 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
 use App\Http\Components\Filters;
 use App\Http\Components\FilterSubjectSort;
+use App\Http\Components\globalSettings;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
+use App\Traits\userTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Pagination\Paginator;
 use Inertia\Inertia;
 use function Symfony\Component\String\b;
 
 class SubjectController extends Controller
 {
-    private $ItemsInPages = 20;
+    use userTrait;
+    protected $subjectModel;
 
+    public function __construct(Partition $subjectModel)
+    {
+        $this->subjectModel = $subjectModel;
+    }
     /**
      * Vrácení všech předmětů
      * @return \Inertia\Response
@@ -27,10 +36,8 @@ class SubjectController extends Controller
     public function index(Request $request)
     {
         $sort = $request->input('sort');
-        $filter = new FilterSubjectSort();
-        $subjects = $filter->sorting($sort);
-        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / $this->ItemsInPages);
-        return Inertia::render('subjects/subjects', ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort]);
+        $arr = $this->indexJson($sort);
+        return Inertia::render('subjects/subjects', $arr);
     }
 
     /**
@@ -39,12 +46,11 @@ class SubjectController extends Controller
      * @return \Inertia\Response
      */
     public function show(Request $request, $slug) {
-        $subject = Partition::where('slug', $slug)->first();
-
+        $subject = $this->subjectModel->getSubjectBySlug($slug);
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
 
         if($pShare === null) {
-            if(auth()->user()->roles->id == Roles::ADMIN || auth()->user()->roles->id == Roles::OPERATOR) {
+            if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
             }
         }
@@ -52,11 +58,11 @@ class SubjectController extends Controller
             $subject["permission"] = $pShare;
         }
         $this->authorize("view", $subject);
-        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate($this->ItemsInPages);
+        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate(globalSettings::ITEMS_IN_PAGE);
         $chapters = $chaptersSelect->map(function ($chapter) {
             return $chapter->toArray();
         });
-        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / $this->ItemsInPages);
+        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / globalSettings::ITEMS_IN_PAGE);
 
         return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
     }
@@ -101,7 +107,7 @@ class SubjectController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit($slug) {
-        $subject = Partition::where('slug', $slug)->first();
+        $subject = $this->subjectModel->getSubjectBySlug($slug);
         $this->authorize('update', $subject);
         return Inertia::render('subjects/editSubjects', compact('subject'));
     }
@@ -122,12 +128,14 @@ class SubjectController extends Controller
     }
 
     /**
-     * Vymazání předmětu
+     * Vymazání předmětu a vrácení stávajících
      * @param Partition $subject
      * @return RedirectResponse
      */
-    public function destroy(Partition $subject) {
+    public function destroy(Request $request, Partition $subject) {
+        $sort = "default";
         $subject->delete();
-        return redirect()->back()->with(['message' => __('validation.custom.deleted')]);
+        $arr = $this->indexJson($sort);
+        return redirect()->back()->with(['message' => __('validation.custom.deleted'), $arr]);
     }
 }

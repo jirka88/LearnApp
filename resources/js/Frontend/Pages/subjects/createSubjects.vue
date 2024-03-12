@@ -11,7 +11,7 @@
                         variant="outlined"
                         autofocus
                         :label="$t('global.name')"
-                        :rules="[rules.required, rules.minName, rules.maxName]"
+                        :rules="[rules.required, rules.chapterNameLength, rules.minSubjectLength]"
                     ></v-text-field>
                     <v-select
                         variant="outlined"
@@ -55,6 +55,7 @@ import {useForm} from "@inertiajs/inertia-vue3";
 import icons from "../../../itemsIcons";
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 import {ref} from "vue";
+import rules from "./../../rules/rules"
 
 const props = defineProps({usr: Object, url: String, errors: Object});
 const creating = ref(false);
@@ -85,11 +86,6 @@ const createSubject = async() =>{
         }
     });
 }
-const rules = {
-    required: value => !!value || 'Nutné vyplnit!',
-    minName: v => v.length > 3 || 'Předmět musí mít delší název!',
-    maxName: v => v.length < 25 ||'Předmět nesmí být delší!'
- }
 </script>
 <style lang="scss">
 .create-subject {

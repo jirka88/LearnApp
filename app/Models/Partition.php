@@ -36,6 +36,15 @@ class Partition extends Model
     public function permissions() :BelongsTo {
         return $this->belongsTo(Permission::class, 'permission_id');
     }
+
+    /**
+     * Vrátí objekt předmětu podle slug
+     * @param $slug
+     * @return Partition|null
+     */
+    public function getSubjectBySlug($slug): ?Partition {
+        return $this->where('slug', $slug)->firstOrFail();
+    }
     protected function chapterCount() :Attribute
     {
         return new Attribute(

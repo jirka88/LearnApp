@@ -31,6 +31,12 @@ const routes = [
 import { i18nVue } from 'laravel-vue-i18n'
 import setLanguage from "./setLanguage";
 
+let light = {
+    variables: {},
+    colors: {
+        accentCustom: accentColor,
+    }
+};
 const vuetify= createVuetify({
     icons: {
         defaultSet: "mdi",
@@ -44,12 +50,7 @@ const vuetify= createVuetify({
             customProperties: true
         },
         themes: {
-            light: {
-                variables: {},
-                colors: {
-                    accentCustom: accentColor,
-                }
-            }
+            light: light
         }
     },
     components,

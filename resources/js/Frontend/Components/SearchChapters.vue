@@ -4,6 +4,7 @@
             <template v-slot:activator="{ props }">
                 <v-text-field
                     v-model="search"
+                    :disabled="subject.chapter_count === 0"
                     v-bind="props"
                     variant="outlined"
                     class="search"
@@ -35,7 +36,7 @@ import {ref, watch} from "vue";
 import axios from "axios";
 import {Link} from "@inertiajs/inertia-vue3";
 
-const props = defineProps({subject: Object})
+const props = defineProps({subject: Array})
 const search = ref('');
 const searchResult = ref([]);
 watch(search, async (val) => {

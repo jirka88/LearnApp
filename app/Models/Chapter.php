@@ -33,7 +33,7 @@ class Chapter extends Model
      * @return mixed
      */
     public function getChapter($slug) :?Chapter {
-        return $this->where('slug', $slug)->first();
+        return $this->where('slug', $slug)->firstOrFail();
     }
     public function Partition() :BelongsTo {
         return $this->BelongsTo(Partition::class, 'partition_id');

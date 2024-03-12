@@ -18,7 +18,7 @@
 
             </v-text-field>
             <v-text-field v-model="formPassword.againNewPassword" :label="$t('userAccount.confirm_password')"
-                          :rules="[rules.passwordConfirm]"
+                          :rules="[customRules.passwordConfirm]"
                           :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                           :type="show2 ? 'text' : 'password'"
                           prepend-inner-icon="mdi-lock"
@@ -45,7 +45,10 @@ const show1 = ref('');
 const show2 = ref('');
 const props = defineProps({'usr': Object, errors: Object})
 import {isActiveToast, statusToast, toastShow, toastStatus} from "@/Toast";
-
+import rules from './../rules/rules'
+const customRules = {
+    passwordConfirm: v => v === form.password || "Hesla se neshodují!",
+}
 const formPassword = useForm({
     oldPassword: '',
     newPassword: '',
@@ -63,31 +66,6 @@ const changePassword = async () => {
             toastStatus(false);
         }
     });
-}
-const rules = {
-    oldPassword: v => v.length > 0 || "Nutné zadat staré heslo!",
-    password: v => {
-        const missingElements = [];
-        if (v.length < 8) {
-            missingElements.push('více než 8 znaků');
-        }
-        if (!/(?=.*\d)/.test(v)) {
-            missingElements.push('číslici');
-        }
-        if (!/[!@#$%^&*]/.test(v)) {
-            missingElements.push('speciální znak');
-        }
-        if (!/(?=.*[a-z])/.test(v)) {
-            missingElements.push('malé písmeno');
-        }
-        if (!/(?=.*[A-Z])/.test(v)) {
-            missingElements.push('velké písmeno');
-        }
-        if (missingElements.length > 0) {
-            return `Heslo musí obsahovat ${missingElements.join(', ')}!`;
-        }
-    },
-    passwordConfirm: v => v === formPassword.newPassword || "Hesla se neshodují!",
 }
 </script>
 <style scoped lang="scss">

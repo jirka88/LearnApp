@@ -15,7 +15,7 @@
                         <h2>LearnApp</h2>
                         <p>{{$t('authentication.welcome.created')}}<br> Jiří Navrátil</p>
                     </v-sheet>
-                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown}"  :elevation="$vuetify.display.smAndDown ? '4' : ''">
+                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown}" :elevation="$vuetify.display.smAndDown ? '4' : ''">
                         <v-tabs
                             v-model="tab"
                             align-tabs="center"
@@ -79,7 +79,7 @@ watch((tab), (val) => {
 </script>
 
 <style lang="scss">
-
+@use 'vuetify/lib/styles/settings/variables' as *;
 .w-30 {
     width: 30% !important;
 }
@@ -91,10 +91,7 @@ watch((tab), (val) => {
 }
 .menu {
     display: flex;
-    height: 100vh;
-    & .v-sheet {
-        min-height: 420px;
-    }
+    min-height: 100vh;
     .author {
         display: flex;
         background: #4398f0;
@@ -106,15 +103,13 @@ watch((tab), (val) => {
         padding: 16px;
     }
 }
-@media only screen and (max-width: 959px) {
+@media #{map-get($display-breakpoints, 'md-and-down')} {
     .v-sheet:first-child {
         background: unset !important;
     }
 }
-@media only screen and (max-height: 640px) {
-    .menu {
-        height: 640px;
-    }
+@media #{map-get($display-breakpoints, 'sm-and-down')} {
+
 }
 
 </style>

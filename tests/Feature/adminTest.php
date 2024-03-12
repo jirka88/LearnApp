@@ -69,14 +69,8 @@ class adminTest extends TestCase
      */
     public function test_admin_can_create_subject_to_user() {
         $user = $this->createUser(4);
-        $subject = [
-            'name' => fake()->firstName(),
-            'icon' => [
-                'iconName' => fake()->text(50)
-            ],
-            'created_by' => $user->id
-        ];
-        $response = $this->actingAs($this->user)->post(route('adminuser.storeSubject', $user->slug), $subject);
+        $subject = $this->createSubject($user);
+        $response = $this->actingAs($this->user)->post(route('adminuser.storeSubject', $user->slug), array($subject));
         $this->assertAuthenticated();
         $this->assertDatabaseHas('partitions', [
             'name' => $subject['name'],

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRoles;
+use App\Http\Components\Filters;
+use App\Http\Components\globalSettings;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
@@ -18,14 +21,20 @@ use Inertia\Inertia;
 
 class Admin extends Controller
 {
+    protected $userModel;
+
+    public function __construct(User $userModel)
+    {
+        $this->userModel = $userModel;
+    }
     /**
      * ADMIN -Získání všech uživatelů
      * @return \Inertia\Response
      */
     public function index()
     {
-        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(20);
-        $pages = ceil(count(User::all()) / 20);
+        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(globalSettings::ITEMS_IN_PAGE);
+        $pages = ceil(count(User::all()) / globalSettings::ITEMS_IN_PAGE);
         return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
     }
 
@@ -37,7 +46,7 @@ class Admin extends Controller
      */
     public function edit($slug)
     {
-        $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->first();
+        $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->firstOrFail();
         $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if ($isAdmin) {
@@ -59,7 +68,7 @@ class Admin extends Controller
     public function update(User $user, UpdateRequest $updateRequest)
     {
         $role = 0;
-        if (Roles::ADMIN == $user->role_id) {
+        if (UserRoles::ADMIN == $user->role_id) {
             $role = 1;
         } else {
             $role = $updateRequest->role['id'];
@@ -137,8 +146,7 @@ class Admin extends Controller
      */
     public function getUserSubjects($slug)
     {
-        $user = app('App\Models\User');
-        $user = $user->getUserBySlug($slug);
+        $user = $this->userModel->getUserBySlug($slug);
         $this->authorize('view', $user);
         $subjects = User::with(['patritions' => function ($query) {
             $query->withCount('chapter');
@@ -154,8 +162,7 @@ class Admin extends Controller
      */
     public function createUserSubject($slug)
     {
-        $user = app('App\Models\User');
-        $user = $user->getUserBySlug($slug);
+        $user = $this->userModel->getUserBySlug($slug);
         $this->authorize('view', $user);
         $url = "/dashboard/admin/controll/" . $user->slug . "/subject/create";
         return Inertia::render('subjects/createSubjects', compact('url'));
@@ -169,10 +176,9 @@ class Admin extends Controller
      */
     public function storeUserSubject($slug, SubjectRequest $subjectRequest)
     {
-        $user = app('App\Models\User');
-        $user = $user->getUserBySlug($slug);
+        $user = $this->userModel->getUserBySlug($slug);
         $subject = $subjectRequest->only("name");
-        $subject["icon"] = $subjectRequest->icon["iconName"];
+        $subject["icon"] = $subjectRequest->icon;
         $subject["created_by"] = $user->id;
         $subjectT = Partition::create($subject);
 
@@ -184,11 +190,11 @@ class Admin extends Controller
     {
         if(auth()->user()->role_id == 1) {
             $userCount = User::all()->count();
-            $operatosCount = User::where('role_id', Roles::OPERATOR)->get()->count();
-            $userNormalCount = User::where('role_id', Roles::BASIC_USER)->get()->count();
-            $testersCount = User::where('role_id', Roles::TESTER)->get()->count();
+            $operatosCount = User::where('role_id', UserRoles::OPERATOR)->get()->count();
+            $userNormalCount = User::where('role_id', UserRoles::BASIC_USER)->get()->count();
+            $testersCount = User::where('role_id', UserRoles::TESTER)->get()->count();
             $allChapters = Chapter::all()->count();
-            $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
+            $restrictRegister = Settings::pluck('RestrictedRegistration')->first();
             $stats = ([
                 'users' =>  $userCount,
                 'operators' => $operatosCount,

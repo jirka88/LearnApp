@@ -2,6 +2,9 @@
 
 namespace App\Traits;
 
+use App\Http\Components\FilterSubjectSort;
+use App\Http\Components\globalSettings;
+use App\Models\Partition;
 use App\Models\User;
 
 trait userTrait
@@ -22,5 +25,17 @@ trait userTrait
             }
             return $totalUsersCount;
         }
+    }
+
+    /**
+     * Vrátí předmětů/stránek/sort
+     * @param $sort
+     * @return array
+     */
+    private function indexJson($sort) {
+        $filter = new FilterSubjectSort();
+        $subjects = $filter->sorting($sort);
+        $pages = ceil(count(Partition::all()->where("created_by", auth()->user()->id)) / globalSettings::ITEMS_IN_PAGE);
+        return ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort];
     }
 }

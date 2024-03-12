@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call(SettingsSeeder::class);
         $this->call(RolesSeeder::class);
         $this->call(AccountTypesSeeder::class);
         $this->call(LicenceSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(PermissionSeeder::class);
-        $this->call(SettingsSeeder::class);
         //$this->call(UserSeeder::class);
 
         // \App\Models\User::factory(10)->create();

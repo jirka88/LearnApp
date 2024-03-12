@@ -19,8 +19,9 @@ const emit = defineEmits(['close']);
                     class="bg-white"
                     @click="emit('close')"
                     size="x-large"
+                    variant="outlined"
                 >
-                    Zřušit
+                    {{$t('global.close')}}
                 </v-btn>
                 <slot>
 

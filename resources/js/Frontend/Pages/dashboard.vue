@@ -148,6 +148,7 @@ const setColorTheme = () =>{
 </template>
 
 <style lang="scss">
+@use 'vuetify/lib/styles/settings/variables' as *;
 .v-app-bar {
     .v-icon {
         color: black !important;
@@ -156,9 +157,11 @@ const setColorTheme = () =>{
 
 .v-card {
     box-sizing: border-box;
-    padding: 4em 0 !important;
+    padding: 3em 0 !important;
     flex-grow: 1;
-
+    @media #{map-get($display-breakpoints, 'md-and-down')} {
+        padding: 2em 0 !important;
+    }
     .v-card-text {
         font-size: 1.4em;
     }

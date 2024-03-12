@@ -23,22 +23,21 @@
                         <QuillEditor v-model:content="form.contentChapter"
                                      theme="snow"
                                      toolbar="full"
-                                     content-type="html"/>
+                                     content-type="html"
+                                     :style="form.errors.contentChapter ? { 'border': '1px solid red !important' } : {}"
+                        />
+                        <p class="text-red pt-1 subtitle-2">{{form.errors.contentChapter}}</p>
                     </v-no-ssr>
-                    <span class="text-center text-red py-4 font-weight-bold" v-if="errors.content">{{
-                            errors.content
-                        }}</span>
-                    <span class="text-center text-red py-4 font-weight-bold" v-if="errors.name">{{ errors.name }}</span>
-                    <span class="text-center text-red py-4 font-weight-bold"
-                          v-if="$page.props.flash.message">{{ $page.props.flash.message }}</span>
                     <v-btn type="submit"
                            color="blue"
                            class="btn d-flex my-4"
+                           :disabled="btnStatus"
                            :class="{'w-100': $vuetify.display.smAndDown}"
                     >
                         {{ $t('global.created') }}!
                     </v-btn>
                 </form>
+                <Toastify v-if="isActiveToast && form.errors.name" :text="form.errors.name" variant="error" :time="3000" @close="toastShow(false)"></Toastify>
             </v-container>
         </div>
     </component>
@@ -51,6 +50,10 @@ import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {QuillEditor} from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 import BackBtn from "@/Frontend/Components/UI/BackBtn.vue";
+import rules from "./../../rules/rules"
+import {isActiveToast, toastShow} from "@/Toast";
+import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+import {ref} from "vue";
 
 const props = defineProps({slug: String, errors: Object})
 const form = useForm({
@@ -59,14 +62,17 @@ const form = useForm({
     contentChapter: "",
     slug: props.slug
 });
-const rules = {
-    required: value => !!value || 'Nutné vyplnit!',
-    nameLength: value => value.length <= 20 || "Název je příliš dlouhý!",
-    perexLength: value => value.length <= 50 || "Perex je příliš dlouhý!",
-}
+const btnStatus = ref(false);
 const createChapter = () => {
+    btnStatus.value = true;
     form.post(route('chapter.store', props.slug), {
         onSuccess: () => {
+        },
+        onError: () => {
+            toastShow(true)
+        },
+        onFinish: () =>{
+            btnStatus.value = false;
         }
     });
 }
@@ -76,11 +82,9 @@ const createChapter = () => {
 .creatingChapter {
     min-height: calc(100vh - 64px);
     overflow: auto;
-
     form {
         background: white;
         border-radius: 24px;
-
         .v-btn {
             margin: 0px auto;
             padding: 2em;

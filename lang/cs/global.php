@@ -6,7 +6,7 @@ return [
     'no' => 'Ne',
     'name' => 'Jméno',
     'surname' => 'Příjmení',
-    'close' => 'Zavři',
+    'close' => 'Zrušit',
     'create_user' => 'Vytvořit uživatele',
     'created' => 'Vytvořit',
     'delete' => 'Vymazat',

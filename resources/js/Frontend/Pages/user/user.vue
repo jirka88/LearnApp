@@ -6,14 +6,17 @@
                  :class="{'gp-4 mobile-variant': $vuetify.display.smAndDown}">
 
                 <div class="avatar" @click="showChangeAvatar">
-                    <v-avatar class="avatar position-relative" :class="{'margin-center': $vuetify.display.smAndDown}" size="180">
+                    <v-avatar class="avatar" :class="{'margin-center': $vuetify.display.smAndDown}" size="180">
                         <v-img
                             height="100%"
                             cover
                             :src="usr.image ? '/storage/' + usr.image : undefinedProfilePicture"
+                            @mouseenter="isHover = true"
+                            @mouseleave="isHover = false"
                         />
-                        <v-icon icon="mdi-camera" class="position-absolute" />
                     </v-avatar>
+                    <v-icon @mouseover="isHovered = true"
+                            @mouseleave="isHovered = false" v-show="isHover" icon="mdi-camera" class="position-absolute" />
                 </div>
                 <div class="info d-flex justify-center flex-column"
                      :class="{'align-center': $vuetify.display.smAndDown}">
@@ -62,6 +65,7 @@ import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 
 const tab = ref(null);
 const isActive = ref(false);
+const isHover = ref(false);
 defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array, errors: Object});
 import {toastShow} from "@/Toast";
 watch(tab, (val) => {
@@ -82,21 +86,21 @@ const showChangeAvatar = () => {
         grid-area: avatar;
         display: flex;
         justify-content: center;
-        &:hover {
-            cursor: pointer;
-            transition: 0.3s;
-            filter: brightness(80%);
-        }
-        &:hover .v-icon {
-            display: block;
+        position: relative;
+        .v-img {
+            &:hover {
+                cursor: pointer;
+                transition: 0.3s ease-in-out !important;
+                filter: brightness(50%);
+            }
         }
         .v-icon {
             z-index: 200;
             color: white;
             top: 50%;
-            display: none;
             left: 50%;
             transform: translate(-50%,-50%);
+            pointer-events: none;
         }
     }
     .on-hover {
