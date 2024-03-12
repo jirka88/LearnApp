@@ -21,6 +21,12 @@ use Inertia\Inertia;
 
 class Admin extends Controller
 {
+    protected $userModel;
+
+    public function __construct(User $userModel)
+    {
+        $this->userModel = $userModel;
+    }
     /**
      * ADMIN -Získání všech uživatelů
      * @return \Inertia\Response
@@ -40,7 +46,7 @@ class Admin extends Controller
      */
     public function edit($slug)
     {
-        $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->first();
+        $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->firstOrFail();
         $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if ($isAdmin) {
@@ -140,8 +146,7 @@ class Admin extends Controller
      */
     public function getUserSubjects($slug)
     {
-        $user = app('App\Models\User');
-        $user = $user->getUserBySlug($slug);
+        $user = $this->userModel->getUserBySlug($slug);
         $this->authorize('view', $user);
         $subjects = User::with(['patritions' => function ($query) {
             $query->withCount('chapter');
@@ -157,8 +162,7 @@ class Admin extends Controller
      */
     public function createUserSubject($slug)
     {
-        $user = app('App\Models\User');
-        $user = $user->getUserBySlug($slug);
+        $user = $this->userModel->getUserBySlug($slug);
         $this->authorize('view', $user);
         $url = "/dashboard/admin/controll/" . $user->slug . "/subject/create";
         return Inertia::render('subjects/createSubjects', compact('url'));
@@ -172,8 +176,7 @@ class Admin extends Controller
      */
     public function storeUserSubject($slug, SubjectRequest $subjectRequest)
     {
-        $user = app('App\Models\User');
-        $user = $user->getUserBySlug($slug);
+        $user = $this->userModel->getUserBySlug($slug);
         $subject = $subjectRequest->only("name");
         $subject["icon"] = $subjectRequest->icon;
         $subject["created_by"] = $user->id;
@@ -191,7 +194,7 @@ class Admin extends Controller
             $userNormalCount = User::where('role_id', UserRoles::BASIC_USER)->get()->count();
             $testersCount = User::where('role_id', UserRoles::TESTER)->get()->count();
             $allChapters = Chapter::all()->count();
-            $restrictRegister = Settings::all()->pluck('RestrictedRegistration')->first();
+            $restrictRegister = Settings::pluck('RestrictedRegistration')->first();
             $stats = ([
                 'users' =>  $userCount,
                 'operators' => $operatosCount,
