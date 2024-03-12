@@ -64,12 +64,13 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(ChapterRequest $chapterRequest) {
-        $partition =  $this->chapterModel->getChapter($chapterRequest->slug);
+        $subjectModel = app('App\Models\Partition');
+        $partition =  $subjectModel->getSubjectBySlug($chapterRequest->slug);
         if(Chapter::where("partition_id", $partition->id)->where("name", $chapterRequest->name)->first() !== null) {
             return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
-        if(auth()->user()->licences->id == 1 && $partition->Chapter()->count() > Licences::standartUserChaptersInPartitions) {
-            return redirect()->back()->with(["message" => "Přesáhnut limit!"]);
+        if(auth()->user()->licences->id === 1 && $partition->Chapter()->count() >= Licences::standartUserChaptersInPartitions) {
+            return redirect()->back()->withErrors(["message" => "Přesáhnut limit!"]);
         }
         Chapter::create([
             "name" => $chapterRequest->name,
