@@ -24,7 +24,7 @@ class ChapterRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => "required|max:20|unique:chapters,partition_id",
+            "name" => "required|max:20|unique:chapters",
             "perex" => "max:50",
             "contentChapter" => "required",
             "slug" => "required"

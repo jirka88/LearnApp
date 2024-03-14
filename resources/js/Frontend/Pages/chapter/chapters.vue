@@ -40,8 +40,8 @@
                     <ChapterPreview
                         v-for="chapter in chapters" :key="chapter.id"
                         :chapter="chapter"
-                        :subject="subject">
-                    </ChapterPreview>
+                        :subject="subject"
+                    />
             </v-sheet>
             <v-pagination
                 v-if="pages !== 0"
@@ -122,6 +122,7 @@ const fetchData = () => {
 .v-sheet{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    background: none;
     @media #{map-get($display-breakpoints, 'md-and-down')} {
         grid-template-columns: 1fr 1fr;
     }
