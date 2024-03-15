@@ -64,12 +64,11 @@
                 </tr>
                 </tbody>
                 <tbody v-else>
-                <v-divider></v-divider>
-                <tr>
-                    <td width="2em">
-                        <v-img height="2em" min-width="1em" :src="arrow"></v-img>
+                <tr class="pa-8">
+                    <td width="5%">
+                        <v-img min-height="1em" max-height="2em" min-width="1em" :src="arrow"></v-img>
                     </td>
-                    <td colspan="5">Nesdíleno s nikým!</td>
+                    <td colspan="6" class="font-weight-bold">Nesdíleno s nikým!</td>
                 </tr>
                 </tbody>
             </v-table>
