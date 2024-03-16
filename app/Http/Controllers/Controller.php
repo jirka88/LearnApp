@@ -143,20 +143,19 @@ class Controller extends BaseController
      * @return \Inertia\Response
      */
     public function showStatsShare() {
-        $subjects = User::with(['patritions.users' => function ($query) {
+        $user = User::with(['patritions.users' => function ($query) {
              $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
         }])->select('id')->find(auth()->user()->id);
-        $subjects->patritions->each(function ($subject) {
+        $user->patritions->each(function ($subject) {
             $subject->users->each(function ($user) {
                 $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
             });
         });
-        $subjects->patritions = $subjects->patritions->sortByDesc(function ($patrition) {
+        $subjects = $user->patritions->filter(function ($patrition) {
             return $patrition->users->isNotEmpty();
-        })->values();
+        });
         $permission = Permission::all();
-
-        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects->patritions, 'permission' => $permission]);
+        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permissions' => $permission]);
     }
 
     /**
@@ -170,6 +169,12 @@ class Controller extends BaseController
         $subject = Partition::find($request->input('subject'));
         $user->patritions()->updateExistingPivot($subject->id,['permission_id' => $dr['id']]);
     }
+
+    /**
+     * Vyhledání uživatele
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function searchUser(Request $request) {
         $search = $request->input('select');
         $user = [];

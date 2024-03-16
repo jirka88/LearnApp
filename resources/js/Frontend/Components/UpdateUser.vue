@@ -109,6 +109,7 @@ import {useForm} from "@inertiajs/inertia-vue3";
 import {markRaw} from "vue";
 import {isActiveToast, statusToast, toastShow, toastStatus} from "@/Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+import rules from "./../rules/rules"
 const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array});
 const form = useForm({
     firstname: props.usr.firstname,
@@ -159,11 +160,6 @@ const updateAdminUser = async(id) => {
             toastStatus(false);
         }
     })
-}
-const rules = {
-    required: value => !!value || 'Nutné vyplnit!',
-    lengthName: v => v.length < 25 || "Příliš dlouhé jméno!",
-    lengthlastName: v => v.length < 50 || "Příliš dlouhé příjmení!"
 }
 const permission = (permissionView, userId) => {
     if(permissionView) {

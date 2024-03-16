@@ -2,23 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserLicences;
 use App\Enums\UserRoles;
-use App\Http\Components\Filters;
-use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\globalSettings;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
-use App\Models\Roles;
 use App\Models\User;
 use App\Traits\userTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Pagination\Paginator;
 use Inertia\Inertia;
-use function Symfony\Component\String\b;
 
 class SubjectController extends Controller
 {
@@ -82,10 +78,10 @@ class SubjectController extends Controller
      */
     public function store(SubjectRequest $subjectRequest) {
         $user = User::find(auth()->user()->id);
-        if($user->licences_id == 1 && $user->patritions()->count() > Licences::standartUserPartitions ) {
+        if($user->licences_id == UserLicences::STANDART && $user->patritions()->count() > Licences::standartUserPartitions ) {
             return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
-        else if($user->licences_id == 2 && $user->patritions()->count() > Licences::standartPlusUserPartitions ) {
+        else if($user->licences_id == UserLicences::STANDART_PLUS && $user->patritions()->count() > Licences::standartPlusUserPartitions ) {
             return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
         else {
