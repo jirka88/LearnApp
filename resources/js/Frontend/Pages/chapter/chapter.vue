@@ -1,6 +1,6 @@
 <template>
     <component :is="DashboardLayout">
-        <div>
+        <div class="chapterBg">
             <v-container class="py-12">
                 <div class="chapter pa-10 elevation-20">
                 <ChapterSettings
@@ -64,7 +64,7 @@ const destroy = () => {
 
 <style scoped lang="scss">
 
-div {
+.chapterBg {
     background: #4398f0 !important;
     .chapter {
         border-radius: 24px;

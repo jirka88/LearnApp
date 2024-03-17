@@ -54,7 +54,7 @@ class User extends Authenticatable
         );
     }
     public function getUserBySlug($slug) : ?User {
-        return User::where('slug', $slug)->first();
+        return User::where('slug', $slug)->firstOrFail();
     }
     public function roles() : BelongsTo {
         return $this->belongsTo(Roles::class, 'role_id');

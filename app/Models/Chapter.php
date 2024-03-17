@@ -35,6 +35,11 @@ class Chapter extends Model
     public function getChapter($slug) :?Chapter {
         return $this->where('slug', $slug)->firstOrFail();
     }
+    public function getChapterWithPermission($slug) :? Chapter {
+        return $this->where('slug', $slug)->with(['Partition.Users' => function ($query2) {
+            $query2->where('user_id', auth()->user()->id)->firstOrFail();
+        }])->firstOrFail();
+    }
     public function Partition() :BelongsTo {
         return $this->BelongsTo(Partition::class, 'partition_id');
     }

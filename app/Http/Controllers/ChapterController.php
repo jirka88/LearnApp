@@ -33,10 +33,7 @@ class ChapterController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Request $request, $slug, $chapterName) {
-        $chapter = $this->chapterModel->getChapter($chapterName)->with(['Partition.Users' => function ($query) {
-          $query->where('user_id', auth()->user()->id);
-        }])->firstOrFail();
-
+        $chapter = $this->chapterModel->getChapterWithPermission($chapterName);
         if($chapter->Partition->Users) {
             if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $chapter->Partition->Users = User::find($chapter->Partition->created_by);
@@ -91,10 +88,7 @@ class ChapterController extends Controller
      * @return \Inertia\Response
      */
     public function edit(Request $request, $slug, $chapter) {
-        $chapter = $this->chapterModel->getChapter($chapter);
-        $chapter->with(['Partition.Users' => function ($query2) {
-                $query2->find(auth()->user()->id);
-            }])->first();
+        $chapter = $this->chapterModel->getChapterWithPermission($chapter);
         $this->authorize('update', $chapter);
         return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
     }

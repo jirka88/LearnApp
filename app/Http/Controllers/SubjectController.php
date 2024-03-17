@@ -44,7 +44,7 @@ class SubjectController extends Controller
     public function show(Request $request, $slug) {
         $subject = $this->subjectModel->getSubjectBySlug($slug);
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
-
+        $sharingUsr = [];
         if($pShare === null) {
             if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
@@ -52,6 +52,7 @@ class SubjectController extends Controller
         }
         else {
             $subject["permission"] = $pShare;
+            $sharingUsr = User::select('firstname', 'lastname', 'email')->find($subject->created_by);
         }
         $this->authorize("view", $subject);
         $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate(globalSettings::ITEMS_IN_PAGE);
@@ -60,7 +61,7 @@ class SubjectController extends Controller
         });
         $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / globalSettings::ITEMS_IN_PAGE);
 
-        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
+        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'sharingUsr'));
     }
     /**
      * Redirect k formuláři k vytvoření předmětu

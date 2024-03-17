@@ -29,6 +29,9 @@
                     :subject="subject"
                 ></SearchChapters>
             </div>
+            <v-card v-if="$page.props.user.id != subject.created_by" class="pa-4 font-weight-bold" :class="{'text-center': $vuetify.display.smAndDown}">
+                <p>Sdíleno od: {{sharingUsr.firstname}} {{sharingUsr.lastname}} ({{sharingUsr.email}}) </p>
+            </v-card>
             <v-sheet class="py-5 d-grid ga-6">
                 <DialogShare
                     v-model="sharing"
@@ -84,8 +87,9 @@ const status = ref(false);
 const showSearchMobile = ref(false);
 const props = defineProps({
     chapters: Object,
-    subject: Object,
+    subject: Array,
     errors: Object,
+    sharingUsr: Object,
     pages: Number,
 });
 
