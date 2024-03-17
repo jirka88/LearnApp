@@ -33,7 +33,7 @@
                     {{ $t('authentication.forget') }}
                 </Link>
             </div>
-            <Toastify v-if="isActiveToast" :text="form.errors.msg" variant="error" :time="3000"
+            <Toastify v-if="isActiveToast" :text="form.errors.msg" variant="error" :time="5000"
                       @close="toastShow(false)"></Toastify>
             <v-btn
                 type="submit"

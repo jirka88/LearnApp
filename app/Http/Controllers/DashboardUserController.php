@@ -63,10 +63,10 @@ class DashboardUserController extends Controller
      */
     public function passwordReset(PasswordResetRequest $passwordResetRequest) {
         if(!Hash::check($passwordResetRequest->oldPassword, auth()->user()->password)) {
-            return back()->withErrors(['msg' => 'Staré heslo se liší!']);
+            return back()->withErrors(['oldPassword' => 'Staré heslo se liší!']);
         }
         if($passwordResetRequest->oldPassword == $passwordResetRequest->newPassword) {
-            return back()->withErrors(['msg' => 'Nové heslo nesmí být stejné jako staré!']);
+            return back()->withErrors(['newPasswordSameAsOld' => 'Nové heslo nesmí být stejné jako staré!']);
         }
         User::find(auth()->user()->id)->update([
             'password' => $passwordResetRequest->newPassword,

@@ -137,10 +137,11 @@ class ChapterController extends Controller
      */
     public function selectChapter(Request $request, $slug) {
         $sort = $request->input('select');
-        $subject_id = Partition::where('slug', $slug)->pluck('id')->first();
+        $subject = app('App\Models\Partition');
+        $subjectId = $subject->getSubjectId($slug);
         $chapter = [];
         if($sort !== null) {
-            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject_id)->select('name', 'perex','slug')->get();
+            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subjectId)->select('name', 'perex','slug')->get();
         }
         if(count($chapter) === 0) {
             $chapter = ['item' => 'Nic nenalezeno!'];
