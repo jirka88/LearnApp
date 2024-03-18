@@ -29,8 +29,9 @@
                     :subject="subject"
                 ></SearchChapters>
             </div>
-            <v-card v-if="$page.props.user.id != subject.created_by" class="pa-4 font-weight-bold" :class="{'text-center': $vuetify.display.smAndDown}">
-                <p>Sdíleno od: {{sharingUsr.firstname}} {{sharingUsr.lastname}} ({{sharingUsr.email}}) </p>
+            <v-card v-if="$page.props.user.id != subject.created_by" class="pa-4 font-weight-bold"
+                    :class="{'text-center': $vuetify.display.smAndDown}">
+                <p>Sdíleno od: {{ sharingUsr.firstname }} {{ sharingUsr.lastname }} ({{ sharingUsr.email }}) </p>
             </v-card>
             <v-sheet class="py-5 d-grid ga-6">
                 <DialogShare
@@ -40,11 +41,11 @@
                     :users="users"
                     @close="sharing = false"
                 />
-                    <ChapterPreview
-                        v-for="chapter in chapters" :key="chapter.id"
-                        :chapter="chapter"
-                        :subject="subject"
-                    />
+                <ChapterPreview
+                    v-for="chapter in chapters" :key="chapter.id"
+                    :chapter="chapter"
+                    :subject="subject"
+                />
             </v-sheet>
             <v-pagination
                 v-if="pages !== 0"
@@ -123,7 +124,8 @@ const fetchData = () => {
 </script>
 <style scoped lang="scss">
 @use 'vuetify/lib/styles/settings/variables' as *;
-.v-sheet{
+
+.v-sheet {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     background: none;
