@@ -21,7 +21,7 @@
                 :label="$t('authentication.register.password')"
                 @click:append="show = !show"
             ></v-text-field>
-            <div class="d-flex justify-center align-center">
+            <div class="d-flex justify-space-between align-center">
                 <v-checkbox
                     v-model="form.remember"
                     hide-details
