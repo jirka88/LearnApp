@@ -35,6 +35,7 @@
             </v-card>
             <v-sheet class="py-5 d-grid ga-6">
                 <DialogShare
+                    v-if="sharing"
                     v-model="sharing"
                     :subject="subject"
                     :errors="errors"

@@ -89,9 +89,10 @@
             </div>
         </v-container>
         <v-row justify="center">
-            <DialogDelete v-model="dialog"
-                          :subject="subject"
-                          @close="dialog = false">
+            <DialogDelete
+                v-if="dialog"
+                v-model:dialog="dialog"
+                :subject="subject">
                 <v-btn
                     class="bg-red"
                     @click="destroySubject()"
@@ -118,11 +119,11 @@ import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
 const Toastify = defineAsyncComponent(() => import("@/Frontend/Components/UI/Toastify.vue"));
-const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/UI/DialogBeforeDelete.vue"));
+const dialog = ref(false);
+const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
 
 const props = defineProps({subjects: Object, pages: Number, sort: String});
 
-const dialog = ref(false);
 const subject = ref({
     subjectName: '',
     subjectId: ''
