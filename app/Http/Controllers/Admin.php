@@ -67,23 +67,14 @@ class Admin extends Controller
      */
     public function update(User $user, UpdateRequest $updateRequest)
     {
-        $role = 0;
-        if (UserRoles::ADMIN == $user->role_id) {
-            $role = 1;
-        } else {
-            $role = $updateRequest->role['id'];
-        }
-        $typeAccount = $updateRequest->type['id'];
-        $active = $updateRequest->active['id'];
-        $licence = $updateRequest->licences['id'];
         $this->authorize('view', $user);
         User::find($user->id)->update([
             'firstname' => $updateRequest->firstname,
             'lastname' => $updateRequest->lastname,
-            'type_id' => $typeAccount,
-            'role_id' => $role,
-            'active' => $active,
-            'licences_id' => $licence
+            'type_id' => $updateRequest->type['id'],
+            'role_id' => UserRoles::ADMIN == $user->role_id ? 1 : $updateRequest->role['id'],
+            'active' => $updateRequest->active['id'],
+            'licences_id' => $updateRequest->licences['id']
         ]);
         return redirect()->back()->with('message', __('validation.custom.update'));
     }
@@ -148,9 +139,8 @@ class Admin extends Controller
     {
         $user = $this->userModel->getUserBySlug($slug);
         $this->authorize('view', $user);
-        $subjects = User::with(['patritions' => function ($query) {
-            $query->withCount('chapter');
-        }])->find($user->id);
+        $subjects = $user->loadMissing('patritions');
+        $subjects->patritions->each->append('chapter_count');
         return Inertia::render('admin/listSubjects', compact('subjects'));
     }
 
@@ -188,7 +178,7 @@ class Admin extends Controller
 
     public function getStats()
     {
-        if(auth()->user()->role_id == 1) {
+        if (auth()->user()->role_id == 1) {
             $userCount = User::all()->count();
             $operatosCount = User::where('role_id', UserRoles::OPERATOR)->get()->count();
             $userNormalCount = User::where('role_id', UserRoles::BASIC_USER)->get()->count();
@@ -196,14 +186,13 @@ class Admin extends Controller
             $allChapters = Chapter::all()->count();
             $restrictRegister = Settings::pluck('RestrictedRegistration')->first();
             $stats = ([
-                'users' =>  $userCount,
+                'users' => $userCount,
                 'operators' => $operatosCount,
                 'normalUsers' => $userNormalCount,
                 'chapters' => $allChapters,
                 'testersCount' => $testersCount,
                 'restrictRegister' => $restrictRegister]);
-        }
-        else {
+        } else {
             $stats = null;
         }
         return $stats;
@@ -213,8 +202,9 @@ class Admin extends Controller
      * Povolí/zákáže registraci do aplikace
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function changeRestriction($register) {
-        $value = filter_var($register,FILTER_VALIDATE_BOOLEAN);
+    public function changeRestriction($register)
+    {
+        $value = filter_var($register, FILTER_VALIDATE_BOOLEAN);
         $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['RestrictedRegistration' => $value]);
         return redirect()->back()->with('message', __('validation.custom.update'));
@@ -226,7 +216,8 @@ class Admin extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function changeTheme($color) {
+    public function changeTheme($color)
+    {
         $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['color' => $color]);
         return redirect()->back()->with('message', __('validation.custom.update'));

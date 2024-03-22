@@ -48,10 +48,10 @@ class ChapterController extends Controller
      * @param $slug
      * @return \Inertia\Response
      */
-    public function create($slug) {
-        $user = User::with(['patritions' => function ($query) use ($slug) {
+    public function create(Request $request, $slug) {
+        $user = $request->user()->with(['patritions' => function ($query) use ($slug) {
             $query->where('slug', $slug)->firstOrFail();
-        }])->find(auth()->user()->id);
+        }])->firstOrFail();
         $this->authorize("create", $user);
         return Inertia::render('chapter/createChapter', ['slug' => $slug]);
     }
@@ -63,8 +63,8 @@ class ChapterController extends Controller
      */
     public function store(ChapterRequest $chapterRequest) {
         $subjectModel = app('App\Models\Partition');
-        $partition =  $subjectModel->getSubjectBySlug($chapterRequest->slug);
-        if(Chapter::where("partition_id", $partition->id)->where("name", $chapterRequest->name)->first() !== null) {
+        $partition = $subjectModel->getSubjectBySlug($chapterRequest->slug);
+        if($this->chapterModel->getChapterByNameAndPatrition($partition->id, $chapterRequest->name) !== null) {
             return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
         if(auth()->user()->licences->id === UserLicences::STANDART && $partition->Chapter()->count() >= Licences::standartUserChaptersInPartitions) {
@@ -77,17 +77,16 @@ class ChapterController extends Controller
             "slug" => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
             "partition_id" => $partition->id
         ]);
-        return to_route('subject.show', $chapterRequest->slug);
+        return to_route('subject.show', $partition->slug);
     }
 
     /**
      * Odkázání na formulář k aktualizaci kapitoly
-     * @param Request $request
      * @param $slug
      * @param $chapter
      * @return \Inertia\Response
      */
-    public function edit(Request $request, $slug, $chapter) {
+    public function edit( $slug, $chapter) {
         $chapter = $this->chapterModel->getChapterWithPermission($chapter);
         $this->authorize('update', $chapter);
         return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
@@ -100,24 +99,24 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
-        $chapter = $this->chapterModel->getChapter($slug);
+        $chapter = $this->chapterModel->getChapter($chapterRequest->slug);
         $this->authorize('update', $chapter);
+        $subject = app('App\Models\Partition');
         $chapter->update([
             'name' => $chapterRequest->name,
             'perex' => $chapterRequest->perex,
             'context' => $chapterRequest->contentChapter,
             'slug' => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
         ]);
-        return to_route('subject.show', $chapter->Partition()->find($chapter->partition_id)->slug);
+        return to_route('subject.show', $subject->getSubjectById($chapter->partition_id)->slug);
     }
     /**
      * Vymazání kapitoly
-     * @param Request $request
      * @param $slug
      * @param $chapter
      * @return void
      */
-    public function destroy(Request $request, $slug, $chapter) {
+    public function destroy($slug, $chapter) {
         $chapterDelete = $this->chapterModel->getChapter($chapter);
         $chapterDelete->delete();
         return to_route('subject.show', $slug);

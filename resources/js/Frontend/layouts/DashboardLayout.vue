@@ -29,7 +29,10 @@
                         <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.all_users')"
                                      :value="$t('dashboard.all_users')"></v-list-item>
                     </Link>
-                    <v-list-group id="group">
+                    <v-list-group
+                        id="group"
+                        value="true"
+                        @click="changeStatusSection">
                         <template v-slot:activator="{ props }">
                             <v-list-item
                                 v-bind="props"
@@ -162,6 +165,26 @@ const changeLanguage = () => {
     localStorage.setItem('lang', select.value.ISO);
     localStorage.setItem('langImage', select.value.image)
     loadLanguageAsync(select.value.ISO);
+}
+const getIfIsOpenSections = () => {
+    const status = localStorage.getItem("layoutOpen");
+    if(status) {
+        return status;
+    }
+    else {
+        localStorage.setItem('layoutOpen', false);
+    }
+}
+const changeStatusSection = () => {
+    const status = localStorage.getItem("layoutOpen");
+    console.log(status);
+    if(!status) {
+        localStorage.setItem('layoutOpen', false);
+    }
+    else {
+        localStorage.setItem('layoutOpen', true);
+    }
+
 }
 const itemProps = (item) =>{
     return {title: item.language,
