@@ -55,11 +55,10 @@ class SubjectController extends Controller
             $sharingUsr = User::select('firstname', 'lastname', 'email')->find($subject->created_by);
         }
         $this->authorize("view", $subject);
-        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate(globalSettings::ITEMS_IN_PAGE);
-        $chapters = $chaptersSelect->map(function ($chapter) {
-            return $chapter->toArray();
-        });
-        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / globalSettings::ITEMS_IN_PAGE);
+        $chapters = Chapter::where('partition_id', $subject->id)
+            ->select(['name', 'perex', 'id', 'slug'])
+            ->paginate(globalSettings::ITEMS_IN_PAGE);
+        $pages = Ceil(Chapter::where('partition_id',$subject->id)->count() / globalSettings::ITEMS_IN_PAGE);
 
         return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'sharingUsr'));
     }

@@ -178,20 +178,14 @@ class Admin extends Controller
 
     public function getStats()
     {
-        if (auth()->user()->role_id == 1) {
-            $userCount = User::all()->count();
-            $operatosCount = User::where('role_id', UserRoles::OPERATOR)->get()->count();
-            $userNormalCount = User::where('role_id', UserRoles::BASIC_USER)->get()->count();
-            $testersCount = User::where('role_id', UserRoles::TESTER)->get()->count();
-            $allChapters = Chapter::all()->count();
-            $restrictRegister = Settings::pluck('RestrictedRegistration')->first();
+        if (auth()->user()->role_id == UserRoles::ADMIN) {
             $stats = ([
-                'users' => $userCount,
-                'operators' => $operatosCount,
-                'normalUsers' => $userNormalCount,
-                'chapters' => $allChapters,
-                'testersCount' => $testersCount,
-                'restrictRegister' => $restrictRegister]);
+                'users' => $this->userModel->append('get_count_users'),
+                'operators' => $this->userModel->getUserCountByRole(UserRoles::OPERATOR),
+                'normalUsers' => $this->userModel->getUserCountByRole(UserRoles::BASIC_USER),
+                'chapters' => Chapter::all()->count(),
+                'testersCount' => $this->userModel->getUserCountByRole(UserRoles::TESTER),
+                'restrictRegister' => Settings::pluck('RestrictedRegistration')->first()]);
         } else {
             $stats = null;
         }

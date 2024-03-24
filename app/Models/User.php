@@ -54,7 +54,16 @@ class User extends Authenticatable
         );
     }
     public function getUserBySlug($slug) : ?User {
-        return User::where('slug', $slug)->firstOrFail();
+        return $this->where('slug', $slug)->firstOrFail();
+    }
+
+    /**
+     * Vrátí počet uživatelů podle role
+     * @param $role
+     * @return int|null
+     */
+    public function getUserCountByRole($role) : ?int {
+        return $this->where('role_id', $role)->get()->count();
     }
     public function roles() : BelongsTo {
         return $this->belongsTo(Roles::class, 'role_id');

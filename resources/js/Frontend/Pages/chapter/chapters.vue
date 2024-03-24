@@ -43,7 +43,7 @@
                     @close="sharing = false"
                 />
                 <ChapterPreview
-                    v-for="chapter in chapters" :key="chapter.id"
+                    v-for="chapter in chapters.data" :key="chapter.id"
                     :chapter="chapter"
                     :subject="subject"
                 />
