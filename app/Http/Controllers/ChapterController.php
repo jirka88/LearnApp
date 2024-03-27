@@ -10,6 +10,7 @@ use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\User;
+use App\Rules\UniqueChapterName;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -100,6 +101,11 @@ class ChapterController extends Controller
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
         $chapter = $this->chapterModel->getChapter($chapterRequest->slug);
+        $chapter->name = $chapterRequest->name;
+        $uniqueChapterNameRule = new UniqueChapterName();
+        if(!$uniqueChapterNameRule->passes('name', $chapter)) {
+            return redirect()->back()->withErrors($uniqueChapterNameRule->message());
+        }
         $this->authorize('update', $chapter);
         $subject = app('App\Models\Partition');
         $chapter->update([

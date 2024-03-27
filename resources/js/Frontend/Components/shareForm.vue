@@ -59,7 +59,6 @@ const changeShare = () => {
         onFinish() {
             emit('close')
         }
-
     });
 }
 </script>

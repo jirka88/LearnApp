@@ -39,6 +39,14 @@ class Chapter extends Model
     }
 
     /**
+     * Vrátí kapitolu podle id
+     * @param $chapter
+     * @return mixed
+     */
+    public function getChapterById($id) :?Chapter {
+        return $this->find($id);
+    }
+    /**
      * Vrátí podle sekce id a jména kapitoly kapitolu
      * @param $id
      * @param $name
