@@ -34,7 +34,7 @@ class Admin extends Controller
     public function index()
     {
         $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(globalSettings::ITEMS_IN_PAGE);
-        $pages = ceil(count(User::all()) / globalSettings::ITEMS_IN_PAGE);
+        $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
         return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
     }
 

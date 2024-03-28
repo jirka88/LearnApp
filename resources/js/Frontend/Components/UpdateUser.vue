@@ -29,9 +29,9 @@
                     <td >
                         <v-select
                             v-model="form.role"
-                            :items="items"
-                            :disabled="permission($page.props.permission.view, $page.props.user.role.id  )"
-                            item-title="state"
+                            :items="roles"
+                            :disabled="permission($page.props.permission.view, $page.props.user.role.id )"
+                            item-title="role"
                             item-value="id"
                             label="Select"
                             persistent-hint
@@ -46,8 +46,8 @@
                     <td >
                         <v-select
                             v-model="form.type"
-                            :items="types"
-                            item-title="state"
+                            :items="accountTypes"
+                            item-title="type"
                             item-value="id"
                             label="Select"
                             persistent-hint
@@ -64,7 +64,7 @@
                             <v-select
                                 v-model="form.licences"
                                 :items="licences"
-                                item-title="state"
+                                item-title="Licence"
                                 item-value="id"
                                 label="Select"
                                 persistent-hint
@@ -115,23 +115,12 @@ const form = useForm({
     firstname: props.usr.firstname,
     lastname: props.usr.lastname,
     email: props.usr.email,
-    role: {state: props.usr.roles.role, id: props.usr.roles.id},
-    type: {state: props.usr.account_types.type, id: props.usr.account_types.id},
-    licences: {state: props.usr.licences.Licence, id: props.usr.licences.id},
+    role: {role: props.usr.roles.role, id: props.usr.roles.id},
+    type: {type: props.usr.account_types.type, id: props.usr.account_types.id},
+    licences: {Licence: props.usr.licences.Licence, id: props.usr.licences.id},
     active: props.usr.active == 1 ? {state: 'ANO', id: '1'} : {state: 'NE', id: '0'}
 });
-const items= markRaw(
-    props.roles.map(role => ({
-        state: role.role, id: role.id
-    })));
-const types = markRaw(
-    props.accountTypes.map(type => ({
-        state: type.type, id: type.id
-    })));
-const licences = markRaw(
-    props.licences.map(licence => ({
-        state: licence.Licence, id: licence.id
-    })));
+
 const status = markRaw([
     {state: 'ANO', id: '1'},
     {state: 'NE', id: '0'}]

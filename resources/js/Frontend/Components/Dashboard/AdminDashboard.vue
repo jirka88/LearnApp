@@ -5,19 +5,10 @@
         <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
         <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
             <v-col>
-                <WelcomeBox></WelcomeBox>
+                <WelcomeBox/>
             </v-col>
             <v-col>
-                <v-sheet
-                    :elevation="8"
-                    :height="80"
-                    border
-                    rounded
-                    class="d-flex justify-center align-center flex-column py-2"
-                >
-                    <div class="text-h5 font-weight-bold">LearnApp</div>
-                    <a href="http://github.com" class="underlineLink" target="_blank">Github</a>
-                </v-sheet>
+                <ProjectInfoBox/>
             </v-col>
         </v-row>
     </div>
@@ -112,6 +103,7 @@ import DialogChangeColorTheme from "@/Frontend/Components/Dashboard/DialogChange
 import DialogRegisterRestrict from "@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue";
 import {markRaw, ref} from "vue";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+import ProjectInfoBox from "@/Frontend/Components/Dashboard/ProjectInfoBox.vue";
 
 const props = defineProps(['stats'])
 
