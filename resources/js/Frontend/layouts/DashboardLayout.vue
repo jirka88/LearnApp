@@ -103,7 +103,7 @@
                     hide-details
                     return-object
                 >
-                    <template v-slot:selection="{ item}">
+                    <template v-slot:selection="{item}">
                         <div class="d-flex justify-content-center align-items-center ga-2">
                             <v-img width="2em" max-height="2em" :src="item.raw.image"/>
                             {{ item.title }}
