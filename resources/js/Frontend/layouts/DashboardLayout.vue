@@ -23,7 +23,7 @@
                 <v-list density="compact" nav>
                     <Link :href="route('dashboard')">
                         <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')"
-                                     :value="$t('dashboard.home')" active-class="bg-primary"></v-list-item>
+                                     :value="$t('dashboard.home')"></v-list-item>
                     </Link>
                     <Link v-if="$page.props.permission.view" :href="route('admin')">
                         <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.all_users')"
@@ -31,8 +31,7 @@
                     </Link>
                     <v-list-group
                         id="group"
-                        value="true"
-                        @click="changeStatusSection">
+                        value="group1">
                         <template v-slot:activator="{ props }">
                             <v-list-item
                                 v-bind="props"
@@ -152,6 +151,10 @@ const drawer = ref(true);
 
 const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs', 'image': localStorage.getItem('langImage') || czechFlag});
 
+const openedGroup = ref(['group1']);
+
+const item = ref();
+
 const languages = [
     {language: 'Česky', ISO: 'cs', image: czechFlag}, {
         language: 'English',
@@ -165,26 +168,6 @@ const changeLanguage = () => {
     localStorage.setItem('lang', select.value.ISO);
     localStorage.setItem('langImage', select.value.image)
     loadLanguageAsync(select.value.ISO);
-}
-const getIfIsOpenSections = () => {
-    const status = localStorage.getItem("layoutOpen");
-    if(status) {
-        return status;
-    }
-    else {
-        localStorage.setItem('layoutOpen', false);
-    }
-}
-const changeStatusSection = () => {
-    const status = localStorage.getItem("layoutOpen");
-    console.log(status);
-    if(!status) {
-        localStorage.setItem('layoutOpen', false);
-    }
-    else {
-        localStorage.setItem('layoutOpen', true);
-    }
-
 }
 const itemProps = (item) =>{
     return {title: item.language,
@@ -215,14 +198,9 @@ const itemProps = (item) =>{
 .v-list-item {
     padding: 0.7em !important;
 }
-
 #group {
-    .subItem:first-child {
-        padding-inline-start: 8px !important;
-    }
-
     .subItem {
-        padding-inline-start: 16px !important;
+        padding-inline-start: 1em !important;
     }
 }
 
