@@ -43,8 +43,8 @@
                     label="Role"
                     :items="roles"
                     hint="Nastavení role uživatele"
-                    item-title="state"
-                    item-value="value"
+                    item-title="role"
+                    item-value="id"
                     variant="outlined"
                     persistent-hint
                     return-object
@@ -54,9 +54,9 @@
                     v-model="form.type"
                     label="Typ účtu"
                     hint="Nastavení typ účtu uživatele"
-                    :items="types"
-                    item-title="state"
-                    item-value="value"
+                    :items="accountTypes"
+                    item-title="type"
+                    item-value="id"
                     variant="outlined"
                     persistent-hint
                     return-object
@@ -67,8 +67,8 @@
                     label="Licence"
                     hint="Nastavení licence uživatele"
                     :items="licences"
-                    item-title="state"
-                    item-value="value"
+                    item-title="Licence"
+                    item-value="id"
                     variant="outlined"
                     persistent-hint
                     return-object
@@ -101,23 +101,11 @@ const form = useForm( {
     lastname: "",
     email: "",
     password: "",
-    type: {state: "Osobní", id: 1},
-    role: {state: "Uživatel", id: 4},
-    licence: {state: "Standart", id: 1}
+    type: {type: props.accountTypes[0].type, id: props.accountTypes[0].id},
+    role: {role: props.roles[0].role, id: props.roles[0].id},
+    licence: {Licence: props.licences[0].Licence, id: props.licences[0].id}
 });
 const show = ref(false);
-const types = markRaw(
-    props.accountTypes.map(type => ({
-        state: type.type, id: type.id
-    })));
-const roles = markRaw(
-    props.roles.map(role => ({
-        state: role.role, id: role.id
-    })));
-const licences = markRaw(
-    props.licences.map(licenc => ({
-        state: licenc.Licence, id: licenc.id
-    })));
 const createUser = () => {
     form.post(route('adminuser.store'), {
         onSuccess: () => {

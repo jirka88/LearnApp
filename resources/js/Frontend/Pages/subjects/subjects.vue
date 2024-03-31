@@ -102,12 +102,6 @@
                 </v-btn>
             </DialogDelete>
         </v-row>
-        <Toastify
-            v-if="$page.props.flash.message"
-            :text="$page.props.flash.message"
-            variant="success"
-            @close="$page.props.flash.message =''"
-            :time="3000"></Toastify>
     </component>
 </template>
 <script setup>
@@ -118,7 +112,6 @@ import {Inertia} from "@inertiajs/inertia";
 import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
-const Toastify = defineAsyncComponent(() => import("@/Frontend/Components/UI/Toastify.vue"));
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
 

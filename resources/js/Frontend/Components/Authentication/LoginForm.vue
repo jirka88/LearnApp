@@ -33,8 +33,6 @@
                     {{ $t('authentication.forget') }}
                 </Link>
             </div>
-            <Toastify v-if="isActiveToast" :text="form.errors.msg" variant="error" :time="5000"
-                      @close="toastShow(false)"></Toastify>
             <v-btn
                 type="submit"
                 color="blue"
@@ -50,8 +48,7 @@
 <script setup>
 import {ref} from "vue";
 import {useForm, Link} from "@inertiajs/inertia-vue3";
-import {isActiveToast, toastShow} from "@/Toast";
-import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+import {toastShow} from "@/Toast";
 import rules from "./../../rules/rules"
 defineProps({errors: Object})
 

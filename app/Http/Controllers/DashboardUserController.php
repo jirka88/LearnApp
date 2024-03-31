@@ -71,7 +71,7 @@ class DashboardUserController extends Controller
         User::find(auth()->user()->id)->update([
             'password' => $passwordResetRequest->newPassword,
         ]);
-        return redirect()->back()->with('message', 'Heslo bylo úspěšně změněno!');
+        return redirect()->back()->with(['message' => 'Heslo bylo úspěšně změněno!', 'status' => 'success']);
     }
 
     /**

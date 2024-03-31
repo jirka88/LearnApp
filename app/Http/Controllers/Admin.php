@@ -114,7 +114,7 @@ class Admin extends Controller
             "licences_id" => $adminCreateUser->licence["id"],
             "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
         ]);
-        return to_route('admin')->with('message', 'Uživatel byl úspěšně vytvořen!');
+        return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => 'success']);
     }
 
     /**

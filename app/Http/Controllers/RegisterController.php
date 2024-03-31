@@ -23,7 +23,7 @@ class RegisterController extends Controller
     {
         $restricted = Settings::find(1);
         if($restricted === true) {
-            return redirect()->back()->withErrors(['msg' => __('authentication.restricted')]);
+            return redirect()->back()->with(['status' => 'error'])->withErrors(['msg' => __('authentication.restricted')]);
         }
         $usr = $request->only(['firstname', 'email', 'lastname', 'password']);
         $usr['type_id'] = $request->type['value'];

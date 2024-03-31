@@ -79,10 +79,10 @@ class SubjectController extends Controller
     public function store(SubjectRequest $subjectRequest) {
         $user = User::find(auth()->user()->id);
         if($user->licences_id == UserLicences::STANDART && $user->patritions()->count() > Licences::standartUserPartitions ) {
-            return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
+            return redirect()->back()->with(['status' => 'error'])->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
         else if($user->licences_id == UserLicences::STANDART_PLUS && $user->patritions()->count() > Licences::standartPlusUserPartitions ) {
-            return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
+            return redirect()->back()->with(['status' => 'error'])->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
         else {
             $subject = $subjectRequest->only('name', 'icon');
@@ -91,7 +91,7 @@ class SubjectController extends Controller
             $subjectT = Partition::create($subject);
 
             $user->patritions()->attach($subjectT->id);
-            return to_route('subject.index')->with(['message' => __('validation.custom.create')]);
+            return to_route('subject.index')->with(['message' => __('validation.custom.create'), 'status' => 'success']);
         }
 
     }
