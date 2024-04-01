@@ -20,7 +20,9 @@
                 <tr>
                     <td >Email:</td>
                     <td >
-                        <v-text-field v-model="form.email" :disabled="$page.props.permission.view ? false : true"
+                        <v-text-field v-model="form.email"
+                                      :rules="[rules.email, rules.required]"
+                                      :disabled="$page.props.permission.view ? false : true"
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
@@ -92,7 +94,6 @@
                 </tr>
                 </tbody>
             </table>
-            <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"
@@ -107,8 +108,6 @@
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
 import {markRaw} from "vue";
-import {isActiveToast, statusToast, toastShow, toastStatus} from "@/Toast";
-import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 import rules from "./../rules/rules"
 const props = defineProps({'usr': Object, 'roles': Array, 'accountTypes': Array, 'licences': Array});
 const form = useForm({
@@ -127,28 +126,10 @@ const status = markRaw([
 );
 
 const updateUser = async (id) => {
-    form.put('/dashboard/user'), {
-        onSuccess: () => {
-            toastShow(true);
-            toastStatus(true);
-        },
-        onError: () =>{
-            toastShow(true);
-            toastStatus(false);
-        }
-    }
+    form.put('/dashboard/user');
 }
 const updateAdminUser = async(id) => {
-    form.put(route('adminuser.update', id), {
-        onSuccess: () => {
-            toastShow(true);
-            toastStatus(true);
-        },
-        onError: () => {
-            toastShow(true);
-            toastStatus(false);
-        }
-    })
+    form.put(route('adminuser.update', id))
 }
 const permission = (permissionView, userId) => {
     if(permissionView) {

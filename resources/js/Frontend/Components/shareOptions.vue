@@ -14,7 +14,6 @@
                 single-line
                 variant="outlined"
             ></v-select>
-            <p class="text-center text-red">{{ errors.share }}</p>
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"
@@ -23,8 +22,6 @@
             >
                 {{$t('global.edit')}}
             </v-btn>
-            <p v-if="$page.props.flash.message" class="text-center text-green pt-4">
-                {{ $page.props.flash.message }}</p>
         </v-form>
     </fieldset>
 </template>
@@ -45,7 +42,7 @@ const form = useForm({
 const changeShare = () => {
     form.put(route('user.share'), {
         onSuccess: () => {
-            disabledBtn.value = form.share.id === 1;
+            disabledBtn.value = form.share.id;
         }
     });
 }

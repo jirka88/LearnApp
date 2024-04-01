@@ -56,6 +56,9 @@ class User extends Authenticatable
     public function getUserBySlug($slug) : ?User {
         return $this->where('slug', $slug)->firstOrFail();
     }
+    public function getUserById($id) : ?User {
+        return $this->find($id);
+    }
 
     /**
      * Vrátí počet uživatelů podle role

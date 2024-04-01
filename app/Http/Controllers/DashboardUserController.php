@@ -17,6 +17,11 @@ use Inertia\Inertia;
 
 class DashboardUserController extends Controller
 {
+    protected $userModel;
+    public function __construct(User $user)
+    {
+        $this->userModel = $user;
+    }
 
     /**
      * Vrátí informace o uživateli
@@ -48,12 +53,12 @@ class DashboardUserController extends Controller
      */
     public function update(UpdateRequest $updateRequest) {
         $typeAccount = $updateRequest->type['id'];
-        User::find(auth()->user()->id)->update([
+        $this->userModel->getUserById(auth()->user()->id)->update([
             'firstname' => $updateRequest->firstname,
             'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
-        return redirect()->back()->with('message', 'Aktualizace úspěšná!');
+        return redirect()->back()->with(['message' => 'Aktualizace úspěšná!', 'status' => 'success']);
     }
 
     /**
@@ -86,11 +91,11 @@ class DashboardUserController extends Controller
         $validated = $request->validate([
             'share' => 'required',
         ], $customMessages);
-        User::find(auth()->user()->id)->update([
+        $this->userModel->getUserById(auth()->user()->id)->update([
             'canShare' => $validated['share']['id']
         ]);
 
-        return redirect()->back()->with('message', 'Sdílení bylo změněno!');
+        return redirect()->back()->with(['message' => 'Sdílení bylo změněno!', 'status' => 'success']);
     }
 
     /**
@@ -160,7 +165,7 @@ class DashboardUserController extends Controller
             $user->image = $imageName;
             $user->save();
         }
-        return redirect()->back();
+        return redirect()->back()->with(['message' => 'Profilová fotka se úspěšně nahrála!', 'status' => 'success']);
     }
     public function deleteProfilePicture(Request $request, $user) {
         $user = User::find($user);

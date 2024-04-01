@@ -107,10 +107,7 @@ const form = useForm( {
 });
 const show = ref(false);
 const createUser = () => {
-    form.post(route('adminuser.store'), {
-        onSuccess: () => {
-        }
-    })
+    form.post(route('adminuser.store'))
 }
 </script>
 

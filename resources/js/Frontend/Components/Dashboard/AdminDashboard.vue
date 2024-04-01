@@ -2,7 +2,7 @@
     <div class="d-flex ga-6 flex-column dashboard">
         <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
             {{ $t('dashboard.stats') }}</h1>
-        <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>
+       <!-- <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>-->
         <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
             <v-col>
                 <WelcomeBox/>
@@ -90,19 +90,28 @@
             </v-sheet>
         </v-col>
     </v-row>
-    <DialogChangeColorTheme v-model="themeModal" @close="themeModal = false"></DialogChangeColorTheme>
-    <DialogRegisterRestrict v-model="restrictRegisterModal" :restricted="restrictRegister" @close="restrictRegisterModal = false;  restrictRegister = stats.restrictRegister;" @fetchIsSuccess="toastFetch"></DialogRegisterRestrict>
+    <DialogChangeColorTheme
+        v-if="themeModal"
+        v-model="themeModal"
+        @close="themeModal = false">
+
+    </DialogChangeColorTheme>
+    <DialogRegisterRestrict
+        v-if="restrictRegisterModal"
+        v-model="restrictRegisterModal"
+        :restricted="restrictRegister"
+        @close="restrictRegisterModal = false;
+        restrictRegister = stats.restrictRegister;">
+    </DialogRegisterRestrict>
 </template>
 
 <script setup>
 import Chart from 'chart.js/auto';
+import {defineAsyncComponent, markRaw, ref} from "vue";
 import {Bar} from 'vue-chartjs'
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
-import {isActiveToast, statusToast, toastShow, toastStatus} from "../../../Toast";
-import DialogChangeColorTheme from "@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue";
-import DialogRegisterRestrict from "@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue";
-import {markRaw, ref} from "vue";
-import Toastify from "@/Frontend/Components/UI/Toastify.vue";
+const DialogChangeColorTheme = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue"));
+const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
 import ProjectInfoBox from "@/Frontend/Components/Dashboard/ProjectInfoBox.vue";
 
 const props = defineProps(['stats'])
@@ -121,10 +130,10 @@ const chartData = ref({
         label: 'Uživatelé'
     }], labels: ["Běžný uživatelé", "Testeři", "Operátoři"]
 });
-const toastFetch = (value) => {
+/*const toastFetch = (value) => {
     toastShow(true);
     toastStatus(value);
-}
+}*/
 const themeModal = ref(false);
 const setColorTheme = () =>{
     themeModal.value = true;

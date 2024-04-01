@@ -76,7 +76,7 @@ class Admin extends Controller
             'active' => $updateRequest->active['id'],
             'licences_id' => $updateRequest->licences['id']
         ]);
-        return redirect()->back()->with('message', __('validation.custom.update'));
+        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
     }
 
     /**
@@ -199,9 +199,9 @@ class Admin extends Controller
     public function changeRestriction($register)
     {
         $value = filter_var($register, FILTER_VALIDATE_BOOLEAN);
-        $this->authorize('viewAdmin', auth()->user());
+        $this->authorize('viewAdmin', Auth()->user());
         Settings::find(1)->update(['RestrictedRegistration' => $value]);
-        return redirect()->back()->with('message', __('validation.custom.update'));
+        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
     }
 
     /**
@@ -212,8 +212,8 @@ class Admin extends Controller
      */
     public function changeTheme($color)
     {
-        $this->authorize('viewAdmin', auth()->user());
+        $this->authorize('viewAdmin', Auth()->user());
         Settings::find(1)->update(['color' => $color]);
-        return redirect()->back()->with('message', __('validation.custom.update'));
+        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
     }
 }
