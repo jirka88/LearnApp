@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\Localization;
@@ -40,7 +41,8 @@ class Controller extends BaseController
      */
     public function showUsersForSharing(Request $request)
     {
-        $subject = Partition::where("slug", $request->slug)->first();
+        $subjecModel = app('\App\Models\Partition');
+        $subject = $subjecModel->getSubjectBySlug($request->slug);
         $users = User::whereNotIn('id', [auth()->user()->id, UserRoles::ADMIN])
             ->where('canShare', true)
             ->whereDoesntHave('patritions', function ($query) use ($subject) {
@@ -66,15 +68,17 @@ class Controller extends BaseController
             'subject' => 'required'
         ], $customMessages);
         $sendMessage = __('share.warning.send');
+        $status = ToastifyStatus::SUCCESS;
         foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->first();
             if ($user->patritions()->where("partition_id", $validated['subject'])->first() == null) {
                 $user->patritions()->attach($validated['subject'], ['permission_id' => (int)$validated['permission'], 'accepted' => false]);
             } else {
                 $sendMessage = __('share.warning.again_send');
+                $status = ToastifyStatus::INFO;
             }
         }
-        return redirect()->back()->with('message', $sendMessage);
+        return redirect()->back()->with(['message' => $sendMessage, "status" => $status]);
     }
 
     /**
@@ -99,8 +103,9 @@ class Controller extends BaseController
      */
     public function deleteShare(Request $request)
     {
-        $subject = Partition::where('slug', $request->slug)->first();
-        $user = User::find(auth()->user()->id);
+        $subjecModel = app('\App\Models\Partition');
+        $subject = $subjecModel->getSubjectBySlug($request->slug);
+        $user = auth()->user();
         $user->patritions()->detach($subject->id);
         return redirect()->back();
     }
@@ -111,7 +116,8 @@ class Controller extends BaseController
      * @return void
      */
     public function deleteShared($slug, $user) {
-        $subject = Partition::where('slug', $slug)->first();
+        $subjecModel = app('\App\Models\Partition');
+        $subject = $subjecModel->getSubjectBySlug($slug);
         $user = User::find($user);
         $user->patritions()->detach($subject->id);
         return redirect()->back();
@@ -124,8 +130,9 @@ class Controller extends BaseController
      */
     public function acceptShare(Request $request)
     {
-        $subject = Partition::where('slug', $request->slug)->first();
-        $user = User::find(auth()->user()->id);
+        $subjecModel = app('\App\Models\Partition');
+        $subject = $subjecModel->getSubjectBySlug($request->slug);
+        $user = auth()->user();
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
         return redirect()->back();
     }

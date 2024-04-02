@@ -59,7 +59,6 @@ import {ref} from "vue";
 import SearchUser from "@/Frontend/Components/SearchUser.vue";
 const props = defineProps({subject: Object, errors: Object, users: Object })
 const model = defineModel();
-const emit = defineEmits(['close'])
 const user = ref();
 const permission = ref();
 
@@ -81,7 +80,7 @@ const sharingToUsers = () => {
     })
 }
 const closeShareDialog = () =>{
-    emit('close');
+    model.value = false;
     user.value = null;
 }
 </script>

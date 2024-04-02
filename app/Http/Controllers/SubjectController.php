@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
 use App\Enums\UserLicences;
 use App\Enums\UserRoles;
 use App\Http\Components\globalSettings;
@@ -77,7 +78,7 @@ class SubjectController extends Controller
      * @return RedirectResponse
      */
     public function store(SubjectRequest $subjectRequest) {
-        $user = User::find(auth()->user()->id);
+        $user = auth()->user();
         if($user->licences_id == UserLicences::STANDART && $user->patritions()->count() > Licences::standartUserPartitions ) {
             return redirect()->back()->with(['status' => 'error'])->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
@@ -91,7 +92,7 @@ class SubjectController extends Controller
             $subjectT = Partition::create($subject);
 
             $user->patritions()->attach($subjectT->id);
-            return to_route('subject.index')->with(['message' => __('validation.custom.create'), 'status' => 'success']);
+            return to_route('subject.index')->with(['message' => __('validation.custom.create'), 'status' => ToastifyStatus::SUCCESS]);
         }
 
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
 use App\Enums\UserLicences;
 use App\Enums\UserRoles;
 use App\Http\Requests\ChapterRequest;
@@ -114,7 +115,7 @@ class ChapterController extends Controller
             'context' => $chapterRequest->contentChapter,
             'slug' => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
         ]);
-        return to_route('subject.show', $subject->getSubjectById($chapter->partition_id)->slug);
+        return to_route('subject.show', $subject->getSubjectById($chapter->partition_id)->slug)->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
     /**
      * Vymazání kapitoly

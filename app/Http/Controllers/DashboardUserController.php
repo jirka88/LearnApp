@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Http\Requests\PasswordResetRequest;
 use App\Http\Requests\UpdateRequest;
@@ -28,7 +29,7 @@ class DashboardUserController extends Controller
      * @return \Inertia\Response
      */
     public function view() {
-        $usr =  User::with(['roles', 'accountTypes', 'licences'])->find(auth()->user()->id);
+        $usr = auth()->user()->loadMissing(['roles', 'accountTypes', 'licences']);
         $roles = [];
         $licences = [];
         $accountTypes = AccountTypes::all();
@@ -58,7 +59,7 @@ class DashboardUserController extends Controller
             'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
-        return redirect()->back()->with(['message' => 'Aktualizace úspěšná!', 'status' => 'success']);
+        return redirect()->back()->with(['message' => 'Aktualizace úspěšná!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -76,7 +77,7 @@ class DashboardUserController extends Controller
         User::find(auth()->user()->id)->update([
             'password' => $passwordResetRequest->newPassword,
         ]);
-        return redirect()->back()->with(['message' => 'Heslo bylo úspěšně změněno!', 'status' => 'success']);
+        return redirect()->back()->with(['message' => 'Heslo bylo úspěšně změněno!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -95,7 +96,7 @@ class DashboardUserController extends Controller
             'canShare' => $validated['share']['id']
         ]);
 
-        return redirect()->back()->with(['message' => 'Sdílení bylo změněno!', 'status' => 'success']);
+        return redirect()->back()->with(['message' => 'Sdílení bylo změněno!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -165,10 +166,10 @@ class DashboardUserController extends Controller
             $user->image = $imageName;
             $user->save();
         }
-        return redirect()->back()->with(['message' => 'Profilová fotka se úspěšně nahrála!', 'status' => 'success']);
+        return redirect()->back()->with(['message' => 'Profilová fotka se úspěšně nahrála!', 'status' => ToastifyStatus::SUCCESS]);
     }
     public function deleteProfilePicture(Request $request, $user) {
-        $user = User::find($user);
+        $user = auth()->user();
         Storage::disk('public')->delete($user->image);
         $user->image = "";
         $user->save();

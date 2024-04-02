@@ -40,7 +40,6 @@
                     :subject="subject"
                     :errors="errors"
                     :users="users"
-                    @close="sharing = false"
                 />
                 <ChapterPreview
                     v-for="chapter in chapters.data" :key="chapter.id"
@@ -59,11 +58,6 @@
                 @update:modelValue="fetchData"
             ></v-pagination>
         </v-container>
-        <Toastify
-            v-if="$page.props.flash.message ? true : false"
-            :text="$page.props.flash.message"
-            variant="success"
-            :time="3000"></Toastify>
     </component>
 </template>
 
@@ -71,14 +65,12 @@
 
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
-import {defineAsyncComponent, ref, watch} from "vue";
-
+import {defineAsyncComponent, ref} from "vue";
 import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
 import {Inertia} from "@inertiajs/inertia";
 import ChapterPreview from "@/Frontend/Components/ChapterPreview.vue";
 import axios from "axios";
 import SearchChapters from "@/Frontend/Components/SearchChapters.vue";
-import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 
 const users = ref();
 const DialogShare = defineAsyncComponent(() => import("@/Frontend/Components/DialogShare.vue"))
