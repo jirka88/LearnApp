@@ -113,14 +113,14 @@ class Controller extends BaseController
     /**
      * Odstranění sdílení
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function deleteShared($slug, $user) {
         $subjecModel = app('\App\Models\Partition');
         $subject = $subjecModel->getSubjectBySlug($slug);
         $user = User::find($user);
         $user->patritions()->detach($subject->id);
-        return redirect()->back();
+        return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
     }
 
     /**
@@ -150,15 +150,16 @@ class Controller extends BaseController
      * @return \Inertia\Response
      */
     public function showStatsShare() {
-        $user = User::with(['patritions.users' => function ($query) {
-             $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
-        }])->select('id')->find(auth()->user()->id);
-        $user->patritions->each(function ($subject) {
+        $user = auth()->user();
+        $partitions = $user->patritions()->with(['users' => function ($query) {
+            $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
+        }])->get();
+        $partitions->each(function ($subject) {
             $subject->users->each(function ($user) {
                 $user->permission['name'] = Permission::where('id',$user->permission->permission_id)->pluck('permission')->first();
             });
         });
-        $subjects = $user->patritions->filter(function ($patrition) {
+        $subjects = $partitions->filter(function ($patrition) {
             return $patrition->users->isNotEmpty();
         });
         $permission = Permission::all();
@@ -168,13 +169,15 @@ class Controller extends BaseController
     /**
      * Úprava sdílení
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function editShare(Request $request) {
-        $user = User::where('email', $request->input('email'))->first();
+        $userModel = app('\App\Models\User');
+        $user = $userModel->getUserByEmail($request->input('email'));
         $dr = $request->input('permission');
         $subject = Partition::find($request->input('subject'));
         $user->patritions()->updateExistingPivot($subject->id,['permission_id' => $dr['id']]);
+        return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => __('validation.custom.update')]);
     }
 
     /**

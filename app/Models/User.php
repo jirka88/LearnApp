@@ -53,6 +53,9 @@ class User extends Authenticatable
             get: fn () => $this->all()->count()
         );
     }
+    public function getUserByEmail($email) : ?User {
+        return $this->where('email', $email)->firstOrFail();
+    }
     public function getUserBySlug($slug) : ?User {
         return $this->where('slug', $slug)->firstOrFail();
     }

@@ -122,6 +122,9 @@ const fetchData = () => {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     background: none;
+    @media #{map-get($display-breakpoints, 'lg-and-up')} {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
     @media #{map-get($display-breakpoints, 'md-and-down')} {
         grid-template-columns: 1fr 1fr;
     }

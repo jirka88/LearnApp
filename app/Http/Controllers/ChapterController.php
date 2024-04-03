@@ -6,6 +6,7 @@ use App\Enums\ToastifyStatus;
 use App\Enums\UserLicences;
 use App\Enums\UserRoles;
 use App\Http\Requests\ChapterRequest;
+use App\Http\Resources\ChapterSelectResource;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
@@ -67,10 +68,10 @@ class ChapterController extends Controller
         $subjectModel = app('App\Models\Partition');
         $partition = $subjectModel->getSubjectBySlug($chapterRequest->slug);
         if($this->chapterModel->getChapterByNameAndPatrition($partition->id, $chapterRequest->name) !== null) {
-            return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
+            return redirect()->back()->with('status', ToastifyStatus::ERROR)->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
         if(auth()->user()->licences->id === UserLicences::STANDART && $partition->Chapter()->count() >= Licences::standartUserChaptersInPartitions) {
-            return redirect()->back()->withErrors(["message" => "Přesáhnut limit!"]);
+            return redirect()->back()->with('status', ToastifyStatus::ERROR)->withErrors(["message" => "Přesáhnut limit!"]);
         }
         Chapter::create([
             "name" => $chapterRequest->name,
@@ -126,7 +127,7 @@ class ChapterController extends Controller
     public function destroy($slug, $chapter) {
         $chapterDelete = $this->chapterModel->getChapter($chapter);
         $chapterDelete->delete();
-        return to_route('subject.show', $slug);
+        return to_route('subject.show', $slug)->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Kapitola byla úspěšně vymazána']);
     }
 
     /**
@@ -141,7 +142,7 @@ class ChapterController extends Controller
         $subjectId = $subject->getSubjectId($slug);
         $chapter = [];
         if($sort !== null) {
-            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subjectId)->select('name', 'perex','slug')->get();
+            $chapter = ChapterSelectResource::collection(Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subjectId)->get());
         }
         if(count($chapter) === 0) {
             $chapter = ['item' => 'Nic nenalezeno!'];

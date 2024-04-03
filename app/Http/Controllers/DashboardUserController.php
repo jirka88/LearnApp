@@ -137,7 +137,6 @@ class DashboardUserController extends Controller
         if(Auth()->user()->image) {
             Storage::disk('public')->delete(Auth()->user()->image);
         }
-
         //image
         if($request->hasFile('savedImage')) {
             $image = $request->file('savedImage')[0];
@@ -145,7 +144,7 @@ class DashboardUserController extends Controller
             $path = 'avatars/' . $imageName;
             Storage::disk('public')->put($path, file_get_contents($image));
 
-            $user = User::find(Auth()->user()->id);
+            $user = auth()->user();
             $user->image = $path;
             $user->save();
         }
@@ -162,16 +161,17 @@ class DashboardUserController extends Controller
             $imageName = "avatars/" . str_random(10) . '.'.$ext;
             Storage::disk('public')->put($imageName, base64_decode($image));
 
-            $user = User::find(Auth()->user()->id);
+            $user = auth()->user();
             $user->image = $imageName;
             $user->save();
         }
         return redirect()->back()->with(['message' => 'Profilová fotka se úspěšně nahrála!', 'status' => ToastifyStatus::SUCCESS]);
     }
-    public function deleteProfilePicture(Request $request, $user) {
+    public function deleteProfilePicture(Request $request) {
         $user = auth()->user();
         Storage::disk('public')->delete($user->image);
         $user->image = "";
         $user->save();
+        return redirect()->back()->with(['message' => 'Profilová fotka byla smazána!', 'status' => ToastifyStatus::SUCCESS]);
     }
 }

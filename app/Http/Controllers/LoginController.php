@@ -48,7 +48,7 @@ class LoginController extends Controller
     /**
      * Get the rate limiting throttle key for the request.
      *
-     * @return string
+     * @return string|
      */
     public function throttleKey()
     {
