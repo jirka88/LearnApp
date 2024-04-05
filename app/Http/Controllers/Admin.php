@@ -198,8 +198,8 @@ class Admin extends Controller
      */
     public function changeRestriction($register)
     {
-        $value = filter_var($register, FILTER_VALIDATE_BOOLEAN);
         $this->authorize('viewAdmin', Auth()->user());
+        $value = filter_var($register, FILTER_VALIDATE_BOOLEAN);
         Settings::find(1)->update(['RestrictedRegistration' => $value]);
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
     }
@@ -210,7 +210,7 @@ class Admin extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function changeTheme($color)
+    public function changeTheme(Request $request, $color)
     {
         $this->authorize('viewAdmin', Auth()->user());
         Settings::find(1)->update(['color' => $color]);

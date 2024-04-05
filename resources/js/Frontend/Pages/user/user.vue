@@ -45,7 +45,10 @@
                     </v-window-item>
                 </v-window>
             </div>
-            <UploadImage v-model="isActive" :isActive="isActive"  @close="isActive = false"/>
+            <UploadImage
+                v-if="isActive"
+                v-model:active="isActive"
+            />
         </v-container>
     </AdminLayout>
 </template>

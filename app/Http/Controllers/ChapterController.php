@@ -80,7 +80,7 @@ class ChapterController extends Controller
             "slug" => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
             "partition_id" => $partition->id
         ]);
-        return to_route('subject.show', $partition->slug);
+        return to_route('subject.show', $partition->slug)->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Kapitola úspěšně vytvořena!']);
     }
 
     /**
