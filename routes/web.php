@@ -70,8 +70,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
     Route::get('/403', function (Request $request){
         return Inertia::render('errors/auth/403')->toResponse($request)->setStatusCode(403);
     });
-
-
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [Admin::class, 'index']);
         route::get('/controll/{slug}', [Admin::class, 'edit'])->name('user.edit');
