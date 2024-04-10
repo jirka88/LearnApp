@@ -11,9 +11,9 @@ use App\Models\Licences;
 use App\Models\Roles;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class DashboardUserController extends Controller
@@ -32,14 +32,20 @@ class DashboardUserController extends Controller
         $usr = auth()->user()->loadMissing(['roles', 'accountTypes', 'licences']);
         $roles = [];
         $licences = [];
-        $accountTypes = AccountTypes::all();
+        $accountTypes = Cache::rememberForever('accountTypes', function() {
+            return AccountTypes::all();
+        });
         if(auth()->user()->role_id == UserRoles::ADMIN) {
            $roles = Roles::all();
-           $licences = Licences::all();
+           $licences = Cache::rememberForever('licences', function() {
+               return Licences::all();
+           });
         }
         else if(auth()->user()->role_id == UserRoles::OPERATOR) {
             $roles = Roles::whereNot('id', UserRoles::ADMIN)->get();
-            $licences = Licences::all();
+            $licences = Cache::rememberForever('licences', function() {
+                return Licences::all();
+            });
         }
         else {
             $roles = Roles::find(UserRoles::BASIC_USER)->get();

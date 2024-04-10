@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Settings;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 use App\Traits\userTrait;
 
@@ -61,7 +62,7 @@ class HandleInertiaRequests extends Middleware
                 'operator_view' => auth()->user()?->role_id == 2,
             ],
             'settings' => [
-                'theme' => Settings::get('color')->first(),
+                'theme' => $this->getCurrentColor()
             ]
 
         ]);

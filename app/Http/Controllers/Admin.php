@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserRoles;
-use App\Http\Components\Filters;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Components\globalSettings;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
@@ -54,8 +54,12 @@ class Admin extends Controller
         } else {
             $roles = Roles::all()->whereNotIn('id', [1, 2])->values();
         }
-        $accountTypes = AccountTypes::all();
-        $licences = Licences::all();
+        $accountTypes = Cache::rememberForever('accountTypes', function() {
+            return AccountTypes::all();
+        });
+        $licences = Cache::rememberForever('licences', function() {
+            return Licences::all();
+        });
         return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes', 'licences']));
     }
 
@@ -87,8 +91,12 @@ class Admin extends Controller
     public function create()
     {
         $this->authorize('viewAny', auth()->user());
-        $accountTypes = AccountTypes::all();
-        $licences = Licences::all();
+        $accountTypes = Cache::rememberForever('accountTypes', function() {
+            return AccountTypes::all();
+        });
+        $licences = Cache::rememberForever('licences', function() {
+            return Licences::all();
+        });
         if (auth()->user()->role_id == 1) {
             $roles = Roles::all();
         } else {
@@ -179,11 +187,14 @@ class Admin extends Controller
     public function getStats()
     {
         if (auth()->user()->role_id == UserRoles::ADMIN) {
+            $chapterCount = Cache::remember('chapterAllCount', now()->addMinute(), function() {
+                return Chapter::all()->count();
+            });
             $stats = ([
                 'users' => $this->userModel->append('get_count_users'),
                 'operators' => $this->userModel->getUserCountByRole(UserRoles::OPERATOR),
                 'normalUsers' => $this->userModel->getUserCountByRole(UserRoles::BASIC_USER),
-                'chapters' => Chapter::all()->count(),
+                'chapters' => $chapterCount,
                 'testersCount' => $this->userModel->getUserCountByRole(UserRoles::TESTER),
                 'restrictRegister' => Settings::pluck('RestrictedRegistration')->first()]);
         } else {
@@ -214,6 +225,7 @@ class Admin extends Controller
     {
         $this->authorize('viewAdmin', Auth()->user());
         Settings::find(1)->update(['color' => $color]);
+        Cache::forget('color');
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
     }
 }

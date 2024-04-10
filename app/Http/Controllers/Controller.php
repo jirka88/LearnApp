@@ -16,6 +16,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class Controller extends BaseController
@@ -78,6 +79,7 @@ class Controller extends BaseController
                 $status = ToastifyStatus::INFO;
             }
         }
+        Cache::forget("sharedSubjects");
         return redirect()->back()->with(['message' => $sendMessage, "status" => $status]);
     }
 
@@ -120,6 +122,7 @@ class Controller extends BaseController
         $subject = $subjecModel->getSubjectBySlug($slug);
         $user = User::find($user);
         $user->patritions()->detach($subject->id);
+        Cache::forget("sharedSubjects");
         return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
     }
 
@@ -134,6 +137,7 @@ class Controller extends BaseController
         $subject = $subjecModel->getSubjectBySlug($request->slug);
         $user = auth()->user();
         $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
+        Cache::forget("sharedSubjects");
         return redirect()->back();
     }
 
