@@ -7,6 +7,7 @@ use App\Http\Components\globalSettings;
 use App\Models\Partition;
 use App\Models\Settings;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 trait userTrait
 {

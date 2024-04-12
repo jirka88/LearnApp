@@ -50,7 +50,9 @@ class Admin extends Controller
         $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if ($isAdmin) {
-            $roles = Roles::all();
+            $roles = Cache::rememberForever('roles', function() {
+                return Roles::all();
+            });
         } else {
             $roles = Roles::all()->whereNotIn('id', [1, 2])->values();
         }
@@ -97,8 +99,10 @@ class Admin extends Controller
         $licences = Cache::rememberForever('licences', function() {
             return Licences::all();
         });
-        if (auth()->user()->role_id == 1) {
-            $roles = Roles::all();
+        if (auth()->user()->role_id == UserRoles::ADMIN) {
+            $roles = Cache::rememberForever('roles', function() {
+                return Roles::all();
+            });
         } else {
             $roles = Roles::all()->whereNotIn("id", [1, 2])->values();
         }

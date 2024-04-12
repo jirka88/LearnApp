@@ -9,15 +9,11 @@ use App\Http\Requests\ChapterRequest;
 use App\Http\Resources\ChapterSelectResource;
 use App\Models\Chapter;
 use App\Models\Licences;
-use App\Models\Partition;
-use App\Models\Roles;
 use App\Models\User;
 use App\Rules\UniqueChapterName;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use function Symfony\Component\String\b;
 
 class ChapterController extends Controller
 {
