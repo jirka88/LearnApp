@@ -52,6 +52,7 @@
             </v-card>
         </v-form>
     </v-dialog>
+
 </template>
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
@@ -76,12 +77,12 @@ const sharingToUsers = () => {
     form.post(route('share'), {
         onSuccess: () => {
             user.value = null;
+            permission.value = null;
         }
     })
 }
 const closeShareDialog = () =>{
     model.value = false;
-    user.value = null;
 }
 </script>
 <style scoped lang="scss">

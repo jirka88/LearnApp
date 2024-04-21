@@ -6,6 +6,7 @@ use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\Localization;
+use App\Http\Resources\UserSelectResource;
 use App\Models\Partition;
 use App\Models\Permission;
 use App\Models\Roles;
@@ -107,8 +108,7 @@ class Controller extends BaseController
     {
         $subjecModel = app('\App\Models\Partition');
         $subject = $subjecModel->getSubjectBySlug($request->slug);
-        $user = auth()->user();
-        $user->patritions()->detach($subject->id);
+        auth()->user()->patritions()->detach($subject->id);
         return redirect()->back();
     }
 
@@ -135,8 +135,7 @@ class Controller extends BaseController
     {
         $subjecModel = app('\App\Models\Partition');
         $subject = $subjecModel->getSubjectBySlug($request->slug);
-        $user = auth()->user();
-        $user->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
+        auth()->user()->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
         Cache::forget("sharedSubjects");
         return redirect()->back();
     }
@@ -156,7 +155,7 @@ class Controller extends BaseController
     public function showStatsShare() {
         $user = auth()->user();
         $partitions = $user->patritions()->with(['users' => function ($query) {
-            $query->whereNot('user_id', auth()->user()->id)->select('firstname', 'lastname', 'email', 'image')->get();
+            UserSelectResource::make($query->whereNot('user_id', auth()->user()->id)->get());
         }])->get();
         $partitions->each(function ($subject) {
             $subject->users->each(function ($user) {
@@ -193,13 +192,13 @@ class Controller extends BaseController
         $search = $request->input('select');
         $user = [];
         if(isset($search)) {
-            $user = User::where('canShare' , 1)
+            $user = UserSelectResource::Collection(User::where('canShare' , 1)
                 ->whereNotIn('id', [auth()->user()->id, UserRoles::ADMIN])
                 ->where(function ($query) use ($search){
                 $query->where('firstname', 'LIKE', '%'. $search . '%')
                     ->orWhere('lastname', 'LIKE', '%'. $search . '%')
                     ->orWhere('email', 'LIKE', '%'. $search . '%')->get();
-            })->select('firstname', 'lastname', 'image', 'email')->get();
+            })->get());
         }
         return response()->json($user);
 
