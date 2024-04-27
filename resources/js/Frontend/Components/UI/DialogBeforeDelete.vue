@@ -1,11 +1,10 @@
 <script setup>
 defineProps({subject: Object })
-const model = defineModel("dialog")
+const emit = defineEmits(['close']);
 </script>
 
 <template>
     <v-dialog
-        v-model="model"
         persistent
         width="auto"
     >
@@ -18,7 +17,7 @@ const model = defineModel("dialog")
                 <v-spacer></v-spacer>
                 <v-btn
                     class="bg-white"
-                    @click="model = false"
+                    @click="emit('close')"
                     size="x-large"
                     variant="outlined"
                 >

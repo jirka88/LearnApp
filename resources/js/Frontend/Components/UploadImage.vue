@@ -5,7 +5,8 @@ import 'vue-advanced-cropper/dist/style.css';
 import {useForm} from "@inertiajs/inertia-vue3";
 import {Inertia} from "@inertiajs/inertia";
 
-const model = defineModel('active');
+defineProps({isActive: Boolean, errors: Object})
+const emit = defineEmits(['close']);
 const image = ref(null);
 const preview = ref("");
 const uploading = ref(false);
@@ -17,7 +18,7 @@ const form = useForm( {
     savedImage: null,
 })
 const closed = () => {
-    model.value = false;
+    emit('close');
 }
 const onFileChange = (file) => {
     if (!file) {
@@ -48,7 +49,7 @@ const uploadImage = () => {
             onSuccess: () => {
                 resetInput();
                 uploading.value = false;
-                closed();
+                emit('close');
             },
             });
 }
@@ -70,7 +71,6 @@ const deleteImage = (id) => {
 <template>
     <v-dialog
         transition="dialog-bottom-transition"
-        v-model="model"
     >
         <v-card
             class="d-flex ga-2 rounded-xl py-2">

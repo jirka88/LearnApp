@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use App\Models\Settings;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 use App\Traits\userTrait;
 
@@ -43,7 +42,6 @@ class HandleInertiaRequests extends Middleware
         return array_merge(parent::share($request), [
             'flash' => [
                 'message' => session('message'),
-                'status' => session('status')
             ],
             'user' => [
                 'id' => auth()->user()->id ?? '',
@@ -62,7 +60,7 @@ class HandleInertiaRequests extends Middleware
                 'operator_view' => auth()->user()?->role_id == 2,
             ],
             'settings' => [
-                'theme' => $this->getCurrentColor()
+                'theme' => Settings::get('color')->first(),
             ]
 
         ]);

@@ -66,6 +66,11 @@ const btnStatus = ref(false);
 const createChapter = () => {
     btnStatus.value = true;
     form.post(route('chapter.store', props.slug), {
+        onSuccess: () => {
+        },
+        onError: () => {
+            toastShow(true)
+        },
         onFinish: () =>{
             btnStatus.value = false;
         }

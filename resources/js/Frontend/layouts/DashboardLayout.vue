@@ -23,15 +23,13 @@
                 <v-list density="compact" nav>
                     <Link :href="route('dashboard')">
                         <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')"
-                                     :value="$t('dashboard.home')"></v-list-item>
+                                     :value="$t('dashboard.home')" active-class="bg-primary"></v-list-item>
                     </Link>
                     <Link v-if="$page.props.permission.view" :href="route('admin')">
                         <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.all_users')"
                                      :value="$t('dashboard.all_users')"></v-list-item>
                     </Link>
-                    <v-list-group
-                        id="group"
-                        value="group1">
+                    <v-list-group id="group">
                         <template v-slot:activator="{ props }">
                             <v-list-item
                                 v-bind="props"
@@ -102,7 +100,7 @@
                     hide-details
                     return-object
                 >
-                    <template v-slot:selection="{item}">
+                    <template v-slot:selection="{ item}">
                         <div class="d-flex justify-content-center align-items-center ga-2">
                             <v-img width="2em" max-height="2em" :src="item.raw.image"/>
                             {{ item.title }}
@@ -151,10 +149,6 @@ const drawer = ref(true);
 
 const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs', 'image': localStorage.getItem('langImage') || czechFlag});
 
-const openedGroup = ref(['group1']);
-
-const item = ref();
-
 const languages = [
     {language: 'Česky', ISO: 'cs', image: czechFlag}, {
         language: 'English',
@@ -198,9 +192,14 @@ const itemProps = (item) =>{
 .v-list-item {
     padding: 0.7em !important;
 }
+
 #group {
+    .subItem:first-child {
+        padding-inline-start: 8px !important;
+    }
+
     .subItem {
-        padding-inline-start: 1em !important;
+        padding-inline-start: 16px !important;
     }
 }
 

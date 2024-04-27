@@ -26,6 +26,7 @@
                 </tr>
                 </thead>
                 <tbody
+                    v-if="subject.users.length > 0"
                     v-for="user in subject.users"
                     :key="user.id"
                 >
@@ -62,11 +63,20 @@
                     </td>
                 </tr>
                 </tbody>
+                <tbody v-else>
+                <v-divider></v-divider>
+                <tr>
+                    <td width="2em">
+                        <v-img height="2em" min-width="1em" :src="arrow"></v-img>
+                    </td>
+                    <td colspan="5">Nesdíleno s nikým!</td>
+                </tr>
+                </tbody>
             </v-table>
             <shareForm v-if="shareFormActive"
                        :active="shareFormActive"
                        :detail="usr"
-                       :permission="permissions"
+                       :permission="permission"
                        @close="shareFormActive = false"></shareForm>
         </v-container>
     </component>
@@ -83,7 +93,7 @@ import undefinedPicture from './../../../../assets/user/Default_pfp.svg'
 const shareFormActive = ref(false);
 const ShareForm = defineAsyncComponent(() => import("@/Frontend/Components/shareForm.vue"));
 const usr = ref({});
-defineProps({subjects: Object, permissions: Object})
+defineProps({subjects: Object, permission: Object})
 
 const showEditShare = (user, subject) => {
     usr.value = {user: user, subject: subject};
