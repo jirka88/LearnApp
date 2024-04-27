@@ -89,10 +89,9 @@
             </div>
         </v-container>
         <v-row justify="center">
-            <DialogDelete
-                v-if="dialog"
-                v-model:dialog="dialog"
-                :subject="subject">
+            <DialogDelete v-model="dialog"
+                          :subject="subject"
+                          @close="dialog = false">
                 <v-btn
                     class="bg-red"
                     @click="destroySubject()"
@@ -102,6 +101,12 @@
                 </v-btn>
             </DialogDelete>
         </v-row>
+        <Toastify
+            v-if="$page.props.flash.message"
+            :text="$page.props.flash.message"
+            variant="success"
+            @close="$page.props.flash.message =''"
+            :time="3000"></Toastify>
     </component>
 </template>
 <script setup>
@@ -112,11 +117,12 @@ import {Inertia} from "@inertiajs/inertia";
 import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
-const dialog = ref(false);
-const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
+const Toastify = defineAsyncComponent(() => import("@/Frontend/Components/UI/Toastify.vue"));
+const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/UI/DialogBeforeDelete.vue"));
 
 const props = defineProps({subjects: Object, pages: Number, sort: String});
 
+const dialog = ref(false);
 const subject = ref({
     subjectName: '',
     subjectId: ''

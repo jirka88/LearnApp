@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\UserRoles;
-use Illuminate\Support\Facades\Cache;
+use App\Http\Components\Filters;
 use App\Http\Components\globalSettings;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
@@ -34,7 +34,7 @@ class Admin extends Controller
     public function index()
     {
         $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(globalSettings::ITEMS_IN_PAGE);
-        $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
+        $pages = ceil(count(User::all()) / globalSettings::ITEMS_IN_PAGE);
         return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
     }
 
@@ -50,18 +50,12 @@ class Admin extends Controller
         $this->authorize('view', $usr);
         $isAdmin = auth()->user()->role_id == 1 ? true : false;
         if ($isAdmin) {
-            $roles = Cache::rememberForever('roles', function() {
-                return Roles::all();
-            });
+            $roles = Roles::all();
         } else {
             $roles = Roles::all()->whereNotIn('id', [1, 2])->values();
         }
-        $accountTypes = Cache::rememberForever('accountTypes', function() {
-            return AccountTypes::all();
-        });
-        $licences = Cache::rememberForever('licences', function() {
-            return Licences::all();
-        });
+        $accountTypes = AccountTypes::all();
+        $licences = Licences::all();
         return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes', 'licences']));
     }
 
@@ -73,16 +67,25 @@ class Admin extends Controller
      */
     public function update(User $user, UpdateRequest $updateRequest)
     {
+        $role = 0;
+        if (UserRoles::ADMIN == $user->role_id) {
+            $role = 1;
+        } else {
+            $role = $updateRequest->role['id'];
+        }
+        $typeAccount = $updateRequest->type['id'];
+        $active = $updateRequest->active['id'];
+        $licence = $updateRequest->licences['id'];
         $this->authorize('view', $user);
         User::find($user->id)->update([
             'firstname' => $updateRequest->firstname,
             'lastname' => $updateRequest->lastname,
-            'type_id' => $updateRequest->type['id'],
-            'role_id' => UserRoles::ADMIN == $user->role_id ? 1 : $updateRequest->role['id'],
-            'active' => $updateRequest->active['id'],
-            'licences_id' => $updateRequest->licences['id']
+            'type_id' => $typeAccount,
+            'role_id' => $role,
+            'active' => $active,
+            'licences_id' => $licence
         ]);
-        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 
     /**
@@ -93,16 +96,10 @@ class Admin extends Controller
     public function create()
     {
         $this->authorize('viewAny', auth()->user());
-        $accountTypes = Cache::rememberForever('accountTypes', function() {
-            return AccountTypes::all();
-        });
-        $licences = Cache::rememberForever('licences', function() {
-            return Licences::all();
-        });
-        if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $roles = Cache::rememberForever('roles', function() {
-                return Roles::all();
-            });
+        $accountTypes = AccountTypes::all();
+        $licences = Licences::all();
+        if (auth()->user()->role_id == 1) {
+            $roles = Roles::all();
         } else {
             $roles = Roles::all()->whereNotIn("id", [1, 2])->values();
         }
@@ -126,7 +123,7 @@ class Admin extends Controller
             "licences_id" => $adminCreateUser->licence["id"],
             "slug" => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname)
         ]);
-        return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => 'success']);
+        return to_route('admin')->with('message', 'Uživatel byl úspěšně vytvořen!');
     }
 
     /**
@@ -151,8 +148,9 @@ class Admin extends Controller
     {
         $user = $this->userModel->getUserBySlug($slug);
         $this->authorize('view', $user);
-        $subjects = $user->loadMissing('patritions');
-        $subjects->patritions->each->append('chapter_count');
+        $subjects = User::with(['patritions' => function ($query) {
+            $query->withCount('chapter');
+        }])->find($user->id);
         return Inertia::render('admin/listSubjects', compact('subjects'));
     }
 
@@ -190,18 +188,22 @@ class Admin extends Controller
 
     public function getStats()
     {
-        if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $chapterCount = Cache::remember('chapterAllCount', now()->addMinute(), function() {
-                return Chapter::all()->count();
-            });
+        if(auth()->user()->role_id == 1) {
+            $userCount = User::all()->count();
+            $operatosCount = User::where('role_id', UserRoles::OPERATOR)->get()->count();
+            $userNormalCount = User::where('role_id', UserRoles::BASIC_USER)->get()->count();
+            $testersCount = User::where('role_id', UserRoles::TESTER)->get()->count();
+            $allChapters = Chapter::all()->count();
+            $restrictRegister = Settings::pluck('RestrictedRegistration')->first();
             $stats = ([
-                'users' => $this->userModel->append('get_count_users'),
-                'operators' => $this->userModel->getUserCountByRole(UserRoles::OPERATOR),
-                'normalUsers' => $this->userModel->getUserCountByRole(UserRoles::BASIC_USER),
-                'chapters' => $chapterCount,
-                'testersCount' => $this->userModel->getUserCountByRole(UserRoles::TESTER),
-                'restrictRegister' => Settings::pluck('RestrictedRegistration')->first()]);
-        } else {
+                'users' =>  $userCount,
+                'operators' => $operatosCount,
+                'normalUsers' => $userNormalCount,
+                'chapters' => $allChapters,
+                'testersCount' => $testersCount,
+                'restrictRegister' => $restrictRegister]);
+        }
+        else {
             $stats = null;
         }
         return $stats;
@@ -211,12 +213,11 @@ class Admin extends Controller
      * Povolí/zákáže registraci do aplikace
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function changeRestriction($register)
-    {
-        $this->authorize('viewAdmin', Auth()->user());
-        $value = filter_var($register, FILTER_VALIDATE_BOOLEAN);
+    public function changeRestriction($register) {
+        $value = filter_var($register,FILTER_VALIDATE_BOOLEAN);
+        $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['RestrictedRegistration' => $value]);
-        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 
     /**
@@ -225,11 +226,9 @@ class Admin extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function changeTheme(Request $request, $color)
-    {
-        $this->authorize('viewAdmin', Auth()->user());
+    public function changeTheme($color) {
+        $this->authorize('viewAdmin', auth()->user());
         Settings::find(1)->update(['color' => $color]);
-        Cache::forget('color');
-        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
+        return redirect()->back()->with('message', __('validation.custom.update'));
     }
 }

@@ -53,23 +53,8 @@ class User extends Authenticatable
             get: fn () => $this->all()->count()
         );
     }
-    public function getUserByEmail($email) : ?User {
-        return $this->where('email', $email)->firstOrFail();
-    }
     public function getUserBySlug($slug) : ?User {
-        return $this->where('slug', $slug)->firstOrFail();
-    }
-    public function getUserById($id) : ?User {
-        return $this->find($id);
-    }
-
-    /**
-     * Vrátí počet uživatelů podle role
-     * @param $role
-     * @return int|null
-     */
-    public function getUserCountByRole($role) : ?int {
-        return $this->where('role_id', $role)->get()->count();
+        return User::where('slug', $slug)->first();
     }
     public function roles() : BelongsTo {
         return $this->belongsTo(Roles::class, 'role_id');

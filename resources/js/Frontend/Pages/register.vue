@@ -15,7 +15,7 @@
                         <h2>LearnApp</h2>
                         <p>{{$t('authentication.welcome.created')}}<br> Jiří Navrátil</p>
                     </v-sheet>
-                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown}" :elevation="$vuetify.display.smAndDown ? 4: 0">
+                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown}" :elevation="$vuetify.display.smAndDown ? '4' : ''">
                         <v-tabs
                             v-model="tab"
                             align-tabs="center"

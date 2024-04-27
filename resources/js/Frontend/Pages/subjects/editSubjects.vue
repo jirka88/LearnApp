@@ -10,7 +10,7 @@
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 :label="$t('global.name')"
-                :rules="[rules.required, rules.maxName]"
+                :rules="[rules.required, rules.minName, rules.maxName]"
             ></v-text-field>
             <v-select
                 variant="outlined"
@@ -36,7 +36,7 @@
 import SubjectManagerLayout from "@/Frontend/layouts/SubjectManagerLayout.vue";
 import {useForm} from "@inertiajs/inertia-vue3";
 import icons from "../../../itemsIcons";
-import rules from "./../../rules/rules"
+import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 const props = defineProps({subject: Object})
 
 const form = useForm({
@@ -44,6 +44,11 @@ const form = useForm({
     icon: props.subject.icon
 });
 
+const rules = {
+    required: value => !!value || 'Nutné vyplnit!',
+    minName: v => v.length > 3 || 'Předmět musí mít delší název!',
+    maxName: v => v.length < 25 ||'Předmět nesmí být delší!'
+}
 
 const editSubject = () => {
     form.put(route('subject.update', props.subject.id));

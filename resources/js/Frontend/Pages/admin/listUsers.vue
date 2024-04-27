@@ -11,6 +11,7 @@
                     </v-btn>
                 </Link>
             </div>
+            <Toastify v-if="$page.props.flash.message" :text="$page.props.flash.message" variant="success" :time="3000"></Toastify>
             <v-dialog
                 v-model="status"
                 persistent

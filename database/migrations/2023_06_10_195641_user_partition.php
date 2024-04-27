@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained('users', 'id')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->cascadeOnUpdate();
             $table->foreignId('partition_id')
                 ->constrained('partitions', 'id')
                 ->cascadeOnUpdate()
