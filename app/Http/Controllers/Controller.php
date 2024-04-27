@@ -31,7 +31,6 @@ class Controller extends BaseController
      */
     public function sort(Request $request)
     {
-
         $sort = $request->input('sort', 'default');
         $filter = new FilterSubjectSort();
         return response()->json(["search" => $filter->sorting($sort)]);
@@ -90,12 +89,11 @@ class Controller extends BaseController
      */
     public function showShare()
     {
-        $subjects = User::find(auth()->user()->id)
+        $subjects = auth()->user()
             ->patritions()
             ->where('accepted', false)
             ->with(['Users' => function ($query2) {
-                $query2->select('email', 'firstname');
-            }])->get();
+                UserSelectResource::make($query2->where('permission_id', null))->first();}])->get();
         return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
 
@@ -154,7 +152,8 @@ class Controller extends BaseController
      */
     public function showStatsShare() {
         $user = auth()->user();
-        $partitions = $user->patritions()->with(['users' => function ($query) {
+        $partitions = $user->patritions()->where('permission_id', null)
+            ->with(['users' => function ($query) {
             UserSelectResource::make($query->whereNot('user_id', auth()->user()->id)->get());
         }])->get();
         $partitions->each(function ($subject) {
@@ -165,7 +164,9 @@ class Controller extends BaseController
         $subjects = $partitions->filter(function ($patrition) {
             return $patrition->users->isNotEmpty();
         });
-        $permission = Permission::all();
+        $permission = Cache::rememberForever('permission', function() {
+            return Permission::all();
+        });
         return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permissions' => $permission]);
     }
 
