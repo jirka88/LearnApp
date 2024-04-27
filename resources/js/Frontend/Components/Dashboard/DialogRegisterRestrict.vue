@@ -30,18 +30,13 @@
 <script setup>
 import {Inertia} from "@inertiajs/inertia";
 const props = defineProps({restricted: Boolean})
-const emit = defineEmits(['close', 'toastFetch']);
+const emit = defineEmits(['close']);
 const close = () => {
     emit('close');
 }
 const changeRestrict = () => {
-    Inertia.put(route('adminregister.restriction',{register: props.restricted}), {},{
-        onSuccess: () => {
-           emit('fetchIsSuccess', true);
-           close();
-        },
-        onError: () => {
-            emit('fetchIsSuccess', false);
+    Inertia.put(route('adminregister.restriction',{register: props.restricted}),{},{
+        onFinish: () => {
             close();
         }
     });

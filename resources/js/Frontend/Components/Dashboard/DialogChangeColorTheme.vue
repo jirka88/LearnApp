@@ -1,20 +1,3 @@
-<script setup>
-
-import {ref} from "vue";
-import {Inertia} from "@inertiajs/inertia";
-import { usePage } from '@inertiajs/inertia-vue3'
-
-const emit = defineEmits(['close']);
-const picker = ref((usePage().props.value.settings.theme.color))
-const close = () => {
-    emit('close');
-}
-const setTheme = () => {
-    Inertia.put(route('admintheme', {color: picker.value}));
-    close();
-}
-</script>
-
 <template>
     <v-dialog>
         <v-card>
@@ -48,6 +31,22 @@ const setTheme = () => {
         </v-card>
     </v-dialog>
 </template>
+<script setup>
 
-<style scoped lang="scss">
-</style>
+import {ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
+import { usePage } from '@inertiajs/inertia-vue3'
+
+const emit = defineEmits(['close']);
+const picker = ref((usePage().props.value.settings.theme.color))
+const close = () => {
+    emit('close');
+}
+const setTheme = () => {
+    Inertia.put(route('admintheme.color', {color: picker.value}), {}, {
+        onFinish: () => {
+            close();
+        }
+    });
+}
+</script>

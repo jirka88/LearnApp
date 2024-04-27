@@ -65,7 +65,7 @@ class ChapterPolicy
     {
         //zjištění zdali předmět není vytvořený správcem
         $usr = User::where('id', $chapter->partition->created_by)->first();
-        if($user->id == $chapter->partition->created_by || $user->role_id == UserRoles::ADMIN || $chapter->partition->Users->first()?->permission->permission_id == 2 || $chapter->partition->Users->first()?->permission->permission_id == 3 ) {
+        if($user->id == $chapter->partition->created_by || $user->role_id == UserRoles::ADMIN || ($chapter->partition->Users->first()?->permission->permission_id !== null || $chapter->partition->Users->first()?->permission->permission_id != 1)) {
             return true;
         }
         else if ($user->role_id == UserRoles::OPERATOR) {
