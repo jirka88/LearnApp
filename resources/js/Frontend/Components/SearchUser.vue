@@ -31,10 +31,9 @@
 </template>
 
 <script setup>
-import {ref, watch} from "vue";
+import {ref} from "vue";
 import axios from "axios";
-const emit = defineEmits(['getUser'])
-const searchValue = ref([]);
+const searchValue = defineModel("searchValue");
 const searchResult = ref([]);
 const isLoading = ref(false);
 import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg';
@@ -42,10 +41,6 @@ const highlightText = (text) =>{
     const regex = new RegExp(searchValue.value, 'gi');
     return text.replace(regex,'<span style="background-color: #EFEFEF; ">$&</span>');
 }
-
-watch(searchValue, val => {
-    emit('getUser', val)
-})
 const updateUser = (e) => {
     if (e !== null) {
         isLoading.value = true

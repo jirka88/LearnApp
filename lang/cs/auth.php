@@ -15,7 +15,7 @@ return [
 
     'failed' => 'Email nebo heslo není v pořádku!',
     'password' => 'Zadané heslo je nesprávné.',
-    'throttle' => 'Příliš mnoho pokusů o přihlášení. Zkuste to prosím znovu za :sekund sekund.',
+    'throttle' => 'Příliš mnoho pokusů o přihlášení. Zkuste to prosím znovu za :seconds sekund.',
     'activate' => 'Účet je deaktivován!',
     'exist' => 'Účet pod daným emailem neexistuje!'
 

@@ -45,6 +45,23 @@ class Partition extends Model
     public function getSubjectBySlug($slug): ?Partition {
         return $this->where('slug', $slug)->firstOrFail();
     }
+
+    /**
+     * Vrátí objekt předmětu podle ID
+     * @param $id
+     * @return Partition|null
+     */
+    public function getSubjectById($id): ?Partition {
+        return $this->findOrFail($id);
+    }
+    /**
+     * Vrátí Id předmětu/sekce
+     * @param $slug
+     * @return int|null
+     */
+    public function getSubjectId($slug) : ?int {
+        return $this->where('slug', $slug)->pluck('id')->firstOrFail();
+    }
     protected function chapterCount() :Attribute
     {
         return new Attribute(

@@ -26,7 +26,9 @@ class Chapter extends Model
             ]
         ];
     }
-
+    public function Partition() :BelongsTo {
+        return $this->BelongsTo(Partition::class, 'partition_id');
+    }
     /**
      * Vrátí kapitolu podle slug
      * @param $chapter
@@ -35,7 +37,27 @@ class Chapter extends Model
     public function getChapter($slug) :?Chapter {
         return $this->where('slug', $slug)->firstOrFail();
     }
-    public function Partition() :BelongsTo {
-        return $this->BelongsTo(Partition::class, 'partition_id');
+
+    /**
+     * Vrátí kapitolu podle id
+     * @param $chapter
+     * @return mixed
+     */
+    public function getChapterById($id) :?Chapter {
+        return $this->find($id);
+    }
+    /**
+     * Vrátí podle sekce id a jména kapitoly kapitolu
+     * @param $id
+     * @param $name
+     * @return Chapter|null
+     */
+    public function getChapterByNameAndPatrition($partitionId, $name) :? Chapter{
+        return $this->where("partition_id", $partitionId)->where("name", $name)->first();
+    }
+    public function getChapterWithPermission($slug) :? Chapter {
+        return $this->where('slug', $slug)->with(['Partition.Users' => function ($query2) {
+            $query2->where('user_id', auth()->user()->id)->firstOrFail();
+        }])->firstOrFail();
     }
 }

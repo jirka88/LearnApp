@@ -12,5 +12,6 @@ return [
     'delete' => 'Delete',
     'setting' => 'Settings',
     'change' => 'Change',
-    'chapter_count' => 'Chapter count'
+    'chapter_count' => 'Chapter count',
+    'chapter' => 'Chapter'
 ];
