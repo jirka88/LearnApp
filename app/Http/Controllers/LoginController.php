@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Exception;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -28,12 +27,12 @@ class LoginController extends Controller
         $credentials = $request->only('email', 'password');
         $isActive = User::where('email', $credentials['email'])->first();
         if($isActive == null) {
-            return redirect()->back()->withErrors(['msg' => __('auth.exist')]);
+            return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.exist')]);
         }
         if($isActive['active']) {
             if(!Auth::validate($credentials)) {
                 RateLimiter::hit($this->throttleKey(),120);
-                return redirect()->back()->withErrors(['msg' => __('auth.failed')]);
+                return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.failed')]);
             }
             RateLimiter::clear($this->throttleKey());
 
@@ -42,14 +41,14 @@ class LoginController extends Controller
             return redirect()->intended("/dashboard");
         }
         else {
-            return redirect()->back()->withErrors(['msg' => __('auth.activate')]);
+            return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.activate')]);
         }
 
     }
     /**
      * Get the rate limiting throttle key for the request.
      *
-     * @return string
+     * @return string|
      */
     public function throttleKey()
     {

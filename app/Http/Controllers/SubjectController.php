@@ -2,23 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
+use App\Enums\UserLicences;
 use App\Enums\UserRoles;
-use App\Http\Components\Filters;
-use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\globalSettings;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
-use App\Models\Roles;
 use App\Models\User;
 use App\Traits\userTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Pagination\Paginator;
 use Inertia\Inertia;
-use function Symfony\Component\String\b;
 
 class SubjectController extends Controller
 {
@@ -48,7 +45,7 @@ class SubjectController extends Controller
     public function show(Request $request, $slug) {
         $subject = $this->subjectModel->getSubjectBySlug($slug);
         $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
-
+        $sharingUsr = [];
         if($pShare === null) {
             if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $subject["permission"] = $subject->Users()->find($subject->created_by)->permission;
@@ -56,15 +53,15 @@ class SubjectController extends Controller
         }
         else {
             $subject["permission"] = $pShare;
+            $sharingUsr = User::select('firstname', 'lastname', 'email')->find($subject->created_by);
         }
         $this->authorize("view", $subject);
-        $chaptersSelect = Chapter::with('Partition')->where('partition_id', $subject->id)->select(['name', 'perex', 'id', 'slug'])->paginate(globalSettings::ITEMS_IN_PAGE);
-        $chapters = $chaptersSelect->map(function ($chapter) {
-            return $chapter->toArray();
-        });
-        $pages = Ceil(Count(Chapter::where('partition_id',$subject->id)->get()) / globalSettings::ITEMS_IN_PAGE);
+        $chapters = Chapter::where('partition_id', $subject->id)
+            ->select(['name', 'perex', 'id', 'slug'])
+            ->paginate(globalSettings::ITEMS_IN_PAGE);
+        $pages = Ceil(Chapter::where('partition_id',$subject->id)->count() / globalSettings::ITEMS_IN_PAGE);
 
-        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages'));
+        return Inertia::render('chapter/chapters', compact('chapters','subject', 'pages', 'sharingUsr'));
     }
     /**
      * Redirect k formuláři k vytvoření předmětu
@@ -81,12 +78,12 @@ class SubjectController extends Controller
      * @return RedirectResponse
      */
     public function store(SubjectRequest $subjectRequest) {
-        $user = User::find(auth()->user()->id);
-        if($user->licences_id == 1 && $user->patritions()->count() > Licences::standartUserPartitions ) {
-            return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
+        $user = auth()->user();
+        if($user->licences_id == UserLicences::STANDART && $user->patritions()->count() > Licences::standartUserPartitions ) {
+            return redirect()->back()->with(['status' => 'error'])->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
-        else if($user->licences_id == 2 && $user->patritions()->count() > Licences::standartPlusUserPartitions ) {
-            return redirect()->back()->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
+        else if($user->licences_id == UserLicences::STANDART_PLUS && $user->patritions()->count() > Licences::standartPlusUserPartitions ) {
+            return redirect()->back()->with(['status' => 'error'])->withErrors(['msg' => 'Překročen maximální počet předmětů!']);
         }
         else {
             $subject = $subjectRequest->only('name', 'icon');
@@ -95,7 +92,7 @@ class SubjectController extends Controller
             $subjectT = Partition::create($subject);
 
             $user->patritions()->attach($subjectT->id);
-            return to_route('subject.index')->with(['message' => __('validation.custom.create')]);
+            return to_route('subject.index')->with(['message' => __('validation.custom.create'), 'status' => ToastifyStatus::SUCCESS]);
         }
 
     }

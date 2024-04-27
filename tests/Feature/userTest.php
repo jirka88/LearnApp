@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\UserLicences;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\User;
@@ -257,7 +258,7 @@ class userTest extends TestCase
         $response->assertSessionHasErrors(['msg']);
     }
     public function test_user_standart_cant_create_chapter_because_of_limit() {
-        $this->user->licences_id = 1;
+        $this->user->licences_id = UserLicences::STANDART;
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
         for($x = 0; $x <= Licences::standartUserChaptersInPartitions; $x++) {

@@ -68,10 +68,8 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         return Inertia::render('errors/auth/404')->toResponse($request)->setStatusCode(404);
     });
     Route::get('/403', function (Request $request){
-        return Inertia::render('errors/auth/403')->toResponse($request)->setStatusCode(404);
+        return Inertia::render('errors/auth/403')->toResponse($request)->setStatusCode(403);
     });
-
-
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'],function() {
         route::get('/controll', [Admin::class, 'index']);
         route::get('/controll/{slug}', [Admin::class, 'edit'])->name('user.edit');
@@ -83,7 +81,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function() {
         route::get('controll/user/create', [Admin::class, 'create'])->name('user.create');
         route::post('controll/user/create', [Admin::class, 'store'])->name('user.store');
         route::put('/controll/registration/{register}', [Admin::class, 'changeRestriction'])->name('register.restriction');
-        route::put('/controll/theme/{color}', [Admin::class, 'changeTheme'])->name('theme');
+        route::put('/controll/theme/{color}', [Admin::class, 'changeTheme'])->name('theme.color');
     });
 });
 
