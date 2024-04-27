@@ -1,36 +1,34 @@
 <template>
     <component :is="DashboardLayout">
         <v-container>
+        <div class="vh-calc">
             <Breadcrumbs :items="[{title: 'Nové sdílení', disabled: true }]"></Breadcrumbs>
-            <v-main class="pa-5 pl-0 d-flex flex-wrap" :class="{'justify-center': $vuetify.display.smAndDown}">
+            <v-main class="pa-5 d-flex flex-wrap" :class="{'justify-center': $vuetify.display.smAndDown}">
                 <v-card
                     v-for="subject in subjects" :key="subject.id"
-                    class="pa-2 elevation-10 rounded-8"
-                    data-aos="zoom-in" data-aos-delay="200" data-aos-duration="300"
-                    data-aos-anchor-placement="top-bottom"
-                    :max-width="$vuetify.display.smAndDown ? '' : '30em'"
+                    class="pa-2 d-flex flex-column elevation-20"
+                    max-width="344"
                 >
-                    <v-card-text class="pb-0">
-                        <p class="text-h4 font-weight-bold">
+                    <v-card-text>
+                        <p class="text-h4 font-weight-bold text--primary py-4">
                             {{ subject.name }}
                         </p>
-                        <p class="text-subtitle-1 pt-2">
+                        <div class="text--primary">
                             Žádost o sdílení od uživalele:
-                            <span class="font-weight-bold">{{ subject.users[0].email }}</span>
-                        </p>
-                        <div class="text-subtitle-1">
-                        <p v-if="subject.permission.permission_id == 1">
+                            <div class="font-weight-bold">{{ subject.users.email }}</div>
+                            <br>
+                        </div>
+                        <div class=" font-weight-bold" v-if="subject.permission.permission_id == 1">
                             S právem ke čtení<br>
-                        </p>
-                        <p v-if="subject.permission.permission_id == 2">
+                        </div>
+                        <div class=" font-weight-bold" v-if="subject.permission.permission_id == 2">
                             S právem ke čtení a úpravě<br>
-                        </p>
-                        <p v-if="subject.permission.permission_id == 3">
+                        </div>
+                        <div class="  font-weight-bold" v-if="subject.permission.permission_id == 3">
                             S právem plnou kontrolou<br>
-                        </p>
                         </div>
                     </v-card-text>
-                    <v-card-actions class="flex-wrap justify-end align-center ga-2">
+                    <v-card-actions class="flex-wrap justify-end align-center gp-em-05">
                         <v-btn
                             variant="flat"
                             color="red"
@@ -50,6 +48,7 @@
                     </v-card-actions>
                 </v-card>
             </v-main>
+        </div>
         </v-container>
     </component>
 </template>
@@ -91,4 +90,17 @@ const shareAccept = (slug) => {
 </script>
 
 <style scoped lang="scss">
+.v-main {
+    gap: 1em;
+
+    .v-card {
+        flex: 1 1 auto;
+        width: 300px !important;
+        min-height: 14em !important;
+
+        .text-h4 {
+            text-wrap: balance;
+        }
+    }
+}
 </style>

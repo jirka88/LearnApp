@@ -12,6 +12,5 @@ return [
     'delete' => 'Vymazat',
     'setting' => 'Nastavení',
     'change' => 'Změnit',
-    'chapter_count' => 'Počet kapitol',
-    'chapter' => 'Kapitolu'
+    'chapter_count' => 'Počet kapitol'
 ];

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ToastifyStatus;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Settings;
 use App\Models\User;
@@ -24,7 +23,7 @@ class RegisterController extends Controller
     {
         $restricted = Settings::find(1);
         if($restricted === true) {
-            return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('authentication.restricted')]);
+            return redirect()->back()->withErrors(['msg' => __('authentication.restricted')]);
         }
         $usr = $request->only(['firstname', 'email', 'lastname', 'password']);
         $usr['type_id'] = $request->type['value'];

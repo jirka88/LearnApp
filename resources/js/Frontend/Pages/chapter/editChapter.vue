@@ -10,8 +10,6 @@
                         variant="outlined"
                         :label="$t('global.name')"
                         :rules="[rules.required, rules.chapterNameLength]"
-                        :error="form.errors.name"
-                        :error-messages="form.errors.name"
                         required
                     ></v-text-field>
                     <v-text-field

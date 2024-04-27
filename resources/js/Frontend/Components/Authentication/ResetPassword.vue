@@ -24,7 +24,10 @@
 <script setup>
 import {ref} from "vue";
 const off = ref(false);
-import {rules} from './../../rules/rules'
+const rules = {
+    required: v => !!v || 'Nutné vyplnit!',
+    email: v => /^(([^<>()[\]\\.,;:\s@']+(\.[^<>()\\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(v) || 'Musí být platná e-mailová adresa!',
+}
 const form = {
     email: ''
 }

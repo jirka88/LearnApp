@@ -5,9 +5,7 @@ namespace App\Traits;
 use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\globalSettings;
 use App\Models\Partition;
-use App\Models\Settings;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
+use App\Models\User;
 
 trait userTrait
 {
@@ -17,29 +15,20 @@ trait userTrait
      */
     public function getActivedShared() {
         if(auth()->user()) {
-            return Cache::remember('sharedSubjects', now()->addMinutes(10), function () {
-                $shared = auth()->user()->patritions()
-                    ->withCount(['Users' => function ($query) {
-                        $query->whereNot('user_id', auth()->user()->id);
-                    }])->get();
-                $dataArray = json_decode($shared, true);
-                $totalUsersCount = 0;
-                foreach ($dataArray as $item) {
-                    $totalUsersCount += (int)$item['users_count'];
-                }
-                return $totalUsersCount;
-            });
+            $shared = User::find(auth()->user()->id)->patritions()->withCount(['Users' => function ($query) {
+                $query->whereNot('user_id', auth()->user()->id);
+            }])->get();
+            $dataArray = json_decode($shared, true);
+            $totalUsersCount = 0;
+            foreach ($dataArray as $item) {
+                $totalUsersCount += (int)$item['users_count'];
+            }
+            return $totalUsersCount;
         }
-    }
-    public function getCurrentColor()
-    {
-        return Cache::rememberForever('color', function() {
-            return Settings::get('color')->firstOrFail();
-        });
     }
 
     /**
-     * Vrátí předměty/stránky/sort
+     * Vrátí předmětů/stránek/sort
      * @param $sort
      * @return array
      */

@@ -1,6 +1,6 @@
 <template>
     <v-dialog
-        v-model="model"
+        v-if="subject.created_by == $page.props.user.id"
         persistent
         width="auto"
     >
@@ -9,7 +9,7 @@
                 <v-card-title class="text-h5 text-center">
                     {{$t('share.title')}}
                 </v-card-title>
-                <SearchUser v-model:searchValue="user"></SearchUser>
+                <SearchUser @get-user="user"></SearchUser>
                 <p v-if="errors.permission" class="text-center pa-1 text-red">{{ errors.permission }}</p>
                 <div class="d-flex">
                     <v-checkbox
@@ -36,7 +36,7 @@
                 <v-card-actions class="margin-center d-flex justify-center">
                     <v-btn
                         class="bg-white"
-                        @click="closeShareDialog"
+                        @click="emit('close'); $page.props.flash.message = ''"
                         size="x-large"
                     >
                        {{$t('global.close')}}
@@ -52,22 +52,27 @@
             </v-card>
         </v-form>
     </v-dialog>
-
 </template>
 <script setup>
 import {useForm} from "@inertiajs/inertia-vue3";
 import {ref} from "vue";
 import SearchUser from "@/Frontend/Components/SearchUser.vue";
+
 const props = defineProps({subject: Object, errors: Object, users: Object })
-const model = defineModel();
-const user = ref();
+const emit = defineEmits(['close'])
+const selectedUsers = ref();
 const permission = ref();
 
+
 const form = useForm({
-    users: user,
+    users: selectedUsers,
     permission: permission,
     subject: props.subject.id
 });
+
+const user = (val) => {
+    form.users = val;
+}
 
 const rules = {
     required: v => v.length < 0 || "Musíte zadat uživatele",
@@ -76,13 +81,9 @@ const rules = {
 const sharingToUsers = () => {
     form.post(route('share'), {
         onSuccess: () => {
-            user.value = null;
-            permission.value = null;
+            selectedUsers.value = null;
         }
     })
-}
-const closeShareDialog = () =>{
-    model.value = false;
 }
 </script>
 <style scoped lang="scss">
