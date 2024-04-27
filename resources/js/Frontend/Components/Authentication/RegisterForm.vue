@@ -73,6 +73,7 @@
             <div class="d-flex">
             <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
             </div>
+
             <span class="text-center text-red">{{form.errors.confirm}}</span>
             <Toastify v-if="isActiveToast" :text="form.errors.email?.unique ?? form.errors.token" variant="error" :time="3000"
                       @close="isActiveToast = false"></Toastify>

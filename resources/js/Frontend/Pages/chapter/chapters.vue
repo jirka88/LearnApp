@@ -14,7 +14,7 @@
                           data-aos="zoom-in" data-aos-duration="400">
                         <v-btn
                             class="bg-green">
-                            {{ $t('global.created') }} kapitolu
+                            {{ $t('global.created') }} {{$t('global.chapter')}}
                         </v-btn>
                     </Link>
                     <v-btn
@@ -29,19 +29,23 @@
                     :subject="subject"
                 ></SearchChapters>
             </div>
+            <v-card v-if="$page.props.user.id != subject.created_by" class="pa-4 font-weight-bold"
+                    :class="{'text-center': $vuetify.display.smAndDown}">
+                <p>Sdíleno od: {{ sharingUsr.firstname }} {{ sharingUsr.lastname }} ({{ sharingUsr.email }}) </p>
+            </v-card>
             <v-sheet class="py-5 d-grid ga-6">
                 <DialogShare
+                    v-if="sharing"
                     v-model="sharing"
                     :subject="subject"
                     :errors="errors"
                     :users="users"
-                    @close="sharing = false"
                 />
-                    <ChapterPreview
-                        v-for="chapter in chapters" :key="chapter.id"
-                        :chapter="chapter"
-                        :subject="subject">
-                    </ChapterPreview>
+                <ChapterPreview
+                    v-for="chapter in chapters.data" :key="chapter.id"
+                    :chapter="chapter"
+                    :subject="subject"
+                />
             </v-sheet>
             <v-pagination
                 v-if="pages !== 0"
@@ -54,11 +58,6 @@
                 @update:modelValue="fetchData"
             ></v-pagination>
         </v-container>
-        <Toastify
-            v-if="$page.props.flash.message ? true : false"
-            :text="$page.props.flash.message"
-            variant="success"
-            :time="3000"></Toastify>
     </component>
 </template>
 
@@ -66,14 +65,12 @@
 
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {Link} from "@inertiajs/inertia-vue3";
-import {defineAsyncComponent, ref, watch} from "vue";
-
+import {defineAsyncComponent, ref} from "vue";
 import Breadcrumbs from "../../Components/UI/Breadcrumbs.vue";
 import {Inertia} from "@inertiajs/inertia";
 import ChapterPreview from "@/Frontend/Components/ChapterPreview.vue";
 import axios from "axios";
 import SearchChapters from "@/Frontend/Components/SearchChapters.vue";
-import Toastify from "@/Frontend/Components/UI/Toastify.vue";
 
 const users = ref();
 const DialogShare = defineAsyncComponent(() => import("@/Frontend/Components/DialogShare.vue"))
@@ -84,8 +81,9 @@ const status = ref(false);
 const showSearchMobile = ref(false);
 const props = defineProps({
     chapters: Object,
-    subject: Object,
+    subject: Array,
     errors: Object,
+    sharingUsr: Object,
     pages: Number,
 });
 
@@ -119,9 +117,14 @@ const fetchData = () => {
 </script>
 <style scoped lang="scss">
 @use 'vuetify/lib/styles/settings/variables' as *;
-.v-sheet{
+
+.v-sheet {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    background: none;
+    @media #{map-get($display-breakpoints, 'lg-and-up')} {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    }
     @media #{map-get($display-breakpoints, 'md-and-down')} {
         grid-template-columns: 1fr 1fr;
     }

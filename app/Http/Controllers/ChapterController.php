@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
+use App\Enums\UserLicences;
 use App\Enums\UserRoles;
 use App\Http\Requests\ChapterRequest;
+use App\Http\Resources\ChapterSelectResource;
 use App\Models\Chapter;
 use App\Models\Licences;
-use App\Models\Partition;
-use App\Models\Roles;
 use App\Models\User;
+use App\Rules\UniqueChapterName;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use function Symfony\Component\String\b;
 
 class ChapterController extends Controller
 {
@@ -32,10 +32,7 @@ class ChapterController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Request $request, $slug, $chapterName) {
-        $chapter = $this->chapterModel->getChapter($chapterName)->with(['Partition.Users' => function ($query) {
-          $query->where('user_id', auth()->user()->id);
-        }])->firstOrFail();
-
+        $chapter = $this->chapterModel->getChapterWithPermission($chapterName);
         if($chapter->Partition->Users) {
             if(auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
                 $chapter->Partition->Users = User::find($chapter->Partition->created_by);
@@ -50,10 +47,10 @@ class ChapterController extends Controller
      * @param $slug
      * @return \Inertia\Response
      */
-    public function create($slug) {
-        $user = User::with(['patritions' => function ($query) use ($slug) {
+    public function create(Request $request, $slug) {
+        $user = $request->user()->with(['patritions' => function ($query) use ($slug) {
             $query->where('slug', $slug)->firstOrFail();
-        }])->find(auth()->user()->id);
+        }])->firstOrFail();
         $this->authorize("create", $user);
         return Inertia::render('chapter/createChapter', ['slug' => $slug]);
     }
@@ -65,12 +62,12 @@ class ChapterController extends Controller
      */
     public function store(ChapterRequest $chapterRequest) {
         $subjectModel = app('App\Models\Partition');
-        $partition =  $subjectModel->getSubjectBySlug($chapterRequest->slug);
-        if(Chapter::where("partition_id", $partition->id)->where("name", $chapterRequest->name)->first() !== null) {
-            return redirect()->back()->withErrors(["name" => "Jméno musí být unikátní!"]);
+        $partition = $subjectModel->getSubjectBySlug($chapterRequest->slug);
+        if($this->chapterModel->getChapterByNameAndPatrition($partition->id, $chapterRequest->name) !== null) {
+            return redirect()->back()->with('status', ToastifyStatus::ERROR)->withErrors(["name" => "Jméno musí být unikátní!"]);
         }
-        if(auth()->user()->licences->id === 1 && $partition->Chapter()->count() >= Licences::standartUserChaptersInPartitions) {
-            return redirect()->back()->withErrors(["message" => "Přesáhnut limit!"]);
+        if(auth()->user()->licences->id === UserLicences::STANDART && $partition->Chapter()->count() >= Licences::standartUserChaptersInPartitions) {
+            return redirect()->back()->with('status', ToastifyStatus::ERROR)->withErrors(["message" => "Přesáhnut limit!"]);
         }
         Chapter::create([
             "name" => $chapterRequest->name,
@@ -79,21 +76,17 @@ class ChapterController extends Controller
             "slug" => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
             "partition_id" => $partition->id
         ]);
-        return to_route('subject.show', $chapterRequest->slug);
+        return to_route('subject.show', $partition->slug)->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Kapitola úspěšně vytvořena!']);
     }
 
     /**
      * Odkázání na formulář k aktualizaci kapitoly
-     * @param Request $request
      * @param $slug
      * @param $chapter
      * @return \Inertia\Response
      */
-    public function edit(Request $request, $slug, $chapter) {
-        $chapter = $this->chapterModel->getChapter($chapter);
-        $chapter->with(['Partition.Users' => function ($query2) {
-                $query2->find(auth()->user()->id);
-            }])->first();
+    public function edit( $slug, $chapter) {
+        $chapter = $this->chapterModel->getChapterWithPermission($chapter);
         $this->authorize('update', $chapter);
         return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
     }
@@ -105,27 +98,32 @@ class ChapterController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(ChapterRequest $chapterRequest, $slug) {
-        $chapter = $this->chapterModel->getChapter($slug);
+        $chapter = $this->chapterModel->getChapter($chapterRequest->slug);
+        $chapter->name = $chapterRequest->name;
+        $uniqueChapterNameRule = new UniqueChapterName();
+        if(!$uniqueChapterNameRule->passes('name', $chapter)) {
+            return redirect()->back()->withErrors($uniqueChapterNameRule->message());
+        }
         $this->authorize('update', $chapter);
+        $subject = app('App\Models\Partition');
         $chapter->update([
             'name' => $chapterRequest->name,
             'perex' => $chapterRequest->perex,
             'context' => $chapterRequest->contentChapter,
             'slug' => SlugService::createSlug(Chapter::class, 'slug', $chapterRequest->name),
         ]);
-        return to_route('subject.show', $chapter->Partition()->find($chapter->partition_id)->slug);
+        return to_route('subject.show', $subject->getSubjectById($chapter->partition_id)->slug)->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
     /**
      * Vymazání kapitoly
-     * @param Request $request
      * @param $slug
      * @param $chapter
      * @return void
      */
-    public function destroy(Request $request, $slug, $chapter) {
+    public function destroy($slug, $chapter) {
         $chapterDelete = $this->chapterModel->getChapter($chapter);
         $chapterDelete->delete();
-        return to_route('subject.show', $slug);
+        return to_route('subject.show', $slug)->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Kapitola byla úspěšně vymazána']);
     }
 
     /**
@@ -136,10 +134,11 @@ class ChapterController extends Controller
      */
     public function selectChapter(Request $request, $slug) {
         $sort = $request->input('select');
-        $subject_id = Partition::where('slug', $slug)->pluck('id')->first();
+        $subject = app('App\Models\Partition');
+        $subjectId = $subject->getSubjectId($slug);
         $chapter = [];
         if($sort !== null) {
-            $chapter = Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subject_id)->select('name', 'perex','slug')->get();
+            $chapter = ChapterSelectResource::collection(Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subjectId)->get());
         }
         if(count($chapter) === 0) {
             $chapter = ['item' => 'Nic nenalezeno!'];
