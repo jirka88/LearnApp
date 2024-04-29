@@ -1,4 +1,5 @@
 <?php
+
 return [
     'show' => 'Show',
     'edit' => 'Edit!',
@@ -13,5 +14,5 @@ return [
     'setting' => 'Settings',
     'change' => 'Change',
     'chapter_count' => 'Chapter count',
-    'chapter' => 'Chapter'
+    'chapter' => 'Chapter',
 ];

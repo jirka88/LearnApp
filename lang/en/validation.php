@@ -169,7 +169,7 @@ return [
         'update' => 'Update success',
         'error' => 'Something went wrong :(',
         'create' => 'created successfully!',
-        'deleted' => 'Succesfully deleted'
+        'deleted' => 'Succesfully deleted',
     ],
 
     /*

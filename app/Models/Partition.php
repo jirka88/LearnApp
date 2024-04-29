@@ -10,37 +10,38 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Partition extends Model
-{
+class Partition extends Model {
     use HasFactory;
     use Sluggable;
+
     protected $fillable = ['name', 'created_by', 'icon', 'slug'];
 
     protected $appends = ['chapter_count'];
-    public function sluggable() : array
-    {
+
+    public function sluggable(): array {
         return [
             'slug' => [
-                'source' => 'name'
-            ]
+                'source' => 'name',
+            ],
         ];
     }
-    public function Users() : BelongsToMany {
-        return $this->belongsToMany(User::class, 'userPartition', 'partition_id','user_id')
+
+    public function Users(): BelongsToMany {
+        return $this->belongsToMany(User::class, 'userPartition', 'partition_id', 'user_id')
             ->as('permission')
             ->withPivot(['accepted', 'permission_id']);
     }
-    public function Chapter() :HasMany {
+
+    public function Chapter(): HasMany {
         return $this->HasMany(Chapter::class);
     }
-    public function permissions() :BelongsTo {
+
+    public function permissions(): BelongsTo {
         return $this->belongsTo(Permission::class, 'permission_id');
     }
 
     /**
      * Vrátí objekt předmětu podle slug
-     * @param $slug
-     * @return Partition|null
      */
     public function getSubjectBySlug($slug): ?Partition {
         return $this->where('slug', $slug)->firstOrFail();
@@ -48,22 +49,19 @@ class Partition extends Model
 
     /**
      * Vrátí objekt předmětu podle ID
-     * @param $id
-     * @return Partition|null
      */
     public function getSubjectById($id): ?Partition {
         return $this->findOrFail($id);
     }
+
     /**
      * Vrátí Id předmětu/sekce
-     * @param $slug
-     * @return int|null
      */
-    public function getSubjectId($slug) : ?int {
+    public function getSubjectId($slug): ?int {
         return $this->where('slug', $slug)->pluck('id')->firstOrFail();
     }
-    protected function chapterCount() :Attribute
-    {
+
+    protected function chapterCount(): Attribute {
         return new Attribute(
             get: fn () => $this->Chapter()->count()
         );

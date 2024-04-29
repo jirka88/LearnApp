@@ -1,4 +1,5 @@
 <?php
+
 return [
     'stats' => 'Dashboard ',
     'home' => 'Domů',
@@ -14,5 +15,5 @@ return [
     'organization' => 'Organizace',
     'welcome' => 'Vítejte',
     'sign_out' => 'Odhlásit se',
-    'restrict_register' => 'Omezit registraci'
+    'restrict_register' => 'Omezit registraci',
 ];

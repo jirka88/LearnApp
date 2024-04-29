@@ -1,4 +1,5 @@
 <?php
+
 return [
     'stats' => 'Dashboard ',
     'home' => 'Home',
@@ -14,5 +15,5 @@ return [
     'organization' => 'Organization',
     'welcome' => 'Welcome',
     'sign_out' => 'Sign out',
-    'restrict_register' => 'Restrict register'
+    'restrict_register' => 'Restrict register',
 ];

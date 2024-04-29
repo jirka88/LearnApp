@@ -2,37 +2,37 @@
 
 namespace App\Rules;
 
-use App\Models\Chapter;
 use Illuminate\Contracts\Validation\Rule;
 
-class UniqueChapterName implements Rule
-{
+class UniqueChapterName implements Rule {
     /**
      * Create a new rule instance.
      *
      * @return void
      */
     private $attribute;
-    public function __construct()
-    {
+
+    public function __construct() {
     }
 
     /**
      * Determine if the validation rule passes.
-     * @param string $attribute
-     * @param mixed $chapter
+     *
+     * @param  string  $attribute
+     * @param  mixed  $chapter
      * @return bool
      */
-    public function passes($attribute, $chapter)
-    {
+    public function passes($attribute, $chapter) {
         $this->attribute = $attribute;
         $chapterModel = app('\App\Models\Chapter');
-        if($chapterModel->getChapterByNameAndPatrition($chapter->partition_id, $chapter->name) !== null) {
-            if($chapterModel->getChapterById($chapter->id)->name === $chapter->name) {
+        if ($chapterModel->getChapterByNameAndPatrition($chapter->partition_id, $chapter->name) !== null) {
+            if ($chapterModel->getChapterById($chapter->id)->name === $chapter->name) {
                 return true;
             }
+
             return false;
         }
+
         return true;
     }
 
@@ -41,9 +41,8 @@ class UniqueChapterName implements Rule
      *
      * @return array
      */
-    public function message()
-    {
+    public function message() {
         return [
-            'name' => trans('validation.unique', ["attribute" => $this->attribute])];
+            'name' => trans('validation.unique', ['attribute' => $this->attribute])];
     }
 }

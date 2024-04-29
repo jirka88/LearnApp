@@ -5,15 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Settings extends Model
-{
+class Settings extends Model {
     protected $fillable = [
         'RestrictedRegistration',
-        'color'
-        ];
+        'color',
+    ];
+
     public $timestamps = false;
+
     protected $casts = [
-        'RestrictedRegistration' => 'boolean'
+        'RestrictedRegistration' => 'boolean',
     ];
 
     use HasFactory;
