@@ -14,7 +14,7 @@
                           data-aos="zoom-in" data-aos-duration="400">
                         <v-btn
                             class="bg-green">
-                            {{ $t('global.created') }} {{$t('global.chapter')}}
+                            {{ $t('global.created') }} {{ $t('global.chapter') }}
                         </v-btn>
                     </Link>
                     <v-btn

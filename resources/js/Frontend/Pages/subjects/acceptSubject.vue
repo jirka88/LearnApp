@@ -19,15 +19,15 @@
                             <span class="font-weight-bold">{{ subject.users[0].email }}</span>
                         </p>
                         <div class="text-subtitle-1">
-                        <p v-if="subject.permission.permission_id == 1">
-                            S právem ke čtení<br>
-                        </p>
-                        <p v-if="subject.permission.permission_id == 2">
-                            S právem ke čtení a úpravě<br>
-                        </p>
-                        <p v-if="subject.permission.permission_id == 3">
-                            S právem plnou kontrolou<br>
-                        </p>
+                            <p v-if="subject.permission.permission_id == 1">
+                                S právem ke čtení<br>
+                            </p>
+                            <p v-if="subject.permission.permission_id == 2">
+                                S právem ke čtení a úpravě<br>
+                            </p>
+                            <p v-if="subject.permission.permission_id == 3">
+                                S právem plnou kontrolou<br>
+                            </p>
                         </div>
                     </v-card-text>
                     <v-card-actions class="flex-wrap justify-end align-center ga-2">
@@ -56,7 +56,7 @@
 
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
-import {Link, useForm} from "@inertiajs/inertia-vue3";
+import {useForm} from "@inertiajs/inertia-vue3";
 import {ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 
