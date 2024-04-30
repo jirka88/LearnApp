@@ -55,7 +55,9 @@
 - Role: Admin, Operátor, Tester
 - Chráněné routy podle rolí a uživatelů
 - Automatizované testy (Features - PhpUnit)
-- Filtrace dat (Default,ASC,DESC) 
+- Filtrace dat (Default,ASC,DESC)
+- Zrychlení načítání pomocí cachovani dat (Redis)
+- Úprava kódu pomocí pint 
 
 # TO DO
 
