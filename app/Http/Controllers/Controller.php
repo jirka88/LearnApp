@@ -107,7 +107,11 @@ class Controller extends BaseController {
         $subject = $subjecModel->getSubjectBySlug($request->slug);
         auth()->user()->patritions()->detach($subject->id);
 
-        return redirect()->back();
+        if ($subject->created_by == auth()->user()->id) {
+            return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo zrušeno']);
+        } else {
+            return to_route('subject.index')->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo zrušeno']);
+        }
     }
 
     /**

@@ -6,6 +6,13 @@ return [
         'write' => 'To reading and writing',
         'full' => 'Full access',
     ],
+    'permission_view' => [
+        'read' => 'With read permission',
+        'write' => 'With read and write permission',
+        'full' => 'With full control permission',
+    ],
+    'accepted' => 'Accept',
+    'requested_by' => 'Request for sharing from user',
     'title' => 'Who do you want to share this section with?',
     'subtitle' => 'When the user accept the share he gets access to it!',
     'warning' => [

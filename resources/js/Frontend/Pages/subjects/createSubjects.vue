@@ -1,53 +1,52 @@
 <template>
     <component :is="SubjectManagerLayout">
-        <div class="create-subject d-flex justify-center align-center"
-             :class="{'w-85': $vuetify.display.smAndDown,
-                            'w-95': $vuetify.display.xs}">
-            <v-form class="pa-6 bg-white" @submit.prevent="createSubject">
-                <p class="text-h1 font-weight-bold">Vytvořit
-                    {{ $page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět' }}</p>
-                <v-text-field
-                    v-model="form.name"
-                    prepend-inner-icon="mdi-email"
-                    variant="outlined"
-                    autofocus
-                    :label="$t('global.name')"
-                    :rules="[rules.required, rules.chapterNameLength, rules.minSubjectLength]"
-                ></v-text-field>
-                <v-select
-                    variant="outlined"
-                    v-model="form.icon"
-                    :items="icons"
-                    item-title="iconName"
-                    label="Ikona">
-                    <template v-slot:selection="{ item, index }">
-                        <div class="d-flex justify-content-center align-items-center ga-2">
-                            <v-icon :icon="item.title"></v-icon>
-                            {{ item.title }}
-                        </div>
-                    </template>
-                    <template v-slot:item="{ item, props }">
-                        <v-list-item v-bind="props">
-                            <template #title>
-                                <div class="d-flex justify-content-center align-items-center ga-2">
-                                    <v-icon :icon="item.title"></v-icon>
-                                    {{ item.title }}
-                                </div>
-                            </template>
-                        </v-list-item>
-                    </template>
-                </v-select>
-                <v-btn
-                    type="submit"
-                    color="blue"
-                    class="d-flex justify-center margin-center"
-                    :disabled="creating"
-                    :class="{'w-100': $vuetify.display.smAndDown}"
-                >
-                    {{ $t('global.created') }}!
-                </v-btn>
-            </v-form>
-        </div>
+        <v-form
+            class="pa-6 bg-white"
+            :class="{'w-75': $vuetify.display.smAndDown}"
+            @submit.prevent="createSubject">
+            <p class="text-h1 font-weight-bold py-6">{{ $t('global.created') }}
+                {{ $page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět' }}</p>
+            <v-text-field
+                v-model="form.name"
+                prepend-inner-icon="mdi-email"
+                variant="outlined"
+                autofocus
+                :label="$t('global.name')"
+                :rules="[rules.required, rules.chapterNameLength, rules.minSubjectLength]"
+            ></v-text-field>
+            <v-select
+                variant="outlined"
+                v-model="form.icon"
+                :items="icons"
+                item-title="iconName"
+                label="Ikona">
+                <template v-slot:selection="{ item, index }">
+                    <div class="d-flex justify-content-center align-items-center ga-2">
+                        <v-icon :icon="item.title"></v-icon>
+                        {{ item.title }}
+                    </div>
+                </template>
+                <template v-slot:item="{ item, props }">
+                    <v-list-item v-bind="props">
+                        <template #title>
+                            <div class="d-flex justify-content-center align-items-center ga-2">
+                                <v-icon :icon="item.title"></v-icon>
+                                {{ item.title }}
+                            </div>
+                        </template>
+                    </v-list-item>
+                </template>
+            </v-select>
+            <v-btn
+                type="submit"
+                color="blue"
+                class="d-flex justify-center margin-center"
+                :disabled="creating"
+                :class="{'w-100': $vuetify.display.smAndDown}"
+            >
+                {{ $t('global.created') }}!
+            </v-btn>
+        </v-form>
     </component>
 </template>
 <script setup>
@@ -90,27 +89,18 @@ const createSubject = async () => {
     });
 }
 </script>
-<style lang="scss">
-.create-subject {
-    width: 600px;
-
-    p:first-child {
-        font-size: 1.8em !important;
-        white-space: nowrap;
-        overflow: auto;
-    }
-
-    .v-form {
-        border-radius: 1em;
-        border: 1px solid gray;
-        box-shadow: 1em 1em gray;
-        width: inherit;
-
-        .v-messages__message {
-            padding-bottom: 1.2em !important;
-            transition: 0.3s;
-        }
-    }
+<style scoped lang="scss">
+.v-form {
+    width: inherit;
+    max-width: 35em !important;
+    border-radius: 1em;
+    border: 1px solid gray;
+    box-shadow: 1em 1em gray;
 }
+
+p:first-child {
+    font-size: 1.8em !important;
+}
+
 
 </style>

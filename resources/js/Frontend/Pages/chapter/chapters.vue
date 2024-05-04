@@ -29,10 +29,11 @@
                     :subject="subject"
                 ></SearchChapters>
             </div>
-            <v-card v-if="$page.props.user.id != subject.created_by" class="pa-4 font-weight-bold"
-                    :class="{'text-center': $vuetify.display.smAndDown}">
-                <p>Sdíleno od: {{ sharingUsr.firstname }} {{ sharingUsr.lastname }} ({{ sharingUsr.email }}) </p>
-            </v-card>
+            <ShareFromBox
+                v-if="$page.props.user.id != subject.created_by"
+                :sharingUsr="sharingUsr"
+                :subject="subject">
+            </ShareFromBox>
             <v-sheet class="py-5 d-grid ga-6">
                 <DialogShare
                     v-if="sharing"
@@ -71,6 +72,7 @@ import {Inertia} from "@inertiajs/inertia";
 import ChapterPreview from "@/Frontend/Components/ChapterPreview.vue";
 import axios from "axios";
 import SearchChapters from "@/Frontend/Components/SearchChapters.vue";
+import ShareFromBox from "@/Frontend/Components/ShareFromBox.vue";
 
 const users = ref();
 const DialogShare = defineAsyncComponent(() => import("@/Frontend/Components/DialogShare.vue"))

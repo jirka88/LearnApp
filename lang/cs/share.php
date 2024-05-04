@@ -6,6 +6,13 @@ return [
         'write' => 'K čtení a zápisu',
         'full' => 'Plná kontrola',
     ],
+    'permission_view' => [
+        'read' => 'S právem ke čtení',
+        'write' => 'S právem ke čtení a úpravě',
+        'full' => 'S právem plnou kontrolou',
+    ],
+    'accepted' => 'Přijmout',
+    'requested_by' => 'Žádost o sdílení od uživalele',
     'title' => 'Komu si přejete nasdílet tuto sekci?',
     'subtitle' => 'Až uživatel příjme nasdílení dostane k ní přístup!',
     'warning' => [
