@@ -48,9 +48,9 @@ class ChapterController extends Controller {
      * @return \Inertia\Response
      */
     public function create(Request $request, $slug) {
-        $user = $request->user()->with(['patritions' => function ($query) use ($slug) {
+        $user = auth()->user()->loadMissing(['patritions' => function ($query) use ($slug) {
             $query->where('slug', $slug)->firstOrFail();
-        }])->firstOrFail();
+        }]);
         $this->authorize('create', $user);
 
         return Inertia::render('chapter/createChapter', ['slug' => $slug]);
