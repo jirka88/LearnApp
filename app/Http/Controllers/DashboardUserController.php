@@ -80,7 +80,7 @@ class DashboardUserController extends Controller {
         if ($passwordResetRequest->oldPassword == $passwordResetRequest->newPassword) {
             return back()->withErrors(['newPasswordSameAsOld' => 'Nové heslo nesmí být stejné jako staré!']);
         }
-        User::find(auth()->user()->id)->update([
+        auth()->user()->update([
             'password' => $passwordResetRequest->newPassword,
         ]);
 

@@ -2,7 +2,7 @@
     <div class="d-flex ga-6 flex-column dashboard">
         <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
             {{ $t('dashboard.stats') }}</h1>
-       <!-- <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>-->
+        <!-- <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>-->
         <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
             <v-col>
                 <WelcomeBox/>
@@ -52,6 +52,14 @@
                     {{ stats.normalUsers }}
                 </v-card-text>
             </v-card>
+            <v-card elevation="4">
+                <v-card-title class="font-weight-bold text-center">
+                    Počet všech kapitol:
+                </v-card-title>
+                <v-card-text class="text-center">
+                    {{ stats.chapters }}
+                </v-card-text>
+            </v-card>
         </div>
     </div>
     <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
@@ -62,8 +70,9 @@
                 min-height="10em"
                 rounded
                 class="py-8 px-8 d-flex justify-center align-center flex-column">
-                <div class="text-h6 font-weight-bold">{{$t('dashboard.restrict_register')}}</div>
-                <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)"  hide-details></v-switch>
+                <div class="text-h6 font-weight-bold">{{ $t('dashboard.restrict_register') }}</div>
+                <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)"
+                          hide-details></v-switch>
             </v-sheet>
         </v-col>
         <v-col>
@@ -82,12 +91,7 @@
             </v-sheet>
         </v-col>
         <v-col>
-            <v-sheet
-                :elevation="8"
-                border
-                rounded
-            >
-            </v-sheet>
+
         </v-col>
     </v-row>
     <DialogChangeColorTheme
@@ -110,9 +114,10 @@ import Chart from 'chart.js/auto';
 import {defineAsyncComponent, markRaw, ref} from "vue";
 import {Bar} from 'vue-chartjs'
 import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
+import ProjectInfoBox from "@/Frontend/Components/Dashboard/ProjectInfoBox.vue";
+
 const DialogChangeColorTheme = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue"));
 const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
-import ProjectInfoBox from "@/Frontend/Components/Dashboard/ProjectInfoBox.vue";
 
 const props = defineProps(['stats'])
 
@@ -135,13 +140,14 @@ const chartData = ref({
     toastStatus(value);
 }*/
 const themeModal = ref(false);
-const setColorTheme = () =>{
+const setColorTheme = () => {
     themeModal.value = true;
 }
 </script>
 
 <style lang="scss">
 @use 'vuetify/lib/styles/settings/variables' as *;
+
 .v-card {
     box-sizing: border-box;
     padding: 3em 0 !important;
@@ -149,16 +155,20 @@ const setColorTheme = () =>{
     @media #{map-get($display-breakpoints, 'md-and-down')} {
         padding: 2em 0 !important;
     }
+
     .v-card-text {
         font-size: 1.4em;
     }
 }
+
 #my-chart-id {
     max-height: 500px !important;
 }
+
 .v-switch__track {
     background: red;
 }
+
 .underlineLink:before {
     position: absolute;
     content: '';
@@ -170,6 +180,7 @@ const setColorTheme = () =>{
     transform: scale(0);
     transform-origin: center;
 }
+
 .underlineLink:hover:before {
     transform: scale(1) !important;
 }

@@ -192,7 +192,7 @@ class Admin extends Controller {
 
     public function getStats() {
         if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $chapterCount = Cache::remember('chapterAllCount', now()->addMinute(), function () {
+            $chapterCount = Cache::rememberForever('chapterAllCount', function () {
                 return Chapter::all()->count();
             });
             $stats = ([
