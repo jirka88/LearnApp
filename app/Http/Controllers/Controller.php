@@ -8,7 +8,6 @@ use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\Localization;
 use App\Http\Resources\UserSelectResource;
 use App\Models\Partition;
-use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -16,7 +15,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Cache;
-use Inertia\Inertia;
 
 class Controller extends BaseController {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
@@ -82,39 +80,6 @@ class Controller extends BaseController {
     }
 
     /**
-     * Zobrazení všech nabídek ke sdílení předmětu
-     *
-     * @return \Inertia\Response
-     */
-    public function showShare() {
-        $subjects = auth()->user()
-            ->patritions()
-            ->where('accepted', false)
-            ->with(['Users' => function ($query2) {
-                UserSelectResource::make($query2->where('permission_id', null))->first();
-            }])->get();
-
-        return Inertia::render('subjects/acceptSubject', compact('subjects'));
-    }
-
-    /**
-     * Odmítnutí sdílení
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function deleteShare(Request $request) {
-        $subjecModel = app('\App\Models\Partition');
-        $subject = $subjecModel->getSubjectBySlug($request->slug);
-        auth()->user()->patritions()->detach($subject->id);
-
-        if ($subject->created_by == auth()->user()->id) {
-            return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo zrušeno']);
-        } else {
-            return to_route('subject.index')->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo zrušeno']);
-        }
-    }
-
-    /**
      * Odstranění sdílení
      *
      * @param  Request  $request
@@ -150,32 +115,6 @@ class Controller extends BaseController {
         }
 
         return Redirect()->back();
-    }
-
-    /**
-     * Zobrazí pod uživateleme všechny jeho sdílení
-     *
-     * @return \Inertia\Response
-     */
-    public function showStatsShare() {
-        $user = auth()->user();
-        $partitions = $user->patritions()->where('permission_id', null)
-            ->with(['users' => function ($query) {
-                UserSelectResource::make($query->whereNot('user_id', auth()->user()->id)->get());
-            }])->get();
-        $partitions->each(function ($subject) {
-            $subject->users->each(function ($user) {
-                $user->permission['name'] = Permission::where('id', $user->permission->permission_id)->pluck('permission')->first();
-            });
-        });
-        $subjects = $partitions->filter(function ($patrition) {
-            return $patrition->users->isNotEmpty();
-        });
-        $permission = Cache::rememberForever('permission', function () {
-            return Permission::all();
-        });
-
-        return Inertia::render('subjects/sharedSubjects', ['subjects' => $subjects, 'permissions' => $permission]);
     }
 
     /**

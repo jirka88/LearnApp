@@ -135,10 +135,7 @@ const chartData = ref({
         label: 'Uživatelé'
     }], labels: ["Běžný uživatelé", "Testeři", "Operátoři"]
 });
-/*const toastFetch = (value) => {
-    toastShow(true);
-    toastStatus(value);
-}*/
+
 const themeModal = ref(false);
 const setColorTheme = () => {
     themeModal.value = true;
