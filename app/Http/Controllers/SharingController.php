@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ToastifyStatus;
+use App\Models\Partition;
+use App\Models\User;
 use App\Services\SharingService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class SharingController extends Controller {
@@ -18,6 +21,36 @@ class SharingController extends Controller {
         $data = $service->index($user);
 
         return Inertia::render('subjects/sharedSubjects', $data);
+    }
+    /**
+     * Slouží ke vytvoření sdílení
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request, SharingService $service) {
+        $customMessages = [
+            'users.required' => __('share.warning.required_user'),
+            'permission.required' => __('share.warning.required_permission'),
+        ];
+        $validated = $request->validate([
+            'users' => 'required',
+            'permission' => 'required',
+            'subject' => 'required',
+        ], $customMessages);
+
+        $data = $service->store($validated);
+
+        return redirect()->back()->with($data);
+    }
+
+    /**
+     * Úprava sdílení
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, SharingService $service) {
+        $service->update($request->input('email'), $request->input('subject'), $request->input('permission'));
+        return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => __('validation.custom.update')]);
     }
 
     /**
@@ -44,5 +77,15 @@ class SharingController extends Controller {
         } else {
             return to_route('subject.index')->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo zrušeno']);
         }
+    }
+    /**
+     * Přijmutí sdílení
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function acceptShare(Request $request, SharingService $service) {
+        $service->acceptShare($request->slug);
+
+        return redirect()->back();
     }
 }

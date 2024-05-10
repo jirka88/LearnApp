@@ -49,37 +49,6 @@ class Controller extends BaseController {
     }
 
     /**
-     * Slouží ke vytvoření sdílení
-     *
-     * @return void
-     */
-    public function share(Request $request) {
-        $customMessages = [
-            'users.required' => __('share.warning.required_user'),
-            'permission.required' => __('share.warning.required_permission'),
-        ];
-        $validated = $request->validate([
-            'users' => 'required',
-            'permission' => 'required',
-            'subject' => 'required',
-        ], $customMessages);
-        $sendMessage = __('share.warning.send');
-        $status = ToastifyStatus::SUCCESS;
-        foreach ($validated['users'] as $email) {
-            $user = User::where('email', $email)->first();
-            if ($user->patritions()->where('partition_id', $validated['subject'])->first() == null) {
-                $user->patritions()->attach($validated['subject'], ['permission_id' => (int) $validated['permission'], 'accepted' => false]);
-            } else {
-                $sendMessage = __('share.warning.again_send');
-                $status = ToastifyStatus::INFO;
-            }
-        }
-        Cache::forget('sharedSubjects');
-
-        return redirect()->back()->with(['message' => $sendMessage, 'status' => $status]);
-    }
-
-    /**
      * Odstranění sdílení
      *
      * @param  Request  $request
@@ -95,41 +64,12 @@ class Controller extends BaseController {
         return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
     }
 
-    /**
-     * Přijmutí sdílení
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function acceptShare(Request $request) {
-        $subjecModel = app('\App\Models\Partition');
-        $subject = $subjecModel->getSubjectBySlug($request->slug);
-        auth()->user()->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
-        Cache::forget('sharedSubjects');
-
-        return redirect()->back();
-    }
-
     public function changeLanguage(Request $request, $language) {
         if (in_array($language, Localization::$supportedLanguages)) {
             Localization::setLocale($language);
         }
 
         return Redirect()->back();
-    }
-
-    /**
-     * Úprava sdílení
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function editShare(Request $request) {
-        $userModel = app('\App\Models\User');
-        $user = $userModel->getUserByEmail($request->input('email'));
-        $dr = $request->input('permission');
-        $subject = Partition::find($request->input('subject'));
-        $user->patritions()->updateExistingPivot($subject->id, ['permission_id' => $dr['id']]);
-
-        return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => __('validation.custom.update')]);
     }
 
     /**

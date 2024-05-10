@@ -53,11 +53,11 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::get('/manager/subject/{slug}/select', [ChapterController::class, 'selectChapter'])->name('chapter.select');
     Route::resource('/manager/subject/{slug}/chapter', ChapterController::class);
     Route::get('/manager/subject/{slug}/sharing/users', [Controller::class, 'showUsersForSharing'])->name('sharing');
-    Route::post('/sharing/users', [Controller::class, 'share'])->name('share');
+    Route::post('/sharing/users', [SharingController::class, 'store'])->name('share');
     Route::get('/sharing/subjects', [SharingController::class, 'showOfferShare'])->name('share.view');
-    Route::post('/sharing/subjects', [Controller::class, 'acceptShare'])->name('share.accept');
+    Route::post('/sharing/subjects', [SharingController::class, 'acceptShare'])->name('share.accept');
     Route::get('/sharing/show', [SharingController::class, 'index'])->name('share.show');
-    Route::put('/sharing/edit', [Controller::class, 'editShare'])->name('share.edit');
+    Route::put('/sharing/edit', [SharingController::class, 'update'])->name('share.edit');
     Route::delete('/sharing/subjects/{slug}/user/{user}', [Controller::class, 'deleteShared'])->name('sharing.delete');
     Route::delete('/sharing/subjects/{slug}', [SharingController::class, 'refuseShare'])->name('share.delete');
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
