@@ -33,7 +33,7 @@
                         <th class="font-weight-bold" v-if="$page.props.permission.view">ID:</th>
                         <th class="font-weight-bold">{{ $t('global.name') }}:</th>
                         <th class="font-weight-bold">Ikona:</th>
-                        <th class="font-weight-bold">{{$t('global.chapter_count')}}:</th>
+                        <th class="font-weight-bold">{{ $t('global.chapter_count') }}:</th>
                         <th class="font-weight-bold">Editace:</th>
                         <th class="font-weight-bold">Smazání:</th>
                     </tr>
@@ -62,7 +62,7 @@
                                 color="red"
                                 append-icon="mdi-delete"
                                 @click="setId(subjectData.id, subjectData.name)"
-                            >{{$t('global.delete')}}!
+                            >{{ $t('global.delete') }}!
                             </v-btn>
                         </td>
                     </tr>
@@ -98,7 +98,7 @@
                     @click="destroySubject()"
                     size="x-large"
                 >
-                    {{$t('global.delete')}}
+                    {{ $t('global.delete') }}
                 </v-btn>
             </DialogDelete>
         </v-row>
@@ -112,16 +112,18 @@ import {Inertia} from "@inertiajs/inertia";
 import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
+import {usePage} from "@inertiajs/vue3";
+
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
 
-const props = defineProps({subjects: Object, pages: Number, sort: String});
+const props = defineProps({subjects: Object, pages: Number, sort: String, page: Number});
 
 const subject = ref({
     subjectName: '',
     subjectId: ''
 });
-const page = ref(1);
+const page = ref(props.page);
 const subjectsShow = ref(props.subjects);
 
 const filtr = ref({state: 'Výchozí', id: 'default'});
@@ -154,10 +156,10 @@ const destroySubject = () => {
 }
 
 const fetchData = () => {
-    Inertia.get(route('subject.index'), {page: page.value}, {
+    Inertia.get(route('subject.index'), {page: page.value}, {sort: filtr.value?.id}, {
         preserveState: true, onSuccess: (response) => {
             subjectsShow.value = response.props.subjects;
-            pages.value = response.props.pages;
+            page.value = response.props.page;
         }
     });
 }

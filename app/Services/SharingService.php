@@ -73,6 +73,12 @@ class SharingService {
         $subject = Partition::findOrFail($request_subject);
         $user->patritions()->updateExistingPivot($subject->id, ['permission_id' => $permission['id']]);
     }
+    public function delete($slug, $user) :Void {
+        $subjecModel = app('\App\Models\Partition');
+        $subject = $subjecModel->getSubjectBySlug($slug);
+        $user->patritions()->detach($subject->id);
+        Cache::forget('sharedSubjects');
+    }
 
     /**
      * Vrátí nabídky ke sdílení předmětů

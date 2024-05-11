@@ -37,17 +37,4 @@ trait userTrait {
             return Settings::get('color')->firstOrFail();
         });
     }
-
-    /**
-     * Vrátí předměty/stránky/sort
-     *
-     * @return array
-     */
-    private function indexJson($sort) {
-        $filter = new FilterSubjectSort;
-        $subjects = $filter->sorting($sort);
-        $pages = ceil(count(Partition::all()->where('created_by', auth()->user()->id)) / globalSettings::ITEMS_IN_PAGE);
-
-        return ['subjects' => $subjects, 'pages' => $pages, 'sort' => $sort];
-    }
 }

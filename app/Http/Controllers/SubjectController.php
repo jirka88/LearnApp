@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Enums\ToastifyStatus;
 use App\Enums\UserLicences;
 use App\Enums\UserRoles;
+use App\Http\Components\FilterSubjectSort;
 use App\Http\Components\globalSettings;
 use App\Http\Requests\SubjectRequest;
 use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
 use App\Models\User;
+use App\Services\SubjectService;
 use App\Traits\userTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\RedirectResponse;
@@ -31,10 +33,9 @@ class SubjectController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function index(Request $request) {
+    public function index(Request $request, SubjectService $service) {
         $sort = $request->input('sort');
-        $arr = $this->indexJson($sort);
-
+        $arr = $service->index($this->subjectModel, $sort, auth()->user()->id, $request->page);
         return Inertia::render('subjects/subjects', $arr);
     }
 
@@ -125,7 +126,7 @@ class SubjectController extends Controller {
             'slug' => SlugService::createSlug(Partition::class, 'slug', $subjectRequest->name),
         ]);
 
-        return to_route('subject.index');
+        return to_route('subject.index')->with(['message' => __('validation.custom.update') , 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -133,11 +134,10 @@ class SubjectController extends Controller {
      *
      * @return RedirectResponse
      */
-    public function destroy(Request $request, Partition $subject) {
-        $sort = 'default';
+    public function destroy(Request $request, Partition $subject, SubjectService $service) {
         $subject->delete();
-        $arr = $this->indexJson($sort);
+        $arr = $service->index($this->subjectModel, 'default', auth()->user()->id);
 
-        return redirect()->back()->with(['message' => __('validation.custom.deleted'), $arr]);
+        return redirect()->back()->with(['message' => __('validation.custom.deleted') , 'status' => ToastifyStatus::SUCCESS, $arr]);
     }
 }

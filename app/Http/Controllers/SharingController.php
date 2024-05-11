@@ -54,6 +54,17 @@ class SharingController extends Controller {
     }
 
     /**
+     * Odstranění sdílení
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete($slug, User $user, SharingService $service) {
+        $service->delete($slug, $user);
+        return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
+    }
+
+    /**
      * Zobrazení všech nabídek ke sdílení předmětu
      *
      * @return \Inertia\Response
