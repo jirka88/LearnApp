@@ -17,5 +17,15 @@ class ChapterObserver
     {
         Cache::forget('chapterAllCount');
     }
+    /**
+     * Handle the Chapter "deleted" event.
+     *
+     * @param  \App\Models\Chapter  $chapter
+     * @return void
+     */
+    public function deleted(Chapter $chapter)
+    {
+        Cache::forget('chapterAllCount');
+    }
 
 }

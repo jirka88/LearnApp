@@ -10,15 +10,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Traits\subjectTrait;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 class Partition extends Model {
     use HasFactory;
     use Sluggable;
     use subjectTrait;
+    use FilterQueryString;
 
     protected $fillable = ['name', 'created_by', 'icon', 'slug'];
 
     protected $appends = ['chapter_count'];
+
+    protected $filters = ['sort'];
 
     public function sluggable(): array {
         return [

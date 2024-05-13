@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Models\Chapter;
+use App\Models\Partition;
 use App\Observers\ChapterObserver;
+use App\Services\SubjectService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;

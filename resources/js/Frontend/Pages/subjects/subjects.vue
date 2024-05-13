@@ -88,6 +88,7 @@
                 </div>
             </div>
         </v-container>
+        {{ filtr }}
         <v-row justify="center">
             <DialogDelete
                 v-if="dialog"
@@ -109,38 +110,51 @@ import {Link} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import {Inertia} from "@inertiajs/inertia";
-import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
+import {defineAsyncComponent, markRaw, onMounted, ref, watch} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
 import {usePage} from "@inertiajs/vue3";
+import {useRouter} from "vue-router";
 
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
 
-const props = defineProps({subjects: Object, pages: Number, sort: String, page: Number});
+const props = defineProps({
+    subjects: Object,
+    pages: Number,
+    sort: String,
+    page: Number
+});
 
 const subject = ref({
     subjectName: '',
     subjectId: ''
 });
-const page = ref(props.page);
+const page = ref(props.page ?? 1);
 const subjectsShow = ref(props.subjects);
 
 const filtr = ref({state: 'Výchozí', id: 'default'});
 
 const items = markRaw(
     [{state: 'Výchozí', id: 'default'},
-        {state: 'Sestupně', id: 'ASC'},
-        {state: 'Vzestupně', id: 'DESC'}]
+        {state: 'Sestupně', id: 'asc'},
+        {state: 'Vzestupně', id: 'desc'}]
 );
 
 onMounted(() => {
-    const params = useUrlSearchParams('history')
-    if (params.sort !== null) {
-        const sortValue = items.find(item => item.id === params.sort);
-        filtr.value = sortValue;
-    }
+    sort();
 })
+
+const sort = () => {
+    const params = useUrlSearchParams('history')
+    const sort = params.sort?.split(',');
+    if (sort && sort[sort.length - 1] !== null) {
+        const sortValue = items.find(item => item.id === sort[sort.length - 1]);
+        filtr.value = sortValue;
+        params.sort = 'name,' + filtr.value.id.toLowerCase();
+    }
+}
+
 const setId = (id, name) => {
     dialog.value = true;
     subject.value.subjectId = id;
@@ -156,19 +170,22 @@ const destroySubject = () => {
 }
 
 const fetchData = () => {
-    Inertia.get(route('subject.index'), {page: page.value}, {sort: filtr.value?.id}, {
+    Inertia.get(route('subject.index'), {page: page.value}, {
         preserveState: true, onSuccess: (response) => {
             subjectsShow.value = response.props.subjects;
             page.value = response.props.page;
-        }
+        },
     });
+
 }
 const filtred = async () => {
     const params = useUrlSearchParams('history')
-    params.sort = filtr.value.id;
-    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.id}`)
+    params.sort = 'name,' + filtr.value.id.toLowerCase();
+    await axios.get(`/dashboard/manager/subjects/sort?sort=name,${filtr.value.id}`)
         .then(response => {
             subjectsShow.value = response.data.search;
+            params.page = 1;
+            page.value = 1;
         })
 }
 </script>
