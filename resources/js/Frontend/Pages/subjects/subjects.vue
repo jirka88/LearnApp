@@ -88,7 +88,6 @@
                 </div>
             </div>
         </v-container>
-        {{ filtr }}
         <v-row justify="center">
             <DialogDelete
                 v-if="dialog"
@@ -113,8 +112,6 @@ import {Inertia} from "@inertiajs/inertia";
 import {defineAsyncComponent, markRaw, onMounted, ref, watch} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
-import {usePage} from "@inertiajs/vue3";
-import {useRouter} from "vue-router";
 
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
@@ -123,15 +120,14 @@ const props = defineProps({
     subjects: Object,
     pages: Number,
     sort: String,
-    page: Number
 });
 
 const subject = ref({
     subjectName: '',
     subjectId: ''
 });
-const page = ref(props.page ?? 1);
-const subjectsShow = ref(props.subjects);
+const page = ref(props.subjects.current_page);
+const subjectsShow = ref(props.subjects.data);
 
 const filtr = ref({state: 'Výchozí', id: 'default'});
 
@@ -163,27 +159,27 @@ const setId = (id, name) => {
 const destroySubject = () => {
     Inertia.delete(route('subject.destroy', subject.value.subjectId), {
         preserveState: true, onSuccess: (response) => {
-            subjectsShow.value = response.props.subjects;
+            subjectsShow.value = response.props.subjects.data;
             dialog.value = false;
         }
     });
 }
 
 const fetchData = () => {
-    Inertia.get(route('subject.index'), {page: page.value}, {
+    Inertia.get(route('subject.index'), {page: page.value, sort: 'name,' + filtr.value.id}, {
         preserveState: true, onSuccess: (response) => {
-            subjectsShow.value = response.props.subjects;
-            page.value = response.props.page;
+            subjectsShow.value = response.props.subjects.data;
+            page.value = response.props.subjects.current_page;
         },
     });
 
 }
 const filtred = async () => {
     const params = useUrlSearchParams('history')
-    params.sort = 'name,' + filtr.value.id.toLowerCase();
+    params.sort = 'name,' + filtr.value.id;
     await axios.get(`/dashboard/manager/subjects/sort?sort=name,${filtr.value.id}`)
         .then(response => {
-            subjectsShow.value = response.data.search;
+            subjectsShow.value = response.data.search.data;
             params.page = 1;
             page.value = 1;
         })

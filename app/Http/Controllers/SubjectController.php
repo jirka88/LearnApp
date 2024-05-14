@@ -35,7 +35,7 @@ class SubjectController extends Controller {
      */
     public function index(Request $request, SubjectService $service) {
         $sort = $request->input('sort');
-        $arr = $service->index($this->subjectModel, $sort, auth()->user()->id, $request->page);
+        $arr = $service->index($this->subjectModel, $sort, auth()->user()->id, $request->page, $request->url(), $request->query());
         return Inertia::render('subjects/subjects', $arr);
     }
 

@@ -24,7 +24,7 @@ class Controller extends BaseController {
      */
     public function sort(Request $request, Partition $partition) {
         $sort = $request->input('sort', 'default');
-        return response()->json(['search' => $partition->sortSubjects($sort)]);
+        return response()->json(['search' => $partition->sortSubjects($sort, $request->page, $request->url(), $request->query())]);
     }
 
     /**

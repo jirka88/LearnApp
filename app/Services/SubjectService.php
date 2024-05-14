@@ -14,9 +14,9 @@ class SubjectService
      * @param $user_id
      * @return array
      */
-    public function index(Partition $subject, ?String $sort, $user_id, ?int $actual_page) {
-        $subjects = $subject->sortSubjects($sort);
+    public function index(Partition $subject, ?String $sort, $user_id, ?int $actual_page, ?String $url, ?array $query) {
+        $subjects = $subject->sortSubjects($sort, $actual_page, $url, $query);
         $pages = ceil(count(Partition::all()->where('created_by', $user_id)) / globalSettings::ITEMS_IN_PAGE);
-        return ['subjects' => $subjects, 'pages' => $pages, 'page' => $actual_page, 'sort' => $sort];
+        return ['subjects' => $subjects->withQueryString(), 'pages' => $pages, 'sort' => $sort];
     }
 }
