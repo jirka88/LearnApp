@@ -2,9 +2,14 @@
 
 namespace App\Services;
 
+use App\Enums\UserRoles;
 use App\Http\Components\globalSettings;
+use App\Models\AccountTypes;
+use App\Models\Licences;
+use App\Models\Roles;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Facades\Cache;
 
 class AdminService
 {
@@ -15,6 +20,22 @@ class AdminService
             ->paginate(globalSettings::ITEMS_IN_PAGE);
         $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
         return ['users' => $users, 'pages' => $pages];
+    }
+    public function create() {
+        $accountTypes = Cache::rememberForever('accountTypes', function () {
+            return AccountTypes::all();
+        });
+        $licences = Cache::rememberForever('licences', function () {
+            return Licences::all();
+        });
+        if (auth()->user()->role_id == UserRoles::ADMIN) {
+            $roles = Cache::rememberForever('roles', function () {
+                return Roles::all();
+            });
+        } else {
+            $roles = Roles::all()->whereNotIn('id', [1, 2])->values();
+        }
+        return ['accountTypes' => $accountTypes, 'licences' => $licences, 'roles' => $roles];
     }
     public function store($user) {
         User::create([
@@ -27,5 +48,9 @@ class AdminService
             'licences_id' => $user->licence['id'],
             'slug' => SlugService::createSlug(User::class, 'slug', $user->firstname),
         ]);
+    }
+    public function destroy($user) {
+        $user->patritions()->detach();
+        User::destroy($user->id);
     }
 }

@@ -10,4 +10,8 @@ return [
         'description' => 'It appears you do not have access to this page!',
         'solve' => 'Request access from the administrator or double-check the URL address.',
     ],
+    '500' => [
+        'description' => 'An unexpected error occurred.',
+        'solve' => 'Please check your internet connection.'
+    ]
 ];

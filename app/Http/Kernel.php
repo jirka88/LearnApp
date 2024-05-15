@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ExceptionHandlingMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel {
@@ -37,6 +38,7 @@ class Kernel extends HttpKernel {
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\HandleInertiaRequests::class,
             \App\Http\Middleware\Localization::class,
+            \App\Http\Middleware\ExceptionHandlingMiddleware::class,
         ],
 
         'api' => [

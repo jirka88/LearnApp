@@ -93,23 +93,11 @@ class Admin extends Controller {
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create() {
+    public function create(AdminService $service) {
         $this->authorize('viewAny', auth()->user());
-        $accountTypes = Cache::rememberForever('accountTypes', function () {
-            return AccountTypes::all();
-        });
-        $licences = Cache::rememberForever('licences', function () {
-            return Licences::all();
-        });
-        if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $roles = Cache::rememberForever('roles', function () {
-                return Roles::all();
-            });
-        } else {
-            $roles = Roles::all()->whereNotIn('id', [1, 2])->values();
-        }
+        $data = $service->create();
 
-        return Inertia::render('admin/createUser', compact('accountTypes', 'roles', 'licences'));
+        return Inertia::render('admin/createUser', $data);
     }
 
     /**
@@ -118,13 +106,7 @@ class Admin extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(AdminCreateUser $adminCreateUser, AdminService $service) {
-        try {
-            $service->store($adminCreateUser);
-        }
-        catch (\Exception $e) {
-            Log::error('Chyba při ukládání uživatele: ' . $e->getMessage());
-            return redirect()->back()->with(['message' => 'Nastala chyba při ukládání uživatele!', 'status' => ToastifyStatus::ERROR]);
-        }
+        $service->store($adminCreateUser);
 
         return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
     }
@@ -134,10 +116,9 @@ class Admin extends Controller {
      *
      * @return void
      */
-    public function destroy(User $user) {
+    public function destroy(User $user, AdminService $service) {
         $this->authorize('view', $user);
-        $user->patritions()->detach();
-        User::destroy($user->id);
+        $service->destroy($user);
     }
 
     /**

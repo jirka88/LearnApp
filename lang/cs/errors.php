@@ -10,4 +10,8 @@ return [
         'description' => 'K této stránce to vypadá, že nemáte přístup!',
         'solve' => 'Zažádejte administrátora pro povolení k obsahu popřípadně zkontrolujte URL adresu.',
     ],
+    '500' => [
+        'description' => 'Nastala neočekávaná chyba!',
+        'solve' => 'Zkontrolujte připojení k internetu.'
+    ]
 ];

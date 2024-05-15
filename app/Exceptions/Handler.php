@@ -2,9 +2,13 @@
 
 namespace App\Exceptions;
 
+use App\Enums\ToastifyStatus;
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Predis\Configuration\Option\Exceptions;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler {
@@ -49,15 +53,19 @@ class Handler extends ExceptionHandler {
                     return redirect('dashboard/404');
                 }
         });*/
+        /*$this->reportable(function (HttpException $e, $request) {
+            Log::error('Unexpected error: ' . $e->getMessage());
+           return response()->json(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::SUCCESS], 500);
+        });*/
     }
 
     public function render($request, Throwable $e) {
         $response = parent::render($request, $e);
         $status = $response->status();
-
         return match ($status) {
             404 => redirect('dashboard/404'),
             403 => redirect('dashboard/403'),
+            500 => back()->with(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::ERROR]),
             default => $response
         };
     }
