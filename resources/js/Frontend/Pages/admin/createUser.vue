@@ -3,7 +3,7 @@
         <div class="creatingUser d-flex justify-center align-center py-4">
             <v-container class="d-flex justify-center flex-column pa-8">
                 <h1>{{ $t('global.create_user') }}</h1>
-                <form class="py-8 w-100 d-flex flex-column ga-1" @submit.prevent="createUser">
+                <form class="pt-8 w-100 d-flex flex-column ga-1" @submit.prevent="createUser">
                     <v-text-field
                         v-model="form.firstname"
                         prepend-inner-icon="mdi-account"
@@ -77,6 +77,7 @@
                     <v-btn type="submit"
                            color="blue"
                            class="btn d-flex"
+                           :disabled="disabledBtn"
                            :class="{'w-100': $vuetify.display.smAndDown}"
                     >
                         {{ $t('global.created') }}!
@@ -107,8 +108,15 @@ const form = useForm({
     licence: {Licence: props.licences[0].Licence, id: props.licences[0].id}
 });
 const show = ref(false);
+const disabledBtn = ref(false);
 const createUser = () => {
-    form.post(route('adminuser.store'))
+    disabledBtn.value = true;
+    form.post(route('adminuser.store'), {
+            onError: () => {
+                disabledBtn.value = false;
+            }
+        }
+    )
 }
 </script>
 

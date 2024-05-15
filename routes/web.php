@@ -71,7 +71,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     });
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'], function () {
         route::get('/controll', [Admin::class, 'index']);
-        route::get('/controll/{slug}', [Admin::class, 'edit'])->name('user.edit');
+        route::get('/controll/{user}', [Admin::class, 'edit'])->name('user.edit');
         route::put('/controll/{user}', [Admin::class, 'update'])->name('user.update');
         route::delete('/controll/{user}', [Admin::class, 'destroy'])->name('user.destroy');
         route::get('/controll/{slug}/subjects', [Admin::class, 'getUserSubjects'])->name('user.subjects');

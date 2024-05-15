@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
-use App\Http\Components\globalSettings;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
@@ -14,10 +14,13 @@ use App\Models\Partition;
 use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
+use App\Services\AdminService;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use SebastianBergmann\Diff\Exception;
 
 class Admin extends Controller {
     protected $userModel;
@@ -31,11 +34,9 @@ class Admin extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function index() {
-        $users = User::orderBy('role_id', 'ASC')->orderby('id', 'ASC')->with(['roles', 'licences'])->paginate(globalSettings::ITEMS_IN_PAGE);
-        $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
-
-        return Inertia::render('admin/listUsers', ['users' => $users, 'pages' => $pages]);
+    public function index(AdminService $service) {
+        $data = $service->index();
+        return Inertia::render('admin/listUsers', $data);
     }
 
     /**
@@ -82,7 +83,7 @@ class Admin extends Controller {
             'licences_id' => $updateRequest->licences['id'],
         ]);
 
-        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
+        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -116,19 +117,16 @@ class Admin extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AdminCreateUser $adminCreateUser) {
-        User::create([
-            'firstname' => $adminCreateUser->firstname,
-            'lastname' => $adminCreateUser->lastname,
-            'email' => $adminCreateUser->email,
-            'password' => $adminCreateUser->password,
-            'role_id' => $adminCreateUser->role['id'],
-            'type_id' => $adminCreateUser->type['id'],
-            'licences_id' => $adminCreateUser->licence['id'],
-            'slug' => SlugService::createSlug(User::class, 'slug', $adminCreateUser->firstname),
-        ]);
+    public function store(AdminCreateUser $adminCreateUser, AdminService $service) {
+        try {
+            $service->store($adminCreateUser);
+        }
+        catch (\Exception $e) {
+            Log::error('Chyba při ukládání uživatele: ' . $e->getMessage());
+            return redirect()->back()->with(['message' => 'Nastala chyba při ukládání uživatele!', 'status' => ToastifyStatus::ERROR]);
+        }
 
-        return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => 'success']);
+        return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -222,7 +220,7 @@ class Admin extends Controller {
         Settings::find(1)->update(['RestrictedRegistration' => $value]);
         Cache::forget('restrictRegister');
 
-        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
+        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -237,6 +235,6 @@ class Admin extends Controller {
         Settings::find(1)->update(['color' => $color]);
         Cache::forget('color');
 
-        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => 'success']);
+        return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 }
