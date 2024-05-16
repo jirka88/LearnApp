@@ -65,7 +65,7 @@ class Handler extends ExceptionHandler {
         return match ($status) {
             404 => redirect('dashboard/404'),
             403 => redirect('dashboard/403'),
-            500 => back()->with(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::ERROR]),
+            //500 => back()->with(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::ERROR]),
             default => $response
         };
     }

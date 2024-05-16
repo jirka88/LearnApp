@@ -8,10 +8,12 @@
                      :key="subject.id">
                 <thead>
                 <tr>
-                    <Link :href="route('subject.show',{subject: subject.slug} )"> <th colspan="6" class="font-weight-bold text-subtitle-1 text-decoration-underline"> {{
-                            subject.name
-                        }}
-                    </th></Link>
+                    <Link :href="route('subject.show',{subject: subject.slug} )">
+                        <th colspan="6" class="font-weight-bold text-subtitle-1 text-decoration-underline"> {{
+                                subject.name
+                            }}
+                        </th>
+                    </Link>
                 </tr>
                 <tr v-if="subject.users.length > 0">
                     <th>
@@ -20,8 +22,8 @@
                     <th></th>
                     <th class="font-weight-bold">Jméno a příjmení:</th>
                     <th class="font-weight-bold">Email:</th>
-                    <th class="font-weight-bold">Zvolené oprávnění</th>
                     <th class="font-weight-bold">Status:</th>
+                    <th class="font-weight-bold">{{ $t('share.selected_permission') }}</th>
                     <th class="font-weight-bold">Nastavení:</th>
                 </tr>
                 </thead>
@@ -33,12 +35,15 @@
                     <td width="5%">
                         <v-img height="2em" min-width="1em" max-width:="2em" :src="arrow"></v-img>
                     </td>
-                    <td width="2em"><v-img class="border-100"  max-height="3em" min-width="3em" max-width="3em" :src="user.image ? '/storage/' + user.image : undefinedPicture"></v-img></td>
+                    <td width="2em">
+                        <v-img class="border-100" max-height="3em" min-width="3em" max-width="3em"
+                               :src="user.image ? '/storage/' + user.image : undefinedPicture"></v-img>
+                    </td>
                     <td width="20%"><p>{{ user.firstname }} {{ user.lastname }}</p></td>
                     <td width="20%"><p class="text-subtitle-2">{{ user.email }}</p></td>
                     <td width="25%">
                         <v-chip variant="flat" :color="user.permission.accepted  != 0 ? 'green' : 'red'">
-                            {{user.permission.accepted != 0 ? 'Přijmuto' : 'Nepotvrzeno'}}
+                            {{ user.permission.accepted != 0 ? $t('share.confirmed') : $t('share.unconfirmed') }}
                         </v-chip>
                     </td>
                     <td width="25%">{{ user.permission.name }}</td>

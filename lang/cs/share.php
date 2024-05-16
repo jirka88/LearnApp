@@ -21,5 +21,8 @@ return [
         'send' => 'Žádost o sdílení byla zaslána!',
         'again_send' => 'Žádost o sdílení byla už zaslána!',
     ],
+    'selected_permission' => 'Zvolené oprávnění',
+    'confirmed' => 'Přijmuto',
+    'unconfirmed' => 'Nepotvrzeno'
 
 ];

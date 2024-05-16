@@ -136,8 +136,8 @@ class SubjectController extends Controller {
      */
     public function destroy(Request $request, Partition $subject, SubjectService $service) {
         $subject->delete();
-        $arr = $service->index($this->subjectModel, 'default', auth()->user()->id);
-
+        $sort = $request->input('sort', 'default');
+        $arr = $service->index($this->subjectModel, $sort, auth()->user()->id, 1, $request->url(), $request->query());
         return redirect()->back()->with(['message' => __('validation.custom.deleted') , 'status' => ToastifyStatus::SUCCESS, $arr]);
     }
 }

@@ -18,6 +18,7 @@
                         :disabled="subjectsShow.length === 0"
                         item-title="state"
                         item-value="id"
+                        item-sort="sort"
                         label="Výchozí"
                         persistent-hint
                         return-object
@@ -129,12 +130,14 @@ const subject = ref({
 const page = ref(props.subjects.current_page);
 const subjectsShow = ref(props.subjects.data);
 
-const filtr = ref({state: 'Výchozí', id: 'default'});
+const filtr = ref({state: 'Výchozí', id: 'default', sort: 'name'});
 
 const items = markRaw(
-    [{state: 'Výchozí', id: 'default'},
-        {state: 'Sestupně', id: 'asc'},
-        {state: 'Vzestupně', id: 'desc'}]
+    [{state: 'Výchozí', id: 'default', sort: 'name'},
+        {state: 'Sestupně', id: 'asc', sort: 'name'},
+        {state: 'Vzestupně', id: 'desc', sort: 'name'},
+        {state: 'Od nejnovějších', id: 'asc', sort: 'created_at'},
+        {state: 'Od nejstarších', id: 'desc', sort: 'created_at'}]
 );
 
 onMounted(() => {
@@ -147,7 +150,7 @@ const sort = () => {
     if (sort && sort[sort.length - 1] !== null) {
         const sortValue = items.find(item => item.id === sort[sort.length - 1]);
         filtr.value = sortValue;
-        params.sort = 'name,' + filtr.value.id.toLowerCase();
+        params.sort = filtr.value.sort + ',' + filtr.value.id.toLowerCase();
     }
 }
 
@@ -166,7 +169,7 @@ const destroySubject = () => {
 }
 
 const fetchData = () => {
-    Inertia.get(route('subject.index'), {page: page.value, sort: 'name,' + filtr.value.id}, {
+    Inertia.get(route('subject.index'), {page: page.value, sort: filtr.value.sort + ',' + filtr.value.id}, {
         preserveState: true, onSuccess: (response) => {
             subjectsShow.value = response.props.subjects.data;
             page.value = response.props.subjects.current_page;
@@ -176,8 +179,8 @@ const fetchData = () => {
 }
 const filtred = async () => {
     const params = useUrlSearchParams('history')
-    params.sort = 'name,' + filtr.value.id;
-    await axios.get(`/dashboard/manager/subjects/sort?sort=name,${filtr.value.id}`)
+    params.sort = filtr.value.sort + ',' + filtr.value.id;
+    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.sort},${filtr.value.id}`)
         .then(response => {
             subjectsShow.value = response.data.search.data;
             params.page = 1;

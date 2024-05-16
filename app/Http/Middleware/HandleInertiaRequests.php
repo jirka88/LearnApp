@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Traits\userTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware {
@@ -44,7 +45,9 @@ class HandleInertiaRequests extends Middleware {
                 'email' => auth()->user()->email ?? '',
                 'role' => auth()->user()->roles ?? '',
                 'typeAccount' => auth()->user()->accountTypes->type ?? '',
-                'subjects' => auth()->user()->patritions ?? '',
+                'subjects' =>  Cache::rememberForever('subjects', function () {
+                    return auth()->user()->patritions ?? '';
+                }),
                 'licences' => auth()->user()->licences->id ?? '',
                 'image' => auth()->user()->image ?? '',
                 'sharedSubjects' => $this->getActivedShared(),

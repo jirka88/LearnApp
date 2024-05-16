@@ -15,6 +15,7 @@ use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
 use App\Services\AdminService;
+use App\Services\DashboardService;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -167,27 +168,6 @@ class Admin extends Controller {
         $user->patritions()->attach($subjectT->id);
 
         return to_route('adminuser.subjects', $user->slug);
-    }
-
-    public function getStats() {
-        if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $chapterCount = Cache::rememberForever('chapterAllCount', function () {
-                return Chapter::all()->count();
-            });
-            $stats = ([
-                'users' => $this->userModel->append('get_count_users'),
-                'operators' => $this->userModel->getUserCountByRole(UserRoles::OPERATOR),
-                'normalUsers' => $this->userModel->getUserCountByRole(UserRoles::BASIC_USER),
-                'chapters' => $chapterCount,
-                'testersCount' => $this->userModel->getUserCountByRole(UserRoles::TESTER),
-                'restrictRegister' => Cache::rememberForever('restrictRegister', function () {
-                    return Settings::pluck('RestrictedRegistration')->first();
-                })]);
-        } else {
-            $stats = null;
-        }
-
-        return $stats;
     }
 
     /**

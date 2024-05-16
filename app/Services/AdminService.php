@@ -37,6 +37,12 @@ class AdminService
         }
         return ['accountTypes' => $accountTypes, 'licences' => $licences, 'roles' => $roles];
     }
+
+    /**
+     * Vytvoření uživatele
+     * @param $user
+     * @return void
+     */
     public function store($user) {
         User::create([
             'firstname' => $user->firstname,
@@ -49,6 +55,12 @@ class AdminService
             'slug' => SlugService::createSlug(User::class, 'slug', $user->firstname),
         ]);
     }
+
+    /**
+     * Vymazání uživatele
+     * @param $user
+     * @return void
+     */
     public function destroy($user) {
         $user->patritions()->detach();
         User::destroy($user->id);

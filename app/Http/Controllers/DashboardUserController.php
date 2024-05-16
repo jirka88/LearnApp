@@ -10,6 +10,7 @@ use App\Models\AccountTypes;
 use App\Models\Licences;
 use App\Models\Roles;
 use App\Models\User;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -120,11 +121,8 @@ class DashboardUserController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function getUserStats() {
-        $stats = [];
-        if (auth()->user()->role_id == 1) {
-            $stats = app('App\Http\Controllers\Admin')->getStats();
-        }
+    public function getUserStats(DashboardService $service) {
+        $stats = $service->index($this->userModel, auth()->user()->role_id);
 
         return Inertia::render('dashboard', compact('stats'));
     }

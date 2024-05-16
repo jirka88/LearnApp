@@ -21,4 +21,7 @@ return [
         'send' => 'The sharing request has been sent!',
         'again_send' => 'The sharing request has already been sent!',
     ],
+    'selected_permission' => 'Selected permission',
+    'confirmed' => 'Accepted',
+    'unconfirmed' => 'Unconfirmed'
 ];

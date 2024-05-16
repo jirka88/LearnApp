@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use App\Models\Chapter;
 use App\Models\Partition;
+use App\Models\User;
 use App\Observers\ChapterObserver;
+use App\Observers\SubjectObserver;
+use App\Observers\UserObserver;
 use App\Services\SubjectService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -29,6 +32,8 @@ class EventServiceProvider extends ServiceProvider {
      */
     public function boot() {
         Chapter::observe(ChapterObserver::class);
+        Partition::observe(SubjectObserver::class);
+        User::observe(UserObserver::class);
     }
 
     /**
