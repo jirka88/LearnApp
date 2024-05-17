@@ -16,7 +16,7 @@ trait userTrait {
      */
     public function getActivedShared() {
         if (auth()->user()) {
-            return Cache::remember('sharedSubjects', now()->addMinutes(10), function () {
+            return Cache::remember('sharedSubjects' . auth()->user()->id, now()->addMinutes(10), function () {
                 $shared = auth()->user()->patritions()
                     ->withCount(['Users' => function ($query) {
                         $query->whereNot('user_id', auth()->user()->id);
@@ -26,7 +26,6 @@ trait userTrait {
                 foreach ($dataArray as $item) {
                     $totalUsersCount += (int) $item['users_count'];
                 }
-
                 return $totalUsersCount;
             });
         }

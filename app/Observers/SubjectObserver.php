@@ -10,10 +10,10 @@ class SubjectObserver
 {
     public function created(Partition $partition)
     {
-        Cache::forget('subjects');
+        Cache::forget('subjects' . auth()->user()->id);
     }
     public function deleted(Partition $partition)
     {
-        Cache::forget('subjects');
+        Cache::forget('subjects' . auth()->user()->id);
     }
 }
