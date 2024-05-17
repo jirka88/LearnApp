@@ -22,16 +22,16 @@ trait subjectTrait
         $page = $currentPage == null ? 1 : $currentPage;
         if ($sort && $sort !== self::DEFAULT_VALUE) {
             $data = Partition::filter()
-                ->paginate(globalSettings::ITEMS_IN_PAGE)
                 ->where('created_by', Auth()->User()->id)
+                ->paginate(globalSettings::ITEMS_IN_PAGE)
                 ->append('chapter_count')->values();
             $subjects = new LengthAwarePaginator($data, count($data), globalSettings::ITEMS_IN_PAGE, $page, [
                 'path' => $url,
                 'query' => $query
             ]);
         } else {
-            $data = Partition::paginate(globalSettings::ITEMS_IN_PAGE)
-                    ->where('created_by', Auth()->User()->id)
+            $data = Partition::where('created_by', Auth()->User()->id)
+                    ->paginate(globalSettings::ITEMS_IN_PAGE)
                     ->append('chapter_count');
             $subjects = new LengthAwarePaginator($data, count($data), globalSettings::ITEMS_IN_PAGE, $page, [
                 'path' => $url,
