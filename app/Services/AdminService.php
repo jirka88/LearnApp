@@ -21,6 +21,11 @@ class AdminService
         $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
         return ['users' => $users, 'pages' => $pages];
     }
+
+    /**
+     * Vrátí globální informace --> typy účtů, licence, role - podle oprávnění
+     * @return array
+     */
     public function create() {
         $accountTypes = Cache::rememberForever('accountTypes', function () {
             return AccountTypes::all();

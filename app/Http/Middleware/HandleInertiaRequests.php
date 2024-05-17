@@ -45,9 +45,9 @@ class HandleInertiaRequests extends Middleware {
                 'email' => auth()->user()->email ?? '',
                 'role' => auth()->user()->roles ?? '',
                 'typeAccount' => auth()->user()->accountTypes->type ?? '',
-                'subjects' =>  Cache::rememberForever('subjects' . auth()->user()->id, function () {
+                'subjects' => auth()->user()?->id ? Cache::rememberForever('subjects' . auth()->user()->id, function () {
                     return auth()->user()->patritions ?? '';
-                }),
+                }) : '',
                 'licences' => auth()->user()->licences->id ?? '',
                 'image' => auth()->user()->image ?? '',
                 'sharedSubjects' => $this->getActivedShared(),
