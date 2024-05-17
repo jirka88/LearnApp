@@ -11,14 +11,20 @@ use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class SharingController extends Controller {
+    private $service;
+    public function __construct(SharingService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Zobrazí pod uživateleme všechny jeho sdílení
      *
      * @return \Inertia\Response
      */
-    public function index(SharingService $service) {
+    public function index() {
         $user = auth()->user();
-        $data = $service->index($user);
+        $data = $this->service->index($user);
 
         return Inertia::render('subjects/sharedSubjects', $data);
     }
@@ -27,7 +33,7 @@ class SharingController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request, SharingService $service) {
+    public function store(Request $request) {
         $customMessages = [
             'users.required' => __('share.warning.required_user'),
             'permission.required' => __('share.warning.required_permission'),
@@ -38,7 +44,7 @@ class SharingController extends Controller {
             'subject' => 'required',
         ], $customMessages);
 
-        $data = $service->store($validated);
+        $data =  $this->service->store($validated);
 
         return redirect()->back()->with($data);
     }
@@ -48,8 +54,8 @@ class SharingController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, SharingService $service) {
-        $service->update($request->input('email'), $request->input('subject'), $request->input('permission'));
+    public function update(Request $request) {
+        $this->service->update($request->input('email'), $request->input('subject'), $request->input('permission'));
         return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => __('validation.custom.update')]);
     }
 
@@ -59,8 +65,8 @@ class SharingController extends Controller {
      * @param  Request  $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function delete($slug, User $user, SharingService $service) {
-        $service->delete($slug, $user);
+    public function delete($slug, User $user) {
+        $this->service->delete($slug, $user);
         return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
     }
 
@@ -69,8 +75,8 @@ class SharingController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function showOfferShare(SharingService $service) {
-        $subjects = $service->showOfferShare(auth()->user());
+    public function showOfferShare() {
+        $subjects =  $this->service->showOfferShare(auth()->user());
 
         return Inertia::render('subjects/acceptSubject', compact('subjects'));
     }
@@ -80,8 +86,8 @@ class SharingController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function refuseShare(Request $request, SharingService $service) {
-        $subject = $service->refuseShare(auth()->user(), $request->slug);
+    public function refuseShare(Request $request) {
+        $subject = $this->service->refuseShare(auth()->user(), $request->slug);
 
         if ($subject->created_by == auth()->user()->id) {
             return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo zrušeno']);
@@ -94,8 +100,8 @@ class SharingController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function acceptShare(Request $request, SharingService $service) {
-        $service->acceptShare($request->slug);
+    public function acceptShare(Request $request) {
+        $this->service->acceptShare($request->slug);
 
         return redirect()->back();
     }

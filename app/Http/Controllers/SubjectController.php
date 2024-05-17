@@ -4,14 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Enums\ToastifyStatus;
 use App\Enums\UserLicences;
-use App\Enums\UserRoles;
-use App\Http\Components\FilterSubjectSort;
-use App\Http\Components\globalSettings;
 use App\Http\Requests\SubjectRequest;
-use App\Models\Chapter;
 use App\Models\Licences;
 use App\Models\Partition;
-use App\Models\User;
 use App\Services\SubjectService;
 use App\Traits\userTrait;
 use Cviebrock\EloquentSluggable\Services\SlugService;
@@ -23,9 +18,11 @@ class SubjectController extends Controller {
     use userTrait;
 
     protected $subjectModel;
+    private $service;
 
-    public function __construct(Partition $subjectModel) {
+    public function __construct(Partition $subjectModel, SubjectService $service) {
         $this->subjectModel = $subjectModel;
+        $this->service = $service;
     }
 
     /**
@@ -33,9 +30,9 @@ class SubjectController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function index(Request $request, SubjectService $service) {
-        $sort = $request->input('sort');
-        $arr = $service->index($this->subjectModel, $sort, auth()->user()->id, $request->page, $request->url(), $request->query());
+    public function index(Request $request) {
+        $sort = $request->input('sort', 'default');
+        $arr = $this->service->index($this->subjectModel, $sort, auth()->user()->id, $request->page, $request->url(), $request->query());
         return Inertia::render('subjects/subjects', $arr);
     }
 
@@ -46,24 +43,9 @@ class SubjectController extends Controller {
      * @return \Inertia\Response
      */
     public function show(Request $request, $slug) {
-        $subject = $this->subjectModel->getSubjectBySlug($slug);
-        $pShare = $subject->Users()->find(auth()->user()->id, ['user_id'])?->permission;
-        $sharingUsr = [];
-        if ($pShare === null) {
-            if (auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
-                $subject['permission'] = $subject->Users()->find($subject->created_by)->permission;
-            }
-        } else {
-            $subject['permission'] = $pShare;
-            $sharingUsr = User::select('firstname', 'lastname', 'email')->find($subject->created_by);
-        }
-        $this->authorize('view', $subject);
-        $chapters = Chapter::where('partition_id', $subject->id)
-            ->select(['name', 'perex', 'id', 'slug'])
-            ->paginate(globalSettings::ITEMS_IN_PAGE);
-        $pages = ceil(Chapter::where('partition_id', $subject->id)->count() / globalSettings::ITEMS_IN_PAGE);
-
-        return Inertia::render('chapter/chapters', compact('chapters', 'subject', 'pages', 'sharingUsr'));
+        $data = $this->service->show($this->subjectModel, $slug, auth()->user()->id, auth()->user()->roles->id);
+        $this->authorize('view', $data['subject']);
+        return Inertia::render('chapter/chapters', $data);
     }
 
     /**
@@ -134,10 +116,10 @@ class SubjectController extends Controller {
      *
      * @return RedirectResponse
      */
-    public function destroy(Request $request, Partition $subject, SubjectService $service) {
+    public function destroy(Request $request, Partition $subject) {
         $subject->delete();
         $sort = $request->input('sort', 'default');
-        $arr = $service->index($this->subjectModel, $sort, auth()->user()->id, 1, $request->url(), $request->query());
+        $arr = $this->service->index($this->subjectModel, $sort, auth()->user()->id, 1, $request->url(), $request->query());
         return redirect()->back()->with(['message' => __('validation.custom.deleted') , 'status' => ToastifyStatus::SUCCESS, $arr]);
     }
 }
