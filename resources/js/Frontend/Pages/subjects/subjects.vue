@@ -3,7 +3,7 @@
         <v-container class="pa-0">
             <div class="d-flex flex-column pa-5 ga-6">
                 <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
-                <div class="btns d-flex align-center">
+                <div class="btns d-flex align-center justify-space-between">
                     <Link :href="route('subject.create')">
                         <v-btn
                             class="bg-green">
@@ -39,7 +39,7 @@
                         <th class="font-weight-bold">Smazání:</th>
                     </tr>
                     </thead>
-                    <tbody v-if="subjectsShow.length !== 0">
+                    <tbody v-if="subjectsShow.length !== 0 && !loading">
                     <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
                         <td class="font-weight-bold" v-if="$page.props.permission.view">{{ subjectData.id }}</td>
                         <td class="font-weight-bold">{{ subjectData.name }}</td>
@@ -67,6 +67,12 @@
                             </v-btn>
                         </td>
                     </tr>
+                    </tbody>
+                    <tbody v-else-if="loading">
+                    <TableSkeleton v-for="n in subjectsShow" :countTd="$page.props.user.role.id === 4 ? 5 : 6"
+                                   :key="n.id">
+
+                    </TableSkeleton>
                     </tbody>
                     <tbody v-else>
                     <tr>
@@ -116,7 +122,7 @@ import {useUrlSearchParams} from '@vueuse/core';
 
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
-
+const TableSkeleton = defineAsyncComponent(() => import("@/Frontend/Components/Loading/TableSkeleton.vue"));
 const props = defineProps({
     subjects: Object,
     pages: Number,
@@ -129,6 +135,7 @@ const subject = ref({
 });
 const page = ref(props.subjects.current_page);
 const subjectsShow = ref(props.subjects.data);
+const loading = ref(false);
 
 const filtr = ref({state: 'Výchozí', id: 'default', sort: 'name'});
 
@@ -178,6 +185,7 @@ const fetchData = () => {
 
 }
 const filtred = async () => {
+    loading.value = true;
     const params = useUrlSearchParams('history')
     params.sort = filtr.value.sort + ',' + filtr.value.id;
     await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.sort},${filtr.value.id}`)
@@ -185,17 +193,15 @@ const filtred = async () => {
             subjectsShow.value = response.data.search.data;
             params.page = 1;
             page.value = 1;
+            loading.value = false;
         })
 }
 </script>
 
 <style scoped lang="scss">
-.btns {
-    justify-content: space-between;
-}
 
 .v-select {
-    max-width: 150px;
+    max-width: 180px;
 }
 
 .v-chip {
