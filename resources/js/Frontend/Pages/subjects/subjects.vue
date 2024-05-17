@@ -3,7 +3,7 @@
         <v-container class="pa-0">
             <div class="d-flex flex-column pa-5 ga-6">
                 <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
-                <div class="btns d-flex align-center">
+                <div class="btns d-flex align-center justify-space-between">
                     <Link :href="route('subject.create')">
                         <v-btn
                             class="bg-green">
@@ -18,6 +18,7 @@
                         :disabled="subjectsShow.length === 0"
                         item-title="state"
                         item-value="id"
+                        item-sort="sort"
                         label="Výchozí"
                         persistent-hint
                         return-object
@@ -33,12 +34,12 @@
                         <th class="font-weight-bold" v-if="$page.props.permission.view">ID:</th>
                         <th class="font-weight-bold">{{ $t('global.name') }}:</th>
                         <th class="font-weight-bold">Ikona:</th>
-                        <th class="font-weight-bold">{{$t('global.chapter_count')}}:</th>
+                        <th class="font-weight-bold">{{ $t('global.chapter_count') }}:</th>
                         <th class="font-weight-bold">Editace:</th>
                         <th class="font-weight-bold">Smazání:</th>
                     </tr>
                     </thead>
-                    <tbody v-if="subjectsShow.length !== 0">
+                    <tbody v-if="subjectsShow.length !== 0 && !loading">
                     <tr class="pa-8" v-for="subjectData in subjectsShow" :key="subjectData.id">
                         <td class="font-weight-bold" v-if="$page.props.permission.view">{{ subjectData.id }}</td>
                         <td class="font-weight-bold">{{ subjectData.name }}</td>
@@ -62,10 +63,16 @@
                                 color="red"
                                 append-icon="mdi-delete"
                                 @click="setId(subjectData.id, subjectData.name)"
-                            >{{$t('global.delete')}}!
+                            >{{ $t('global.delete') }}!
                             </v-btn>
                         </td>
                     </tr>
+                    </tbody>
+                    <tbody v-else-if="loading">
+                    <TableSkeleton v-for="n in subjectsShow" :countTd="$page.props.user.role.id === 4 ? 5 : 6"
+                                   :key="n.id">
+
+                    </TableSkeleton>
                     </tbody>
                     <tbody v-else>
                     <tr>
@@ -98,7 +105,7 @@
                     @click="destroySubject()"
                     size="x-large"
                 >
-                    {{$t('global.delete')}}
+                    {{ $t('global.delete') }}
                 </v-btn>
             </DialogDelete>
         </v-row>
@@ -109,36 +116,51 @@ import {Link} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import {Inertia} from "@inertiajs/inertia";
-import {defineAsyncComponent, markRaw, onMounted, ref} from "vue";
+import {defineAsyncComponent, markRaw, onMounted, ref, watch} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
+
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
-
-const props = defineProps({subjects: Object, pages: Number, sort: String});
+const TableSkeleton = defineAsyncComponent(() => import("@/Frontend/Components/Loading/TableSkeleton.vue"));
+const props = defineProps({
+    subjects: Object,
+    pages: Number,
+    sort: String,
+});
 
 const subject = ref({
     subjectName: '',
     subjectId: ''
 });
-const page = ref(1);
-const subjectsShow = ref(props.subjects);
+const page = ref(props.subjects.current_page);
+const subjectsShow = ref(props.subjects.data);
+const loading = ref(false);
 
-const filtr = ref({state: 'Výchozí', id: 'default'});
+const filtr = ref({state: 'Výchozí', id: 'default', sort: 'name'});
 
 const items = markRaw(
-    [{state: 'Výchozí', id: 'default'},
-        {state: 'Sestupně', id: 'ASC'},
-        {state: 'Vzestupně', id: 'DESC'}]
+    [{state: 'Výchozí', id: 'default', sort: 'name'},
+        {state: 'Sestupně', id: 'asc', sort: 'name'},
+        {state: 'Vzestupně', id: 'desc', sort: 'name'},
+        {state: 'Od nejnovějších', id: 'asc', sort: 'created_at'},
+        {state: 'Od nejstarších', id: 'desc', sort: 'created_at'}]
 );
 
 onMounted(() => {
-    const params = useUrlSearchParams('history')
-    if (params.sort !== null) {
-        const sortValue = items.find(item => item.id === params.sort);
-        filtr.value = sortValue;
-    }
+    sort();
 })
+
+const sort = () => {
+    const params = useUrlSearchParams('history')
+    const sort = params.sort?.split(',');
+    if (sort && sort[sort.length - 1] !== null) {
+        const sortValue = items.find(item => item.id === sort[sort.length - 1]);
+        filtr.value = sortValue;
+        params.sort = filtr.value.sort + ',' + filtr.value.id.toLowerCase();
+    }
+}
+
 const setId = (id, name) => {
     dialog.value = true;
     subject.value.subjectId = id;
@@ -147,37 +169,39 @@ const setId = (id, name) => {
 const destroySubject = () => {
     Inertia.delete(route('subject.destroy', subject.value.subjectId), {
         preserveState: true, onSuccess: (response) => {
-            subjectsShow.value = response.props.subjects;
+            subjectsShow.value = response.props.subjects.data;
             dialog.value = false;
         }
     });
 }
 
 const fetchData = () => {
-    Inertia.get(route('subject.index'), {page: page.value}, {
+    Inertia.get(route('subject.index'), {page: page.value, sort: filtr.value.sort + ',' + filtr.value.id}, {
         preserveState: true, onSuccess: (response) => {
-            subjectsShow.value = response.props.subjects;
-            pages.value = response.props.pages;
-        }
+            subjectsShow.value = response.props.subjects.data;
+            page.value = response.props.subjects.current_page;
+        },
     });
+
 }
 const filtred = async () => {
+    loading.value = true;
     const params = useUrlSearchParams('history')
-    params.sort = filtr.value.id;
-    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.id}`)
+    params.sort = filtr.value.sort + ',' + filtr.value.id;
+    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.sort},${filtr.value.id}`)
         .then(response => {
-            subjectsShow.value = response.data.search;
+            subjectsShow.value = response.data.search.data;
+            params.page = 1;
+            page.value = 1;
+            loading.value = false;
         })
 }
 </script>
 
 <style scoped lang="scss">
-.btns {
-    justify-content: space-between;
-}
 
 .v-select {
-    max-width: 150px;
+    max-width: 180px;
 }
 
 .v-chip {

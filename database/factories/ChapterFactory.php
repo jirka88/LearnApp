@@ -8,18 +8,17 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Chapter>
  */
-class ChapterFactory extends Factory
-{
+class ChapterFactory extends Factory {
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
     protected $model = Chapter::class;
-    public function definition()
-    {
+
+    public function definition() {
         return [
-            "name" => fake()->firstName(),
+            'name' => fake()->firstName(),
             'perex' => fake()->text(30),
             'context' => fake()->text(500),
         ];

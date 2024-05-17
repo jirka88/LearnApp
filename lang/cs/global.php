@@ -1,4 +1,5 @@
 <?php
+
 return [
     'show' => 'Zobrazit',
     'edit' => 'Upravit!',
@@ -13,5 +14,5 @@ return [
     'setting' => 'Nastavení',
     'change' => 'Změnit',
     'chapter_count' => 'Počet kapitol',
-    'chapter' => 'Kapitolu'
+    'chapter' => 'Kapitolu',
 ];

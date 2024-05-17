@@ -17,6 +17,6 @@ return [
     'password' => 'The provided password is incorrect.',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'activate' => 'Account is deactivated!',
-    'exist' => 'Account does not exist under this email!'
+    'exist' => 'Account does not exist under this email!',
 
 ];

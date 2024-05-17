@@ -4,15 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class passwordResetRequest extends FormRequest
-{
+class passwordResetRequest extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -21,18 +19,17 @@ class passwordResetRequest extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             'oldPassword' => 'required',
             'newPassword' => 'required|min:8|regex:/^(?=.*[0-9])(?=.*[^A-Za-z0-9])/',
-            'againNewPassword' => 'required|same:newPassword'
+            'againNewPassword' => 'required|same:newPassword',
         ];
     }
-    public function messages()
-    {
+
+    public function messages() {
         return [
-            'againNewPassword.same' => 'Nová hesla se neshodují!'
+            'againNewPassword.same' => 'Nová hesla se neshodují!',
         ];
     }
 }

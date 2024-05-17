@@ -5,15 +5,13 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Http;
 
-class ReCaptcha implements Rule
-{
+class ReCaptcha implements Rule {
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct() {
         //
     }
 
@@ -24,14 +22,13 @@ class ReCaptcha implements Rule
      * @param  mixed  $value
      * @return bool
      */
-    public function passes($attribute, $value)
-    {
+    public function passes($attribute, $value) {
         $endpoint = config('services.google_recaptcha');
         $response = Http::asForm()->post($endpoint['url'], [
             'secret' => $endpoint['secret_key'],
             'response' => $value,
         ])->json();
-        if(  $response['success'] && $response['score'] > 0.5) {
+        if ($response['success'] && $response['score'] > 0.5) {
             return true;
         }
 
@@ -43,8 +40,7 @@ class ReCaptcha implements Rule
      *
      * @return string
      */
-    public function message()
-    {
+    public function message() {
         return __('validation.custom.error');
     }
 }

@@ -2,6 +2,7 @@
 import setLanguage from "../../setLanguage";
 import {defineAsyncComponent} from "vue";
 import {isActiveToast, toastShow} from "@/Toast";
+
 const Toastify = defineAsyncComponent(() => import("@/Frontend/Components/UI/Toastify.vue"));
 setLanguage();
 </script>

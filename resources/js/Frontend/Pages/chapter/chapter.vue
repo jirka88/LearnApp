@@ -3,16 +3,16 @@
         <div class="chapterBg">
             <v-container class="py-12">
                 <div class="chapter pa-10 elevation-20">
-                <ChapterSettings
-                    :chapter="chapter"
-                    :slug="slug"
-                    @modal="status = true">
+                    <ChapterSettings
+                        :chapter="chapter"
+                        :slug="slug"
+                        @modal="status = true">
                     </ChapterSettings>
-                <v-divider></v-divider>
-                <p class="text-h2 py-4 font-weight-bold">{{ chapter.name }}</p>
-                <p class="text-h6 py-2">{{ chapter.perex }}</p>
-                <v-divider class="py-2"></v-divider>
-                <p class="text-left" v-html="chapter.context"></p>
+                    <v-divider></v-divider>
+                    <p class="text-h2 py-4 font-weight-bold">{{ chapter.name }}</p>
+                    <p class="text-h6 py-2">{{ chapter.perex }}</p>
+                    <v-divider class="py-2"></v-divider>
+                    <p class="text-left" v-html="chapter.context"></p>
                 </div>
             </v-container>
             <v-dialog
@@ -53,6 +53,7 @@ import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {ref} from "vue";
 import ChapterSettings from "@/Frontend/Components/ChapterSettings.vue";
 import {Inertia} from "@inertiajs/inertia";
+
 const status = ref(false);
 const props = defineProps({chapter: Object, slug: String})
 const destroy = () => {
@@ -66,6 +67,7 @@ const destroy = () => {
 
 .chapterBg {
     background: #4398f0 !important;
+
     .chapter {
         border-radius: 24px;
         background: white !important;

@@ -2,17 +2,16 @@
 
 namespace App\Exceptions;
 
+use App\Enums\ToastifyStatus;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Support\Facades\Log;
+use Predis\Configuration\Option\Exceptions;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
-class Handler extends ExceptionHandler
-{
+class Handler extends ExceptionHandler {
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -47,24 +46,27 @@ class Handler extends ExceptionHandler
      *
      * @return void
      */
-    public function register()
-    {
+    public function register() {
         /*$this->reportable(function (NotFound $e, Request $request) {
             dd($request);
                 if ($request->is('dashboard/*')) {
                     return redirect('dashboard/404');
                 }
         });*/
+        /*$this->reportable(function (HttpException $e, $request) {
+            Log::error('Unexpected error: ' . $e->getMessage());
+           return response()->json(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::SUCCESS], 500);
+        });*/
     }
 
-    public function render($request, Throwable $e)
-    {
+    public function render($request, Throwable $e) {
         $response = parent::render($request, $e);
         $status = $response->status();
-            return match ($status) {
-                404 => redirect('dashboard/404'),
-                403 => redirect('dashboard/403'),
-                default => $response
-            };
+        return match ($status) {
+            404 => redirect('dashboard/404'),
+            403 => redirect('dashboard/403'),
+            //500 => back()->with(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::ERROR]),
+            default => $response
+        };
     }
 }

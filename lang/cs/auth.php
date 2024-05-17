@@ -17,6 +17,6 @@ return [
     'password' => 'Zadané heslo je nesprávné.',
     'throttle' => 'Příliš mnoho pokusů o přihlášení. Zkuste to prosím znovu za :seconds sekund.',
     'activate' => 'Účet je deaktivován!',
-    'exist' => 'Účet pod daným emailem neexistuje!'
+    'exist' => 'Účet pod daným emailem neexistuje!',
 
 ];

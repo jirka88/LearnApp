@@ -15,19 +15,19 @@
                             {{ subject.name }}
                         </p>
                         <p class="text-subtitle-1 pt-2">
-                            Žádost o sdílení od uživalele:
+                            {{ $t('share.requested_by') }}
                             <span class="font-weight-bold">{{ subject.users[0].email }}</span>
                         </p>
                         <div class="text-subtitle-1">
-                        <p v-if="subject.permission.permission_id == 1">
-                            S právem ke čtení<br>
-                        </p>
-                        <p v-if="subject.permission.permission_id == 2">
-                            S právem ke čtení a úpravě<br>
-                        </p>
-                        <p v-if="subject.permission.permission_id == 3">
-                            S právem plnou kontrolou<br>
-                        </p>
+                            <p v-if="subject.permission.permission_id == 1">
+                                {{ $t('share.permission_view.read') }}<br>
+                            </p>
+                            <p v-else-if="subject.permission.permission_id == 2">
+                                {{ $t('share.permission_view.write') }}<br>
+                            </p>
+                            <p v-else>
+                                {{ $t('share.permission_view.full') }}<br>
+                            </p>
                         </div>
                     </v-card-text>
                     <v-card-actions class="flex-wrap justify-end align-center ga-2">
@@ -37,7 +37,7 @@
                             :disabled="btnDisabled"
                             @click="shareDelete(subject.slug)"
                         >
-                            zrušit
+                            {{ $t('global.close') }}
                         </v-btn>
                         <v-btn
                             variant="flat"
@@ -45,7 +45,7 @@
                             :disabled="btnDisabled"
                             @click="shareAccept(subject.slug)"
                         >
-                            Příjmout
+                            {{ $t('share.accepted') }}
                         </v-btn>
                     </v-card-actions>
                 </v-card>
@@ -56,7 +56,7 @@
 
 <script setup>
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
-import {Link, useForm} from "@inertiajs/inertia-vue3";
+import {useForm} from "@inertiajs/inertia-vue3";
 import {ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 

@@ -169,7 +169,7 @@ return [
         'update' => 'Aktualizace úspěšná',
         'error' => 'Něco se nepovedlo :(',
         'create' => 'Úspěšně vytvořeno!',
-        'deleted' => 'Úspěšně smazáno'
+        'deleted' => 'Úspěšně smazáno',
     ],
 
     /*

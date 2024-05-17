@@ -4,15 +4,13 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminCreateUser extends FormRequest
-{
+class AdminCreateUser extends FormRequest {
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -21,8 +19,7 @@ class AdminCreateUser extends FormRequest
      *
      * @return array<string, mixed>
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             'firstname' => 'required|min:3|max:25',
             'lastname' => 'required|max:50',
@@ -30,11 +27,11 @@ class AdminCreateUser extends FormRequest
             'type' => 'required',
             'role' => 'required',
             'licence' => 'required',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8',
         ];
     }
-    public function messages()
-    {
+
+    public function messages() {
         return [
             'firstname.min' => 'Vaše jméno je příliš krátké.',
             'firstname.max' => 'Jméno je příliš dlouhé.',
@@ -42,6 +39,6 @@ class AdminCreateUser extends FormRequest
             'email.email' => 'E-mail musí být platný.',
             'email.unique' => 'E-mail je již registrován.',
             'email.max' => 'E-mail může mít maximálně 320 znaků.',
-            ];
+        ];
     }
 }

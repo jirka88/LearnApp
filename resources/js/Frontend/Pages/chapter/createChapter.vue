@@ -26,7 +26,7 @@
                                      content-type="html"
                                      :style="form.errors.contentChapter ? { 'border': '1px solid red !important' } : {}"
                         />
-                        <p class="text-red pt-1 subtitle-2">{{form.errors.contentChapter}}</p>
+                        <p class="text-red pt-1 subtitle-2">{{ form.errors.contentChapter }}</p>
                     </v-no-ssr>
                     <v-btn type="submit"
                            color="blue"
@@ -37,7 +37,9 @@
                         {{ $t('global.created') }}!
                     </v-btn>
                 </form>
-                <Toastify v-if="isActiveToast && (form.errors.name || form.errors.message)" :text="form.errors.name ? (form.errors.name + ' ') : '' + (form.errors.message ? form.errors.message : '')" variant="error" :time="3000" @close="toastShow(false)"></Toastify>
+                <Toastify v-if="isActiveToast && (form.errors.name || form.errors.message)"
+                          :text="form.errors.name ? (form.errors.name + ' ') : '' + (form.errors.message ? form.errors.message : '')"
+                          variant="error" :time="3000" @close="toastShow(false)"></Toastify>
             </v-container>
         </div>
     </component>
@@ -66,7 +68,7 @@ const btnStatus = ref(false);
 const createChapter = () => {
     btnStatus.value = true;
     form.post(route('chapter.store', props.slug), {
-        onFinish: () =>{
+        onFinish: () => {
             btnStatus.value = false;
         }
     });
@@ -77,9 +79,11 @@ const createChapter = () => {
 .creatingChapter {
     min-height: calc(100vh - 64px);
     overflow: auto;
+
     form {
         background: white;
         border-radius: 24px;
+
         .v-btn {
             margin: 0px auto;
             padding: 2em;

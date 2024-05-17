@@ -149,7 +149,15 @@ import britishFlag from "./../../../assets/ui/flags/united_kingdom.svg"
 
 const drawer = ref(true);
 
-const select = ref({language: localStorage.getItem('langTitle') || 'Česky', ISO: localStorage.getItem('lang') || 'cs', 'image': localStorage.getItem('langImage') || czechFlag});
+const select = ref({
+    language: localStorage.getItem('langTitle') || 'Česky',
+    ISO: localStorage.getItem('lang') || 'cs',
+    'image': localStorage.getItem('langImage') || czechFlag
+});
+
+const openedGroup = ref(['group1']);
+
+const item = ref();
 
 const openedGroup = ref(['group1']);
 
@@ -169,10 +177,12 @@ const changeLanguage = () => {
     localStorage.setItem('langImage', select.value.image)
     loadLanguageAsync(select.value.ISO);
 }
-const itemProps = (item) =>{
-    return {title: item.language,
+const itemProps = (item) => {
+    return {
+        title: item.language,
         ISO: item.ISO,
-        image: item.image}
+        image: item.image
+    }
 }
 </script>
 

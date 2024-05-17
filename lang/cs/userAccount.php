@@ -1,9 +1,10 @@
 <?php
+
 return [
     'Account' => [
         'private' => 'Osobní účet',
-        'school' => 'Školní účet'
-        ],
+        'school' => 'Školní účet',
+    ],
     'old_password' => 'Staré heslo',
     'new_password' => 'Nové heslo',
     'confirm_password' => 'Nové heslo znova',
@@ -14,6 +15,6 @@ return [
     'upload_profile_image' => 'Nahraj profilovou fotku',
     'image' => 'Profilovka',
     'share' => 'Sdílení',
-    'shareInfo' => "Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete přijímat od žádného uživatele sekci zaškrtněte možnost ",
-    'change_password' => 'Změnit heslo'
+    'shareInfo' => 'Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete přijímat od žádného uživatele sekci zaškrtněte možnost ',
+    'change_password' => 'Změnit heslo',
 ];

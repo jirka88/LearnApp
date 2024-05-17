@@ -2,13 +2,18 @@
 
 namespace App\Providers;
 
+use App\Models\Chapter;
+use App\Models\Partition;
+use App\Models\User;
+use App\Observers\ChapterObserver;
+use App\Observers\SubjectObserver;
+use App\Observers\UserObserver;
+use App\Services\SubjectService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
-class EventServiceProvider extends ServiceProvider
-{
+class EventServiceProvider extends ServiceProvider {
     /**
      * The event to listener mappings for the application.
      *
@@ -25,9 +30,10 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
-    {
-        //
+    public function boot() {
+        Chapter::observe(ChapterObserver::class);
+        Partition::observe(SubjectObserver::class);
+        User::observe(UserObserver::class);
     }
 
     /**
@@ -35,8 +41,7 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return bool
      */
-    public function shouldDiscoverEvents()
-    {
+    public function shouldDiscoverEvents() {
         return false;
     }
 }

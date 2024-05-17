@@ -9,21 +9,19 @@ use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Inertia\Inertia;
 
-class RegisterController extends Controller
-{
+class RegisterController extends Controller {
     public function create() {
         return Inertia::render('register', ['value' => 0]);
     }
 
     /**
      * Vytvoření nového uživatele
-     * @param RegisterRequest $request
+     *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(RegisterRequest $request)
-    {
+    public function store(RegisterRequest $request) {
         $restricted = Settings::find(1);
-        if($restricted === true) {
+        if ($restricted === true) {
             return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('authentication.restricted')]);
         }
         $usr = $request->only(['firstname', 'email', 'lastname', 'password']);
@@ -31,6 +29,7 @@ class RegisterController extends Controller
         $usr['slug'] = SlugService::createSlug(User::class, 'slug', $request->firstname);
         $user = User::create($usr);
         auth()->login($user);
-        return redirect()->intended("/dashboard");
+
+        return redirect()->intended('/dashboard');
     }
 }
