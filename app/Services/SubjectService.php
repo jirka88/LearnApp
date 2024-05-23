@@ -49,6 +49,15 @@ class SubjectService
         $pages = ceil(Chapter::where('partition_id', $subject->id)->count() / globalSettings::ITEMS_IN_PAGE);
         return ['chapters' => $chapters, 'subject' => $subject, 'pages' => $pages, 'sharingUsr' => $sharingUsr];
     }
+    public function searchSubject(?String $search) {
+        $subjects = auth()->user()->patritions()
+            ->where('name', 'LIKE', '%' .$search .'%')
+            ->get();
+        if (count($subjects) === 0) {
+            $subjects = ['not_found' => 'Nic nenalezeno!'];
+        }
+        return $subjects;
+    }
 
 
 }

@@ -3,15 +3,18 @@
         <v-container class="pa-0">
             <div class="d-flex flex-column pa-5 ga-6">
                 <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
-                <div class="btns d-flex align-center justify-space-between">
+                <div class="btns d-flex align-center justify-space-between"
+                     :class="$vuetify.display.smAndDown ? 'flex-column ga-4' : 'ga-8'">
                     <Link :href="route('subject.create')">
                         <v-btn
-                            class="bg-green">
+                            class="bg-green"
+                            :class="$vuetify.display.smAndDown ? 'flex-grown-1' : ''">
                             {{ $t('global.created') }}
                             {{ $page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět' }}
                         </v-btn>
                     </Link>
-                    <SortSelect :disabled="subjectsShow.length === 0" @filtr="filtred"></SortSelect>
+                    <SearchSubject :disabled="subjectsShow.length === 0"></SearchSubject>
+                    <SortSelect :disabled="subjectsShow.length === 0" @sort="sorted"></SortSelect>
                 </div>
                 <v-table class="text-left">
                     <thead>
@@ -101,10 +104,11 @@ import {Link} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import {Inertia} from "@inertiajs/inertia";
-import {defineAsyncComponent, markRaw, onMounted, ref, watch} from "vue";
+import {defineAsyncComponent, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
 import SortSelect from "@/Frontend/Components/SortSelect.vue";
+import SearchSubject from "@/Frontend/Components/SearchSubject.vue";
 
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
@@ -148,7 +152,7 @@ const fetchData = () => {
     });
 
 }
-const filtred = async (filtr) => {
+const sorted = async (filtr) => {
     loading.value = true;
     const params = useUrlSearchParams('history')
     params.sort = filtr.sort + ',' + filtr.id;

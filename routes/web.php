@@ -63,6 +63,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
     Route::get('/search/user', [Controller::class, 'searchUser'])->name('user.search');
+    Route::get('/subject/search', [SubjectController::class, 'searchSubject'])->name('subject.search');
     Route::get('/404', function (Request $request) {
         return Inertia::render('errors/auth/404')->toResponse($request)->setStatusCode(404);
     });

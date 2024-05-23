@@ -122,4 +122,9 @@ class SubjectController extends Controller {
         $arr = $this->service->index($this->subjectModel, $sort, auth()->user()->id, 1, $request->url(), $request->query());
         return redirect()->back()->with(['message' => __('validation.custom.deleted') , 'status' => ToastifyStatus::SUCCESS, $arr]);
     }
+    public function searchSubject(Request $request) {
+        $search = $request->input('search');
+        $subjects = $this->service->searchSubject($search);
+        return response()->json(['search' => $subjects]);
+    }
 }

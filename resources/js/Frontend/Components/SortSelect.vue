@@ -3,7 +3,7 @@ import {markRaw, onMounted, ref} from "vue";
 import {useUrlSearchParams} from "@vueuse/core";
 
 const props = defineProps({disabled: Boolean});
-const emit = defineEmits(['filtr']);
+const emit = defineEmits(['sort']);
 
 const filtrValue = ref({state: 'Výchozí', id: 'default', sort: 'name'});
 
@@ -21,10 +21,9 @@ onMounted(() => {
 const sort = () => {
     const params = useUrlSearchParams('history')
     const sort = params.sort?.split(',');
-    if (sort && sort[sort.length - 1] !== null) {
-        const sortValue = items.find(item => item.id === sort[sort.length - 1]);
+    if (sort && sort.length === 2) {
+        const sortValue = items.find(item => item.id === sort[sort.length - 1] && item.sort === sort[sort.length - 2]);
         filtrValue.value = sortValue;
-        params.sort = filtrValue.value.sort + ',' + filtrValue.value.id.toLowerCase();
     }
 }
 
@@ -33,7 +32,7 @@ const sort = () => {
 <template>
     <v-select
         v-model="filtrValue"
-        @update:modelValue="emit('filtr', filtrValue)"
+        @update:modelValue="emit('sort', filtrValue)"
         :items="items"
         :disabled="disabled"
         item-title="state"
