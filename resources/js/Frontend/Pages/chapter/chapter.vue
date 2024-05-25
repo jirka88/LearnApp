@@ -3,11 +3,15 @@
         <div class="chapterBg">
             <v-container class="py-12">
                 <div class="chapter pa-10 elevation-20">
-                    <ChapterSettings
-                        :chapter="chapter"
-                        :slug="slug"
-                        @modal="status = true">
-                    </ChapterSettings>
+                    <div class="d-flex ga-8 pb-4">
+                        <ChapterSettings
+                            :chapter="chapter"
+                            :slug="slug"
+                            @modal="status = true">
+                        </ChapterSettings>
+                        <ExportBtns :showExport="['pdf']" :disabledExport="disabledExport"
+                                    @exportFile="exportFile"></ExportBtns>
+                    </div>
                     <v-divider></v-divider>
                     <p class="text-h2 py-4 font-weight-bold">{{ chapter.name }}</p>
                     <p class="text-h6 py-2">{{ chapter.perex }}</p>
@@ -53,12 +57,25 @@ import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {ref} from "vue";
 import ChapterSettings from "@/Frontend/Components/ChapterSettings.vue";
 import {Inertia} from "@inertiajs/inertia";
+import ExportBtns from "@/Frontend/Components/ExportBtns.vue";
+import FileSaver from 'file-saver'
+import axios from "axios";
 
 const status = ref(false);
+const disabledExport = ref(false);
 const props = defineProps({chapter: Object, slug: String})
 const destroy = () => {
     Inertia.delete(route('chapter.destroy', {slug: props.slug, chapter: props.chapter.slug}));
     emit('delete');
+}
+const exportFile = async (value) => {
+    disabledExport.value = true;
+    await axios.post(`/dashboard/manager/subject/${props.slug}/chapter/${props.chapter.slug}/export?export=${value}`, {}, {
+        responseType: 'blob'
+    }).then((response) => {
+        FileSaver.saveAs(response.data, props.chapter.slug);
+        disabledExport.value = false;
+    });
 }
 
 </script>

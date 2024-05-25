@@ -5,20 +5,17 @@ namespace App\Exports;
 use App\Models\User;
 use Illuminate\Support\Facades\Schema;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithCustomCsvSettings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
-use Maatwebsite\Excel\Events\BeforeWriting;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 
-class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProperties, ShouldAutoSize, WithEvents
+class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProperties, ShouldAutoSize, WithEvents, WithCustomCsvSettings
 {
     use Exportable;
 
@@ -76,6 +73,12 @@ class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProp
             'creator' => 'LearnApp',
             'title' => 'Uživatelé export',
             'description' => 'Výpis uživatelů z webové aplikace LearnApp',
+        ];
+    }
+    public function getCsvSettings(): array
+    {
+        return [
+            'output_encoding' => 'ISO-8859-1',
         ];
     }
 }

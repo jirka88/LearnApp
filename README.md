@@ -55,7 +55,9 @@
 - Role: Admin, Operátor, Tester
 - Chráněné routy podle rolí a uživatelů
 - Automatizované testy (Features - PhpUnit)
-- Filtrace dat (Default,ASC,DESC) 
+- Filtrace dat (Default,ASC,DESC...)
+- Vyhledávání
+- Možnost exportovat data v podobě (PDF, HTML, CSV, Excel)
 
 # TO DO
 

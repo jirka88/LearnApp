@@ -220,8 +220,14 @@ class Admin extends Controller
             case 'xlsx':
                 $sheet = Excel::download(new UsersExport, 'uzivatele.xlsx');
                 break;
+            case 'csv':
+                $sheet =  Excel::download(new UsersExport, 'uzivatele.csv', \Maatwebsite\Excel\Excel::CSV);
+                break;
             case 'html':
                 $sheet = Excel::download(new UsersExport, 'uzivatele.html', \Maatwebsite\Excel\Excel::HTML);
+                break;
+            case 'xml':
+                $sheet = Excel::download(new UsersExport, 'uzivatele.xml', \Maatwebsite\Excel\Excel::XML);
                 break;
         }
         return $sheet;

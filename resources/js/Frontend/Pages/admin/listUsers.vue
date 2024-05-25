@@ -10,41 +10,8 @@
                         {{ $t('global.create_user') }}
                     </v-btn>
                 </Link>
-                <div class="d-flex flex-column ga-1">
-                    <div>
-                        <p class="text-subtitle-2">Exporty:</p>
-                        <v-divider></v-divider>
-                    </div>
-                    <div class="d-flex ga-4">
-                        <v-btn
-                            min-width="1em"
-                            max-height="3.6em"
-                            prepend-icon="mdi-file-pdf-box"
-                            stacked
-                            :disabled="disabledExport"
-                            @click="exportFile('pdf')">
-
-                        </v-btn>
-                        <v-btn
-                            min-width="2em"
-                            max-height="3.6em"
-                            prepend-icon="mdi-file-excel"
-                            stacked
-                            :disabled="disabledExport"
-                            @click="exportFile('xlsx')">
-
-                        </v-btn>
-                        <v-btn
-                            min-width="2em"
-                            max-height="3.6em"
-                            prepend-icon="mdi-language-html5"
-                            stacked
-                            :disabled="disabledExport"
-                            @click="exportFile('html')">
-
-                        </v-btn>
-                    </div>
-                </div>
+                <ExportBtns :showExport="['pdf', 'csv', 'html', 'excel', 'xml']" :disabledExport="disabledExport"
+                            @exportFile="exportFile"></ExportBtns>
             </div>
             <v-dialog
                 v-model="status"
@@ -143,13 +110,13 @@ import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import axios from "axios";
 import FileSaver from 'file-saver'
+import ExportBtns from "@/Frontend/Components/ExportBtns.vue";
 
 const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
-const props = defineProps({users: Object, pages: Object});
 const disabledExport = ref(false);
-
+const props = defineProps({users: Object, pages: Object});
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')
 )
