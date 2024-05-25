@@ -2,7 +2,7 @@
     <component :is="DashboardLayout">
         <v-container>
             <Breadcrumbs :items="[{title: 'Uživatelé', disabled: true }]"></Breadcrumbs>
-            <div v-if="$page.props.permission.view" class="btns d-flex align-center py-8">
+            <div v-if="$page.props.permission.view" class="d-flex align-center py-8 ga-8 overflow-auto">
                 <Link :href="route('adminuser.create')" data-aos="zoom-in"
                       data-aos-duration="400">
                     <v-btn
@@ -10,6 +10,41 @@
                         {{ $t('global.create_user') }}
                     </v-btn>
                 </Link>
+                <div class="d-flex flex-column ga-1">
+                    <div>
+                        <p class="text-subtitle-2">Exporty:</p>
+                        <v-divider></v-divider>
+                    </div>
+                    <div class="d-flex ga-4">
+                        <v-btn
+                            min-width="1em"
+                            max-height="3.6em"
+                            prepend-icon="mdi-file-pdf-box"
+                            stacked
+                            :disabled="disabledExport"
+                            @click="exportFile('pdf')">
+
+                        </v-btn>
+                        <v-btn
+                            min-width="2em"
+                            max-height="3.6em"
+                            prepend-icon="mdi-file-excel"
+                            stacked
+                            :disabled="disabledExport"
+                            @click="exportFile('xlsx')">
+
+                        </v-btn>
+                        <v-btn
+                            min-width="2em"
+                            max-height="3.6em"
+                            prepend-icon="mdi-language-html5"
+                            stacked
+                            :disabled="disabledExport"
+                            @click="exportFile('html')">
+
+                        </v-btn>
+                    </div>
+                </div>
             </div>
             <v-dialog
                 v-model="status"
@@ -106,11 +141,14 @@ import {defineAsyncComponent, ref} from "vue";
 import inertia from "@inertiajs/inertia";
 import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
+import axios from "axios";
+import FileSaver from 'file-saver'
 
 const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
 const props = defineProps({users: Object, pages: Object});
+const disabledExport = ref(false);
 
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')
@@ -126,6 +164,16 @@ const fetchData = () => {
         }
     });
 }
+const exportFile = async (value) => {
+    disabledExport.value = true;
+    await axios.post(`/dashboard/admin/controll/users?export=${value}`, {}, {
+        responseType: 'blob'
+    }).then((response) => {
+        FileSaver.saveAs(response.data, 'uzivatele');
+        disabledExport.value = false;
+    });
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -138,5 +186,6 @@ table {
         }
     }
 }
+
 
 </style>
