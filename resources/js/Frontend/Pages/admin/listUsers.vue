@@ -10,7 +10,7 @@
                         {{ $t('global.create_user') }}
                     </v-btn>
                 </Link>
-                <ExportBtns :showExport="['pdf', 'csv', 'html', 'excel', 'xml']" :disabledExport="disabledExport"
+                <ExportBtns :showExport="['pdf', 'csv', 'html', 'excel']" :disabledExport="disabledExport"
                             @exportFile="exportFile"></ExportBtns>
             </div>
             <v-dialog

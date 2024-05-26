@@ -8,6 +8,7 @@ use App\Exports\UsersExport;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
+use App\Listeners\ChangeUserInformation;
 use App\Models\AccountTypes;
 use App\Models\Licences;
 use App\Models\Partition;
@@ -85,6 +86,7 @@ class Admin extends Controller
             'active' => $updateRequest->active['id'],
             'licences_id' => $updateRequest->licences['id'],
         ]);
+        event(new ChangeUserInformation($user));
 
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
@@ -124,6 +126,7 @@ class Admin extends Controller
     public function destroy(User $user, AdminService $service)
     {
         $this->authorize('view', $user);
+        event(new ChangeUserInformation($user));
         $service->destroy($user);
     }
 

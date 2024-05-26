@@ -65,8 +65,9 @@ class DashboardUserController extends Controller {
             'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
+        Cache::forget('userTypeAccount' . auth()->user()->id);
 
-        return redirect()->back()->with(['message' => 'Aktualizace úspěšná!', 'status' => ToastifyStatus::SUCCESS]);
+        return redirect()->back()->with(['message' =>  __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**

@@ -12,10 +12,12 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithProperties;
+use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProperties, ShouldAutoSize, WithEvents, WithCustomCsvSettings
+class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProperties, ShouldAutoSize, WithEvents, WithCustomCsvSettings, WithStyles
 {
     use Exportable;
 
@@ -28,11 +30,17 @@ class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProp
                     ->setOrientation(\PhpOffice\PhpSpreadsheet\Worksheet\PageSetup::ORIENTATION_LANDSCAPE);
             },
             AfterSheet::class => function(AfterSheet $event) {
-                $event->sheet->getDelegate()->getStyle('1')->getFont()->setSize(14);
+                $event->sheet->getDelegate()->getStyle('1')->getFont()->setSize(10);
             },
         ];
     }
 
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            1    => ['font' => ['bold' => true]],
+        ];
+    }
 
     public function collection()
     {
@@ -51,8 +59,8 @@ class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProp
             $row->roles->role,
             $row->accountTypes->type,
             $row->licences->Licence,
-            $row->active,
-            $row->canShare,
+            $row->active ? 'ANO' : 'NE',
+            $row->canShare ? 'ANO' : 'NE',
             $row->created_at,
             $row->updated_at
         ];
@@ -64,7 +72,7 @@ class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProp
         $columns = Schema::getColumnListing('users');
         $excludeColumns = ['password', 'remember_token', 'image'];
         $filteredColumns = array_diff($columns, $excludeColumns);
-        return $filteredColumns;
+        return [$filteredColumns];
     }
 
     public function properties(): array

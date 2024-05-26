@@ -2,13 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\forgetUserCache;
+use App\Listeners\ChangeUserInformation;
 use App\Models\Chapter;
 use App\Models\Partition;
 use App\Models\User;
 use App\Observers\ChapterObserver;
 use App\Observers\SubjectObserver;
 use App\Observers\UserObserver;
-use App\Services\SubjectService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -23,6 +24,9 @@ class EventServiceProvider extends ServiceProvider {
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        ChangeUserInformation::class => [
+            forgetUserCache::class
+        ]
     ];
 
     /**
