@@ -26,7 +26,7 @@ const handleAfterLeave = () => {
             :color="variant"
             :icon="'$'+variant"
             class="position-fixed toastify px-4"
-            :title="text"
+            :title="$t(text)"
             prominent
             :class="{'center': $vuetify.display.mdAndDown}">
             <v-btn
@@ -48,36 +48,44 @@ const handleAfterLeave = () => {
     top: 2%;
     z-index: 9999;
     padding-top: 0.8em;
+
     :deep(.v-alert__content) {
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
+
         .v-alert-title {
             font-size: 0.8em;
             line-height: 1.2em;
             font-weight: bold;
         }
     }
+
     :deep(.v-icon) {
         font-size: 2em !important;
     }
+
     .v-btn {
         :deep(.v-icon) {
             font-size: 1.4em !important;
         }
     }
 }
+
 .center {
     transform: translate(-50%, -50%);
     left: 50%;
     top: 5%;
 }
+
 .bounce-enter-active {
     animation: bounce-in 0.5s;
 }
+
 .bounce-leave-active {
     animation: bounce-in 0.5s reverse;
 }
+
 @keyframes bounce-in {
     from {
         top: -10%;

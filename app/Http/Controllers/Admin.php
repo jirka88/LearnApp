@@ -24,10 +24,12 @@ use Maatwebsite\Excel\Facades\Excel;
 class Admin extends Controller
 {
     protected $userModel;
+    private $service;
 
-    public function __construct(User $userModel)
+    public function __construct(User $userModel, AdminService $service)
     {
         $this->userModel = $userModel;
+        $this->service = $service;
     }
 
     /**
@@ -35,9 +37,9 @@ class Admin extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index(AdminService $service)
+    public function index()
     {
-        $data = $service->index();
+        $data = $this->service->index();
         return Inertia::render('admin/listUsers', $data);
     }
 
@@ -98,10 +100,10 @@ class Admin extends Controller
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function create(AdminService $service)
+    public function create()
     {
         $this->authorize('viewAny', auth()->user());
-        $data = $service->create();
+        $data = $this->service->create();
 
         return Inertia::render('admin/createUser', $data);
     }
@@ -111,9 +113,9 @@ class Admin extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AdminCreateUser $adminCreateUser, AdminService $service)
+    public function store(AdminCreateUser $adminCreateUser)
     {
-        $service->store($adminCreateUser);
+        $this->service->store($adminCreateUser);
 
         return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
     }
@@ -121,13 +123,14 @@ class Admin extends Controller
     /**
      * ADMIN - Vymazání uživatele
      *
-     * @return void
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy(User $user, AdminService $service)
+    public function destroy(User $user)
     {
         $this->authorize('view', $user);
         event(new ChangeUserInformation($user));
-        $service->destroy($user);
+        $this->service->destroy($user);
+        return redirect()->back()->with(['message' => __('validation.custom.delete'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -189,10 +192,7 @@ class Admin extends Controller
     public function changeRestriction($register)
     {
         $this->authorize('viewAdmin', Auth()->user());
-        $value = filter_var($register, FILTER_VALIDATE_BOOLEAN);
-        Settings::find(1)->update(['RestrictedRegistration' => $value]);
-        Cache::forget('restrictRegister');
-
+        $this->service->changeRestriction($register);
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
