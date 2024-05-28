@@ -8,6 +8,7 @@
         "php": ">=8.2",
         "bensampo/laravel-enum": "^6.10",
         "cviebrock/eloquent-sluggable": "^9.0",
+        "doctrine/dbal": "^4.0",
         "dompdf/dompdf": "^3.0",
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^0.6.11",

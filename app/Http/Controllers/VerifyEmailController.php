@@ -14,7 +14,6 @@ class VerifyEmailController extends Controller
      */
     public function show()
     {
-        $this->requestVerification();
         return Inertia::render('VerifyEmail');
     }
 

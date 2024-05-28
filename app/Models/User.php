@@ -46,7 +46,6 @@ class User extends Authenticatable implements MustVerifyEmail {
             ],
         ];
     }
-
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }
