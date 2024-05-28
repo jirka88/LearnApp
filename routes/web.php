@@ -9,6 +9,8 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SharingController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\VerifyEmailController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,6 +29,7 @@ use Inertia\Inertia;
 Route::inertia('/', 'app');
 Route::post('/language/{language}', [Controller::class, 'changeLanguage'])->name('language');
 
+
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');
     Route::post('/login', [LoginController::class, 'login'])->name('login');
@@ -37,7 +40,13 @@ Route::group(['middleware' => ['guest']], function () {
         return Inertia::render('errors/404')->toResponse($request)->setStatusCode(404);
     });
 });
-Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/email/verify', [VerifyEmailController::class, 'show'])->middleware('unverified')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/request-verification', [VerifyEmailController::class, 'requestVerification'])->middleware('throttle:6,1')->name('verification.email');
+    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+});
+Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], function () {
     Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
@@ -49,7 +58,6 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::put('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
     Route::resource('/manager/subject', SubjectController::class);
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
-    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/manager/subject/{slug}/select', [ChapterController::class, 'selectChapter'])->name('chapter.select');
     Route::resource('/manager/subject/{slug}/chapter', ChapterController::class);
     Route::post('/manager/subject/{slug}/chapter/{chapterSlug}/export', [ChapterController::class, 'exportFile']);

@@ -30,6 +30,6 @@ class RegisterController extends Controller {
         $user = User::create($usr);
         auth()->login($user);
 
-        return redirect()->intended('/dashboard');
+        return redirect()->intended('verification.notice');
     }
 }

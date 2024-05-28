@@ -38,7 +38,6 @@ class LoginController extends Controller {
 
             $user = Auth::getProvider()->retrieveByCredentials($credentials);
             Auth::login($user, $request->get('remember'));
-
             return redirect()->intended('/dashboard');
         } else {
             return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.activate')]);

@@ -60,6 +60,7 @@ class HandleInertiaRequests extends Middleware
                 }) : '',
                 'image' => auth()->user()->image ?? '',
                 'sharedSubjects' => $this->getActivedShared(),
+                'verified' => auth()->user()?->id ? (auth()->user()->email_verified_at ? true : false) : '',
             ],
             'permission' => [
                 'view' => in_array(auth()->user()?->role_id, [1, 2]),
