@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\EmailVerificationNotification;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -91,5 +92,9 @@ class User extends Authenticatable implements MustVerifyEmail {
         return $this->belongsToMany(Partition::class, 'userPartition', 'user_id', 'partition_id')
             ->as('permission')
             ->withPivot(['accepted', 'permission_id']);
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerificationNotification());
     }
 }
