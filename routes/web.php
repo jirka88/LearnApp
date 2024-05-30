@@ -28,9 +28,6 @@ use Inertia\Inertia;
 
 Route::inertia('/', 'app');
 Route::post('/language/{language}', [Controller::class, 'changeLanguage'])->name('language');
-Route::get('/test-email', function() {
-    return view('emails.verify_email');
-});
 
 Route::group(['middleware' => ['guest']], function () {
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');

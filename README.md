@@ -5,6 +5,7 @@
 ## Registrace
 
 - Umožnění registrace pomocí emailu
+- Ověření emailu pomocí zaslání ověřovacího odkazu přes email
 - Hashování hesla
 - Nastavení typ účtu
 

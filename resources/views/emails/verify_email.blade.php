@@ -12,6 +12,30 @@
             height: 100vh;
         }
 
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        p {
+            color: #636363;
+            font-size: 1em;
+        }
+
+        .end {
+            line-height: 2em;
+        }
+
+        .pa-1 {
+            padding: 1em;
+        }
+
+        .py-1 {
+            padding-top: 1em;
+            padding-bottom: 1em;
+        }
+
         .email-header, .email-body, .email-footer {
             font-family: "Roboto", sans-serif;
         }
@@ -37,12 +61,12 @@
             top: 8em;
             background: white;
             z-index: 2;
-            box-shadow: 8px 8px gray;
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
         }
 
         .email-body h2 {
             text-align: center;
-            font-size: 2em;
+            font-size: 3em;
             letter-spacing: 0.2em;
         }
 
@@ -50,31 +74,6 @@
             padding: 20px;
             text-align: center;
         }
-
-        .center {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        p {
-            color: #636363;
-            font-size: 1.2em;
-        }
-
-        .end {
-            line-height: 2em;
-        }
-
-        .pa-1 {
-            padding: 1em;
-        }
-
-        .py-2 {
-            padding-top: 2em;
-            padding-bottom: 2em;
-        }
-
     </style>
 </head>
 <body>
