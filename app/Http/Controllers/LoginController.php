@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\ToastifyStatus;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -66,7 +68,4 @@ class LoginController extends Controller {
         ]);
     }
 
-    public function passwordReset() {
-        return Inertia::render('register', ['value' => 2]);
-    }
 }

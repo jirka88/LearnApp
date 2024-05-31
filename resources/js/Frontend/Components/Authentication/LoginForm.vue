@@ -29,7 +29,7 @@
                     :label="$t('authentication.remember')">
 
                 </v-checkbox>
-                <Link class="forgetPassword" :href="route('reset')">
+                <Link class="forgetPassword" :href="route('password.request')">
                     {{ $t('authentication.forget') }}
                 </Link>
             </div>
@@ -50,6 +50,7 @@ import {ref} from "vue";
 import {useForm, Link} from "@inertiajs/inertia-vue3";
 import {toastShow} from "@/Toast";
 import rules from "./../../rules/rules"
+
 defineProps({errors: Object})
 
 const show = ref(false);
@@ -65,8 +66,8 @@ const form = useForm({
 const login = () => {
     off.value = true;
     form.post(route('login'), {
-        onError: () =>{
-            if(form.errors.msg !== undefined) {
+        onError: () => {
+            if (form.errors.msg !== undefined) {
                 toastShow(true)
             }
         }
@@ -80,16 +81,20 @@ const login = () => {
     .v-input:nth-child(2) {
         padding-bottom: 1em !important;
     }
+
     :deep(.v-input__details):not(:has(.v-messages__message)) {
         display: none;
     }
+
     .v-input:last-child :deep(.v-input__details) {
         padding: 0 !important;
     }
+
     .v-btn {
         margin: 0 auto;
     }
 }
+
 .forgetPassword {
     color: gray;
     position: relative;

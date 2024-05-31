@@ -11,8 +11,9 @@
 
 ## přihlášení
 
-- Ochrana proti spam útokům
+- Ochrana proti spam útokům (Recaptcha)
 - Validace údajů
+- Možnost zapomenuté heslo
 
 ## Běžný uživatel
 

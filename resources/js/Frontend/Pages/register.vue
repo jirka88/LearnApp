@@ -74,14 +74,14 @@ watch((tab), (val) => {
             break;
         }
         case 2: {
-            router.replace('/passwordreset')
+            router.replace('/forgot-password')
             break;
         }
     }
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @use 'vuetify/lib/styles/settings/variables' as *;
 
 .w-30 {

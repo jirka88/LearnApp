@@ -4,8 +4,10 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PasswordReset;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SharingController;
 use App\Http\Controllers\SubjectController;
@@ -34,7 +36,12 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
-    Route::get('/passwordreset', [LoginController::class, 'passwordReset'])->name('reset');
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'passwordResetShow'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'passwordResetStore'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/reset-password/{token}', function (string $token) {
+        return Inertia::render('ForgotPassword', ['token' => $token]);
+    })->name('password.reset');
+    Route::post('/reset-password',[ForgotPasswordController::class, 'passwordReset'])->name('reset');
     Route::get('/404', function (Request $request) {
         return Inertia::render('errors/404')->toResponse($request)->setStatusCode(404);
     });
