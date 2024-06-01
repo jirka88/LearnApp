@@ -2,16 +2,21 @@
     <component :is="DashboardLayout">
         <v-container>
             <Breadcrumbs :items="[{title: 'Uživatelé', disabled: true }]"></Breadcrumbs>
-            <div v-if="$page.props.permission.view" class="d-flex align-center py-8 ga-8 overflow-auto">
-                <Link :href="route('adminuser.create')" data-aos="zoom-in"
-                      data-aos-duration="400">
-                    <v-btn
-                        class="bg-green">
-                        {{ $t('global.create_user') }}
-                    </v-btn>
-                </Link>
-                <ExportBtns :showExport="['pdf', 'csv', 'html', 'excel']" :disabledExport="disabledExport"
-                            @exportFile="exportFile"></ExportBtns>
+            <div v-if="$page.props.permission.view"
+                 class="d-flex align-center py-8 ga-8 overflow-auto justify-space-between">
+                <div class="d-flex align-center justify-center ga-4">
+                    <Link :href="route('adminuser.create')" data-aos="zoom-in"
+                          data-aos-duration="400">
+                        <v-btn
+                            class="bg-green">
+                            {{ $t('global.create_user') }}
+                        </v-btn>
+                    </Link>
+                    <ExportBtns :showExport="['pdf', 'csv', 'html', 'excel']" :disabledExport="disabledExport"
+                                @exportFile="exportFile"></ExportBtns>
+                </div>
+                <SortSelect max-width="20em" min-width="10em" @sort="sortData"
+                            sortColumnAscDesc="lastname"></SortSelect>
             </div>
             <v-dialog
                 v-model="status"
@@ -38,7 +43,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="pa-8" v-for="user in users.data" :key="user.id">
+                <tr class="pa-8" v-for="user in users.data.data" :key="user.id">
                     <td>{{ user.id }}</td>
                     <td class="mx-0">
                         <v-avatar>
@@ -111,12 +116,15 @@ import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import axios from "axios";
 import FileSaver from 'file-saver'
 import ExportBtns from "@/Frontend/Components/ExportBtns.vue";
+import SortSelect from "@/Frontend/Components/SortSelect.vue";
+import {useUrlSearchParams} from "@vueuse/core";
 
 const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
 const disabledExport = ref(false);
-const props = defineProps({users: Object, pages: Object});
+const props = defineProps({users: Object, pages: Object, sort: String});
+const filtrGlobal = ref('');
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')
 )
@@ -139,6 +147,16 @@ const exportFile = async (value) => {
         FileSaver.saveAs(response.data, 'uzivatele');
         disabledExport.value = false;
     });
+}
+const sortData = async (filtr) => {
+    const params = useUrlSearchParams('history')
+    params.sort = filtr.sort + ',' + filtr.id;
+    filtrGlobal.value = filtr.sort + ',' + filtr.id;
+    await axios.get(`/dashboard/admin/controll?sort=${filtr.sort},${filtr.id}`)
+        .then(response => {
+            params.page = 1;
+            page.value = 1;
+        })
 }
 
 </script>

@@ -11,18 +11,34 @@ use App\Models\Roles;
 use App\Models\Settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Cache;
 use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 
 class AdminService
 {
-    public function index() :array {
-        $users = User::orderBy('role_id', 'ASC')
-            ->orderBy('id', 'ASC')
-            ->with(['roles', 'licences'])
-            ->paginate(globalSettings::ITEMS_IN_PAGE);
+    public function index(?int $page, ?String $sort, ?String $url, ?array $query) {
+        if ($sort && strtolower($sort) !== 'default') {
+            $data = User::filter()
+                ->with(['roles', 'licences'])
+                ->paginate(globalSettings::ITEMS_IN_PAGE);
+            $users = new LengthAwarePaginator($data, count($data), globalSettings::ITEMS_IN_PAGE, $page, [
+                'path' => $url,
+                'query' => $query
+            ]);
+        }
+        else {
+            $data = User::orderBy('role_id', 'ASC')
+                ->orderBy('id', 'ASC')
+                ->with(['roles', 'licences'])
+                ->paginate(globalSettings::ITEMS_IN_PAGE);
+            $users = new LengthAwarePaginator($data, count($data), globalSettings::ITEMS_IN_PAGE, $page, [
+                'path' => $url,
+                'query' => $query
+            ]);
+        }
         $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
-        return ['users' => $users, 'pages' => $pages];
+        return ['users' => $users, 'pages' => $pages, 'sort' => $sort];
     }
 
     /**

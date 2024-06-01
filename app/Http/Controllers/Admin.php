@@ -37,9 +37,10 @@ class Admin extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->service->index();
+        $sort = $request->input('sort', 'default');
+        $data = $this->service->index($request->page, $sort, $request->url(), $request->query());
         return Inertia::render('admin/listUsers', $data);
     }
 

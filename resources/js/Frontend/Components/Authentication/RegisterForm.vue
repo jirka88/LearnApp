@@ -1,13 +1,5 @@
 <template>
-    <v-row justify="center">
-        <v-dialog
-            v-model="dialog"
-            persistent
-            width="auto"
-        >
-            <Dialog v-if="dialog" @close="dialog = false" @disagree="confirm = false" @agree="confirm = true"></Dialog>
-        </v-dialog>
-    </v-row>
+    <Dialog v-if="dialog" v-model:active="dialog" @accepted="confirmRules"></Dialog>
     <v-form @submit.prevent="register">
         <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
             <h1 class="pa-5 text-center">{{ $t('authentication.register.register') }}</h1>
@@ -153,6 +145,10 @@ const register = async () => {
         }
     });
     off.value = false
+}
+
+const confirmRules = (val) => {
+    form.confirm = val;
 }
 </script>
 

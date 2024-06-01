@@ -13,9 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword {
-    use HasApiTokens, HasFactory, Notifiable, Sluggable;
+    use HasApiTokens, HasFactory, Notifiable, Sluggable, FilterQueryString;
 
     protected $fillable = [
         'firstname',
@@ -40,6 +41,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     ];
 
     protected $append = ['get_count_users'];
+
+    protected $filters = ['sort'];
 
     public function sluggable(): array {
         return [

@@ -2,15 +2,15 @@
 import {markRaw, onMounted, ref} from "vue";
 import {useUrlSearchParams} from "@vueuse/core";
 
-const props = defineProps({disabled: Boolean});
+const props = defineProps({disabled: Boolean, sortColumnAscDesc: String});
 const emit = defineEmits(['sort']);
 
 const filtrValue = ref({state: 'Výchozí', id: 'default', sort: 'name'});
 
 const items = markRaw(
-    [{state: 'Výchozí', id: 'default', sort: 'name'},
-        {state: 'Sestupně', id: 'asc', sort: 'name'},
-        {state: 'Vzestupně', id: 'desc', sort: 'name'},
+    [{state: 'Výchozí', id: 'default', sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'},
+        {state: 'Sestupně', id: 'asc', sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'},
+        {state: 'Vzestupně', id: 'desc', sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'},
         {state: 'Od nejnovějších', id: 'desc', sort: 'created_at'},
         {state: 'Od nejstarších', id: 'asc', sort: 'created_at'}]
 );
