@@ -37,7 +37,9 @@ class DashboardUserController extends Controller {
             return AccountTypes::all();
         });
         if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $roles = Roles::all();
+            $roles = Cache::rememberForever('roles', function () {
+                return Roles::all();
+            });
             $licences = Cache::rememberForever('licences', function () {
                 return Licences::all();
             });

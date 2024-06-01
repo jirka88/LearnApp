@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Events;
+namespace App\Listeners;
 
-use App\Listeners\ChangeUserInformation;
+use App\Events\ChangeUserInformation;
 use Illuminate\Support\Facades\Cache;
 
-class forgetUserCache
+class ForgetUserCache
 {
     /**
      * Create the event listener.
@@ -20,7 +20,7 @@ class forgetUserCache
     /**
      * Handle the event.
      *
-     * @param  \App\Listeners\ChangeUserInformation  $event
+     * @param  \App\Events\ChangeUserInformation  $event
      * @return void
      */
     public function handle(ChangeUserInformation $event)

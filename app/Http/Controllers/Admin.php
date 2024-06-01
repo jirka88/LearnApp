@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
+use App\Events\ChangeUserInformation;
 use App\Exports\UsersExport;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
 use App\Http\Requests\UpdateRequest;
-use App\Listeners\ChangeUserInformation;
 use App\Models\AccountTypes;
 use App\Models\Licences;
 use App\Models\Partition;

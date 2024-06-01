@@ -11,8 +11,8 @@ const items = markRaw(
     [{state: 'Výchozí', id: 'default', sort: 'name'},
         {state: 'Sestupně', id: 'asc', sort: 'name'},
         {state: 'Vzestupně', id: 'desc', sort: 'name'},
-        {state: 'Od nejnovějších', id: 'asc', sort: 'created_at'},
-        {state: 'Od nejstarších', id: 'desc', sort: 'created_at'}]
+        {state: 'Od nejnovějších', id: 'desc', sort: 'created_at'},
+        {state: 'Od nejstarších', id: 'asc', sort: 'created_at'}]
 );
 
 onMounted(() => {

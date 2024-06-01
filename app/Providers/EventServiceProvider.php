@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\forgetUserCache;
-use App\Listeners\ChangeUserInformation;
+use App\Events\ChangedUserSharedSubject;
+use App\Events\ChangeUserInformation;
+use App\Listeners\forgetUserCache;
+use App\Listeners\ForgetUserSharedSubjectCache;
 use App\Models\Chapter;
 use App\Models\Partition;
 use App\Models\User;
@@ -25,7 +27,10 @@ class EventServiceProvider extends ServiceProvider {
             SendEmailVerificationNotification::class,
         ],
         ChangeUserInformation::class => [
-            forgetUserCache::class
+            ForgetUserCache::class
+        ],
+        ChangedUserSharedSubject::class => [
+            ForgetUserSharedSubjectCache::class
         ]
     ];
 
