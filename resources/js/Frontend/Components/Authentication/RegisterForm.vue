@@ -10,7 +10,7 @@
     </v-row>
     <v-form @submit.prevent="register">
         <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
-            <h1 class="pa-5 text-center">{{$t('authentication.register.register')}}</h1>
+            <h1 class="pa-5 text-center">{{ $t('authentication.register.register') }}</h1>
             <v-text-field
                 v-model="form.firstname"
                 prepend-inner-icon="mdi-account"
@@ -71,11 +71,13 @@
                 single-line
             ></v-select>
             <div class="d-flex">
-            <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů" hide-details></v-checkbox>
+                <v-checkbox v-model="form.confirm" @click="setDialog" label="Souhlas se zpracováním osobních údajů"
+                            hide-details></v-checkbox>
             </div>
 
-            <span class="text-center text-red">{{form.errors.confirm}}</span>
-            <Toastify v-if="isActiveToast" :text="form.errors.email?.unique ?? form.errors.token" variant="error" :time="3000"
+            <span class="text-center text-red">{{ form.errors.confirm }}</span>
+            <Toastify v-if="isActiveToast" :text="form.errors.email?.unique ?? form.errors.token" variant="error"
+                      :time="3000"
                       @close="isActiveToast = false"></Toastify>
             <v-btn
                 type="submit"
@@ -87,9 +89,10 @@
                 Registrovat!
             </v-btn>
             <p class="mt-4"> Tato stránka je chráněna reCAPTCHA a Google
-            <a class="text-decoration-underline text-cyan" href="https://policies.google.com/privacy">Privacy Policy</a> a
-            <a class="text-decoration-underline text-cyan" href="https://policies.google.com/terms">Terms of Service</a> potvrzení.</p>
-
+                <a class="text-decoration-underline text-cyan" href="https://policies.google.com/privacy">Privacy
+                    Policy</a> a
+                <a class="text-decoration-underline text-cyan" href="https://policies.google.com/terms">Terms of
+                    Service</a> potvrzení.</p>
         </v-container>
     </v-form>
 
@@ -100,6 +103,7 @@
 import {markRaw, ref} from "vue";
 import {defineAsyncComponent} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
+
 const off = ref(false);
 const show = ref('');
 const show1 = ref('');
@@ -108,16 +112,17 @@ const dialog = ref(false);
 const Dialog = defineAsyncComponent(() => import('../DialogAgree.vue'));
 import {isActiveToast, toastShow} from "@/Toast";
 import Toastify from "@/Frontend/Components/UI/Toastify.vue";
-import { useReCaptcha } from 'vue-recaptcha-v3'
+import {useReCaptcha} from 'vue-recaptcha-v3'
 import rules from './../../rules/rules'
-const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
+
+const {executeRecaptcha, recaptchaLoaded} = useReCaptcha()
 
 const items = markRaw([
     {state: 'Osobní účet', value: '1'},
     {state: 'Školní účet', value: '2'}]
 );
 
-defineProps({ errors: Object })
+defineProps({errors: Object})
 const customRules = {
     passwordConfirm: v => v === form.password || "Hesla se neshodují!",
 }
@@ -132,8 +137,8 @@ const form = useForm({
     token: ''
 });
 
-const setDialog = () =>{
-        dialog.value = !dialog.value;
+const setDialog = () => {
+    dialog.value = !dialog.value;
 }
 const register = async () => {
     await recaptchaLoaded()
@@ -155,7 +160,8 @@ const register = async () => {
 .v-btn {
     margin: 0 auto;
 }
-:deep(.v-messages__message)  {
+
+:deep(.v-messages__message) {
     padding-bottom: 1.2em !important;
     transition: 0.3s;
 }

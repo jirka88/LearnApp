@@ -25,7 +25,6 @@ class ForgotPasswordRequest extends FormRequest
     {
         return [
             'token' => 'required',
-            'email' => 'required|email',
             'password' => 'required|min:8|confirmed',
             'password_confirmation' => 'required|same:password'
         ];

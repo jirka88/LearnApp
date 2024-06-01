@@ -60,12 +60,12 @@
 - Filtrace dat (Default,ASC,DESC...)
 - Vyhledávání
 - Možnost exportovat data v podobě (PDF, HTML, CSV, Excel)
+- Cachovani dat za pomocí REDIS
 
 # TO DO
 
 - Optimalizace komponent
 - Přidání vlastních statistik běžnému uživateli
 - Přidání více možností pro testera
-- Možnost zapomenuté heslo
 - Lepší ukládání obrázků v poznámkách
 

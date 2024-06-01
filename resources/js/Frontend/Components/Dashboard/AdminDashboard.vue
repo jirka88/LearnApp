@@ -121,7 +121,6 @@ const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Co
 const props = defineProps(['stats'])
 
 const restrictRegister = ref(props.stats.restrictRegister);
-
 const restrictRegisterModal = ref(false);
 
 const chartOptions = markRaw[{

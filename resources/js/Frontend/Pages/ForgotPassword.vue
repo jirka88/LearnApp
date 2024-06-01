@@ -5,15 +5,6 @@
                 <v-sheet class="pa-8" rounded="" elevation="10">
                     <h1 class="py-4">Resetování hesla</h1>
                     <v-form @submit.prevent="changePassword" class="d-flex flex-column ga-1">
-                        <v-text-field
-                            v-model="form.email"
-                            prepend-inner-icon="mdi-email"
-                            variant="outlined"
-                            label="E-mail"
-                            :rules="[rules.required, rules.email]"
-                            required
-                            autofocus
-                        ></v-text-field>
                         <v-text-field v-model="form.password"
                                       :label="$t('userAccount.new_password')"
                                       :rules="[rules.password]"
@@ -62,13 +53,12 @@ const customRules = {
 }
 const disabled = ref(false);
 const form = useForm({
-    email: '',
     password: '',
     password_confirmation: '',
     token: props.token
 })
 const changePassword = async () => {
-    disabled.value = true;
+    //disabled.value = true;
     form.post(route('reset'), {
         onSuccess: () => {
             disabled.value = false;

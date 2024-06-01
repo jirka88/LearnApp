@@ -23,10 +23,10 @@ class LoginController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(LoginRequest $request) {
+    public function login(LoginRequest $request, User $user) {
         $this->checkTooManyFailedAttempts();
         $credentials = $request->only('email', 'password');
-        $isActive = User::where('email', $credentials['email'])->first();
+        $isActive = $user->getUserByEmail($credentials['email']);
         if ($isActive == null) {
             return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.exist')]);
         }
@@ -61,10 +61,10 @@ class LoginController extends Controller {
             return;
         }
         $seconds = RateLimiter::availableIn($this->throttleKey());
-        throw ValidationException::withMessages(['msg' => trans('auth.throttle',
+        throw ValidationException::withMessages(['message' => trans('auth.throttle',
             ['seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
-            ]),
+           ]),
         ]);
     }
 
