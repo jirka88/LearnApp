@@ -2,14 +2,17 @@
 
 namespace App\Services;
 
+use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Http\Components\globalSettings;
 use App\Models\AccountTypes;
 use App\Models\Licences;
 use App\Models\Roles;
+use App\Models\Settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Support\Facades\Cache;
+use PhpOffice\PhpSpreadsheet\Calculation\Logical\Boolean;
 
 class AdminService
 {
@@ -21,6 +24,11 @@ class AdminService
         $pages = ceil(User::all()->count() / globalSettings::ITEMS_IN_PAGE);
         return ['users' => $users, 'pages' => $pages];
     }
+
+    /**
+     * Vrátí globální informace --> typy účtů, licence, role - podle oprávnění
+     * @return array
+     */
     public function create() {
         $accountTypes = Cache::rememberForever('accountTypes', function () {
             return AccountTypes::all();
@@ -65,4 +73,11 @@ class AdminService
         $user->patritions()->detach();
         User::destroy($user->id);
     }
+
+    public function changeRestriction(String $register)
+    {
+        Settings::find(1)->update(['RestrictedRegistration' => filter_var($register, FILTER_VALIDATE_BOOLEAN)]);
+        Cache::forget('restrictRegister');
+    }
+
 }

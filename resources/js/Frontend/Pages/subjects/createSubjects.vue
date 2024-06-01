@@ -2,41 +2,43 @@
     <component :is="SubjectManagerLayout">
         <v-form
             class="pa-6 bg-white"
-            :class="{'w-75': $vuetify.display.smAndDown}"
+            :class="{'w-85': $vuetify.display.smAndDown}"
             @submit.prevent="createSubject">
             <p class="text-h1 font-weight-bold py-6">{{ $t('global.created') }}
                 {{ $page.props.user.typeAccount == 'Osobní' ? 'sekci' : 'předmět' }}</p>
-            <v-text-field
-                v-model="form.name"
-                prepend-inner-icon="mdi-email"
-                variant="outlined"
-                autofocus
-                :label="$t('global.name')"
-                :rules="[rules.required, rules.chapterNameLength, rules.minSubjectLength]"
-            ></v-text-field>
-            <v-select
-                variant="outlined"
-                v-model="form.icon"
-                :items="icons"
-                item-title="iconName"
-                label="Ikona">
-                <template v-slot:selection="{ item, index }">
-                    <div class="d-flex justify-content-center align-items-center ga-2">
-                        <v-icon :icon="item.title"></v-icon>
-                        {{ item.title }}
-                    </div>
-                </template>
-                <template v-slot:item="{ item, props }">
-                    <v-list-item v-bind="props">
-                        <template #title>
-                            <div class="d-flex justify-content-center align-items-center ga-2">
-                                <v-icon :icon="item.title"></v-icon>
-                                {{ item.title }}
-                            </div>
-                        </template>
-                    </v-list-item>
-                </template>
-            </v-select>
+            <div class="d-flex flex-column ga-2">
+                <v-text-field
+                    v-model="form.name"
+                    prepend-inner-icon="mdi-email"
+                    variant="outlined"
+                    autofocus
+                    :label="$t('global.name')"
+                    :rules="[rules.required, rules.chapterNameLength, rules.minSubjectLength]"
+                ></v-text-field>
+                <v-select
+                    variant="outlined"
+                    v-model="form.icon"
+                    :items="icons"
+                    item-title="iconName"
+                    label="Ikona">
+                    <template v-slot:selection="{ item, index }">
+                        <div class="d-flex justify-content-center align-items-center ga-2">
+                            <v-icon :icon="item.title"></v-icon>
+                            {{ item.title }}
+                        </div>
+                    </template>
+                    <template v-slot:item="{ item, props }">
+                        <v-list-item v-bind="props">
+                            <template #title>
+                                <div class="d-flex justify-content-center align-items-center ga-2">
+                                    <v-icon :icon="item.title"></v-icon>
+                                    {{ item.title }}
+                                </div>
+                            </template>
+                        </v-list-item>
+                    </template>
+                </v-select>
+            </div>
             <v-btn
                 type="submit"
                 color="blue"

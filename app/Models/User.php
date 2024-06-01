@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
+use App\Notifications\EmailVerificationNotification;
 use Cviebrock\EloquentSluggable\Sluggable;
+use Illuminate\Contracts\Auth\CanResetPassword;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable {
+class User extends Authenticatable implements MustVerifyEmail, CanResetPassword {
     use HasApiTokens, HasFactory, Notifiable, Sluggable;
 
     protected $fillable = [
@@ -32,6 +35,9 @@ class User extends Authenticatable {
         'password',
         'remember_token',
     ];
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+    ];
 
     protected $append = ['get_count_users'];
 
@@ -42,7 +48,6 @@ class User extends Authenticatable {
             ],
         ];
     }
-
     public function setPasswordAttribute($value) {
         $this->attributes['password'] = bcrypt($value);
     }
@@ -88,5 +93,9 @@ class User extends Authenticatable {
         return $this->belongsToMany(Partition::class, 'userPartition', 'user_id', 'partition_id')
             ->as('permission')
             ->withPivot(['accepted', 'permission_id']);
+    }
+    public function sendEmailVerificationNotification()
+    {
+        $this->notify(new EmailVerificationNotification());
     }
 }

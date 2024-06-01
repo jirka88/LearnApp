@@ -20,7 +20,8 @@ class UserSeeder extends Seeder {
                 'type_id' => 1,
                 'password' => 'Aa123456#',
                 'slug' => 'jirka',
-                'licences_id' => 3],
+                'licences_id' => 3,
+                'email_verified_at' => now()],
             ['firstname' => 'Test',
                 'lastname' => 'Převrátil',
                 'role_id' => 2,
@@ -28,7 +29,8 @@ class UserSeeder extends Seeder {
                 'type_id' => 1,
                 'password' => 'Aa123456#',
                 'slug' => 'test',
-                'licences_id' => 1],
+                'licences_id' => 1,
+                'email_verified_at' => now()],
             ['firstname' => 'Test2',
                 'lastname' => 'Odvrátil',
                 'role_id' => 4,
@@ -36,7 +38,9 @@ class UserSeeder extends Seeder {
                 'type_id' => 1,
                 'password' => 'Aa123456#',
                 'slug' => 'test2',
-                'licences_id' => 2],
+                'licences_id' => 2,
+                'email_verified_at' => now()]
+            ,
         ];
         foreach ($users as $user) {
             User::create($user);

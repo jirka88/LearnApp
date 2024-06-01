@@ -7,12 +7,14 @@
                 location="left"
             >
                 <div class="usr">
-                    <Link :href="route('user.info')" class="text-decoration-none text-black">
+                    <Link :href="!$page.props.user.verified ? '' : route('user.info')"
+                          class="text-decoration-none text-black">
                         <v-list-item
                             :prepend-avatar="$page.props.user.image ? '/storage/' + $page.props.user.image : undefinedProfilePicture"
                             :title="$page.props.user.firstname"
                             nav
                             height="64"
+                            :disabled="!$page.props.user.verified"
                             class=" d-flex align-center ga-2"
                         >
                             <div class="text-subtitle-2">{{ $page.props.user.email }}</div>
@@ -20,7 +22,7 @@
                     </Link>
                 </div>
                 <v-divider></v-divider>
-                <v-list density="compact" nav>
+                <v-list density="compact" nav :disabled="!$page.props.user.verified">
                     <Link :href="route('dashboard')">
                         <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')"
                                      :value="$t('dashboard.home')"></v-list-item>

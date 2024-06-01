@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
 
-class HandleInertiaRequests extends Middleware {
+class HandleInertiaRequests extends Middleware
+{
     use userTrait;
 
     /**
@@ -24,7 +25,8 @@ class HandleInertiaRequests extends Middleware {
      *
      * @see https://inertiajs.com/asset-versioning
      */
-    public function version(Request $request): ?string {
+    public function version(Request $request): ?string
+    {
         return parent::version($request);
     }
 
@@ -33,7 +35,8 @@ class HandleInertiaRequests extends Middleware {
      *
      * @see https://inertiajs.com/shared-data
      */
-    public function share(Request $request): array {
+    public function share(Request $request): array
+    {
         return array_merge(parent::share($request), [
             'flash' => [
                 'message' => session('message'),
@@ -42,15 +45,22 @@ class HandleInertiaRequests extends Middleware {
             'user' => [
                 'id' => auth()->user()->id ?? '',
                 'firstname' => auth()->user()->firstname ?? '',
-                'email' => auth()->user()->email ?? '',
+                'email' => auth()->user()?->id ? Cache::remember('userEmail' . auth()->user()->id, now()->addDays(30), function () {
+                    return auth()->user()->email ?? '';
+                }) : '',
                 'role' => auth()->user()->roles ?? '',
-                'typeAccount' => auth()->user()->accountTypes->type ?? '',
-                'subjects' =>  Cache::rememberForever('subjects' . auth()->user()->id, function () {
+                'typeAccount' => auth()->user()?->id ? Cache::remember('userTypeAccount' . auth()->user()->id, now()->addDays(30), function () {
+                    return auth()->user()->accountTypes->type ?? '';
+                }) : '',
+                'subjects' => auth()->user()?->id ? Cache::remember('subjects' . auth()->user()->id, now()->addDays(30) ,function () {
                     return auth()->user()->patritions ?? '';
-                }),
-                'licences' => auth()->user()->licences->id ?? '',
+                }) : '',
+                'licences' => auth()->user()?->id ? Cache::remember('userLicence' . auth()->user()->id,  now()->addDays(30), function () {
+                    return auth()->user()->licences->id ?? '';
+                }) : '',
                 'image' => auth()->user()->image ?? '',
                 'sharedSubjects' => $this->getActivedShared(),
+                'verified' => auth()->user()?->id ? (auth()->user()->email_verified_at ? true : false) : '',
             ],
             'permission' => [
                 'view' => in_array(auth()->user()?->role_id, [1, 2]),

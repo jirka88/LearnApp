@@ -3,30 +3,18 @@
         <v-container class="pa-0">
             <div class="d-flex flex-column pa-5 ga-6">
                 <Breadcrumbs :items="[{title: 'předměty', disabled: true }]"></Breadcrumbs>
-                <div class="btns d-flex align-center justify-space-between">
+                <div class="btns d-flex align-center justify-space-between"
+                     :class="$vuetify.display.smAndDown ? 'flex-column ga-4' : 'ga-8'">
                     <Link :href="route('subject.create')">
                         <v-btn
-                            class="bg-green">
+                            class="bg-green"
+                            :class="$vuetify.display.smAndDown ? 'flex-grown-1' : ''">
                             {{ $t('global.created') }}
                             {{ $page.props.user.typeAccount === 'Osobní' ? 'sekci' : 'předmět' }}
                         </v-btn>
                     </Link>
-                    <v-select
-                        v-model="filtr"
-                        @update:modelValue="filtred"
-                        :items="items"
-                        :disabled="subjectsShow.length === 0"
-                        item-title="state"
-                        item-value="id"
-                        item-sort="sort"
-                        label="Výchozí"
-                        persistent-hint
-                        return-object
-                        hide-details
-                        single-line
-                        variant="outlined">
-
-                    </v-select>
+                    <SearchSubject :disabled="subjectsShow.length === 0"></SearchSubject>
+                    <SortSelect :disabled="subjectsShow.length === 0" @sort="sorted"></SortSelect>
                 </div>
                 <v-table class="text-left">
                     <thead>
@@ -116,9 +104,11 @@ import {Link} from "@inertiajs/inertia-vue3";
 import axios from 'axios';
 import DashboardLayout from "../../layouts/DashboardLayout.vue";
 import {Inertia} from "@inertiajs/inertia";
-import {defineAsyncComponent, markRaw, onMounted, ref, watch} from "vue";
+import {defineAsyncComponent, ref} from "vue";
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
 import {useUrlSearchParams} from '@vueuse/core';
+import SortSelect from "@/Frontend/Components/SortSelect.vue";
+import SearchSubject from "@/Frontend/Components/SearchSubject.vue";
 
 const dialog = ref(false);
 const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
@@ -136,30 +126,8 @@ const subject = ref({
 const page = ref(props.subjects.current_page);
 const subjectsShow = ref(props.subjects.data);
 const loading = ref(false);
+const filtrGlobal = ref('');
 
-const filtr = ref({state: 'Výchozí', id: 'default', sort: 'name'});
-
-const items = markRaw(
-    [{state: 'Výchozí', id: 'default', sort: 'name'},
-        {state: 'Sestupně', id: 'asc', sort: 'name'},
-        {state: 'Vzestupně', id: 'desc', sort: 'name'},
-        {state: 'Od nejnovějších', id: 'asc', sort: 'created_at'},
-        {state: 'Od nejstarších', id: 'desc', sort: 'created_at'}]
-);
-
-onMounted(() => {
-    sort();
-})
-
-const sort = () => {
-    const params = useUrlSearchParams('history')
-    const sort = params.sort?.split(',');
-    if (sort && sort[sort.length - 1] !== null) {
-        const sortValue = items.find(item => item.id === sort[sort.length - 1]);
-        filtr.value = sortValue;
-        params.sort = filtr.value.sort + ',' + filtr.value.id.toLowerCase();
-    }
-}
 
 const setId = (id, name) => {
     dialog.value = true;
@@ -176,7 +144,7 @@ const destroySubject = () => {
 }
 
 const fetchData = () => {
-    Inertia.get(route('subject.index'), {page: page.value, sort: filtr.value.sort + ',' + filtr.value.id}, {
+    Inertia.get(route('subject.index'), {page: page.value, sort: filtrGlobal.value}, {
         preserveState: true, onSuccess: (response) => {
             subjectsShow.value = response.props.subjects.data;
             page.value = response.props.subjects.current_page;
@@ -184,11 +152,12 @@ const fetchData = () => {
     });
 
 }
-const filtred = async () => {
+const sorted = async (filtr) => {
     loading.value = true;
     const params = useUrlSearchParams('history')
-    params.sort = filtr.value.sort + ',' + filtr.value.id;
-    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.value.sort},${filtr.value.id}`)
+    params.sort = filtr.sort + ',' + filtr.id;
+    filtrGlobal.value = filtr.sort + ',' + filtr.id;
+    await axios.get(`/dashboard/manager/subjects/sort?sort=${filtr.sort},${filtr.id}`)
         .then(response => {
             subjectsShow.value = response.data.search.data;
             params.page = 1;

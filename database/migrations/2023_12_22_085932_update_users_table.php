@@ -13,6 +13,7 @@ return new class extends Migration {
     public function up() {
         Schema::table('users', function (Blueprint $table) {
             $table->string('image')->nullable();
+            $table->timestamp('email_verified_at')->nullable();
         });
     }
 
@@ -23,7 +24,8 @@ return new class extends Migration {
      */
     public function down() {
         Schema::table('users', function (Blueprint $table) {
-            //$table->dropColumn(['image']);
+            $table->dropColumn(['image']);
+            $table->dropColumn('email_verified_at');
         });
 
     }

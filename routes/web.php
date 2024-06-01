@@ -4,11 +4,15 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\PasswordReset;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SharingController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\VerifyEmailController;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -32,12 +36,23 @@ Route::group(['middleware' => ['guest']], function () {
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
     Route::post('/register', [RegisterController::class, 'store'])->name('register');
-    Route::get('/passwordreset', [LoginController::class, 'passwordReset'])->name('reset');
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'passwordResetShow'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'passwordResetStore'])->middleware('throttle:6,1')->name('password.email');
+    Route::get('/reset-password/{token}', function (string $token) {
+        return Inertia::render('ForgotPassword', ['token' => $token]);
+    })->name('password.reset');
+    Route::post('/reset-password',[ForgotPasswordController::class, 'passwordReset'])->name('reset');
     Route::get('/404', function (Request $request) {
         return Inertia::render('errors/404')->toResponse($request)->setStatusCode(404);
     });
 });
-Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
+Route::group(['middleware' => ['auth']], function () {
+    Route::get('/email/verify', [VerifyEmailController::class, 'show'])->middleware('unverified')->name('verification.notice');
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])->middleware('signed')->name('verification.verify');
+    Route::post('/email/request-verification', [VerifyEmailController::class, 'requestVerification'])->middleware('throttle:6,1')->name('verification.email');
+    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
+});
+Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], function () {
     Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
@@ -49,9 +64,9 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::put('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
     Route::resource('/manager/subject', SubjectController::class);
     Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
-    Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
     Route::get('/manager/subject/{slug}/select', [ChapterController::class, 'selectChapter'])->name('chapter.select');
     Route::resource('/manager/subject/{slug}/chapter', ChapterController::class);
+    Route::post('/manager/subject/{slug}/chapter/{chapterSlug}/export', [ChapterController::class, 'exportFile']);
     Route::get('/manager/subject/{slug}/sharing/users', [Controller::class, 'showUsersForSharing'])->name('sharing');
     Route::post('/sharing/users', [SharingController::class, 'store'])->name('share');
     Route::get('/sharing/subjects', [SharingController::class, 'showOfferShare'])->name('share.view');
@@ -63,6 +78,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
     Route::get('/search/user', [Controller::class, 'searchUser'])->name('user.search');
+    Route::get('/subject/search', [SubjectController::class, 'searchSubject'])->name('subject.search');
     Route::get('/404', function (Request $request) {
         return Inertia::render('errors/auth/404')->toResponse($request)->setStatusCode(404);
     });
@@ -74,6 +90,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'dashboard'], function () {
     });
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'], function () {
         route::get('/controll', [Admin::class, 'index']);
+        Route::post('/controll/users', [Admin::class, 'userExportPDF'])->name('users.exportPDF');
         route::get('/controll/{user}', [Admin::class, 'edit'])->name('user.edit');
         route::put('/controll/{user}', [Admin::class, 'update'])->name('user.update');
         route::delete('/controll/{user}', [Admin::class, 'destroy'])->name('user.destroy');

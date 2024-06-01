@@ -19,6 +19,13 @@ class Chapter extends Model {
         'partition_id',
     ];
 
+    protected $casts = [
+        'name' => 'encrypted',
+        'perex' => 'encrypted',
+        'context' => 'encrypted',
+        'slug' => 'encrypted'
+    ];
+
     public function sluggable(): array {
         return [
             'slug' => [

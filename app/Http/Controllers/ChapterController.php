@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Enums\ToastifyStatus;
 use App\Enums\UserLicences;
 use App\Enums\UserRoles;
+use App\Exports\ChapterExport;
+use App\Exports\UsersExport;
 use App\Http\Requests\ChapterRequest;
 use App\Http\Resources\ChapterSelectResource;
 use App\Models\Chapter;
@@ -13,12 +15,17 @@ use App\Models\User;
 use App\Rules\UniqueChapterName;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
-class ChapterController extends Controller {
+class ChapterController extends Controller
+{
     protected $chapterModel;
 
-    public function __construct(Chapter $chapterModel) {
+    public function __construct(Chapter $chapterModel)
+    {
         $this->chapterModel = $chapterModel;
     }
 
@@ -29,7 +36,8 @@ class ChapterController extends Controller {
      *
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function show(Request $request, $slug, $chapterName) {
+    public function show(Request $request, $slug, $chapterName)
+    {
         $chapter = $this->chapterModel->getChapterWithPermission($chapterName);
         if ($chapter->Partition->Users) {
             if (auth()->user()->roles->id == UserRoles::ADMIN || auth()->user()->roles->id == UserRoles::OPERATOR) {
@@ -47,7 +55,8 @@ class ChapterController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function create(Request $request, $slug) {
+    public function create(Request $request, $slug)
+    {
         $user = auth()->user()->loadMissing(['patritions' => function ($query) use ($slug) {
             $query->where('slug', $slug)->firstOrFail();
         }]);
@@ -61,7 +70,8 @@ class ChapterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ChapterRequest $chapterRequest) {
+    public function store(ChapterRequest $chapterRequest)
+    {
         $subjectModel = app('App\Models\Partition');
         $partition = $subjectModel->getSubjectBySlug($chapterRequest->slug);
         if ($this->chapterModel->getChapterByNameAndPatrition($partition->id, $chapterRequest->name) !== null) {
@@ -86,7 +96,8 @@ class ChapterController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function edit($slug, $chapter) {
+    public function edit($slug, $chapter)
+    {
         $chapter = $this->chapterModel->getChapterWithPermission($chapter);
         $this->authorize('update', $chapter);
 
@@ -98,7 +109,8 @@ class ChapterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(ChapterRequest $chapterRequest, $slug) {
+    public function update(ChapterRequest $chapterRequest, $slug)
+    {
         $chapter = $this->chapterModel->getChapter($chapterRequest->slug);
         $chapter->name = $chapterRequest->name;
         $uniqueChapterNameRule = new UniqueChapterName;
@@ -122,7 +134,8 @@ class ChapterController extends Controller {
      *
      * @return void
      */
-    public function destroy($slug, $chapter) {
+    public function destroy($slug, $chapter)
+    {
         $chapterDelete = $this->chapterModel->getChapter($chapter);
         $chapterDelete->delete();
 
@@ -134,18 +147,39 @@ class ChapterController extends Controller {
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function selectChapter(Request $request, $slug) {
+    public function selectChapter(Request $request, $slug)
+    {
         $sort = $request->input('select');
         $subject = app('App\Models\Partition');
         $subjectId = $subject->getSubjectId($slug);
         $chapter = [];
         if ($sort !== null) {
-            $chapter = ChapterSelectResource::collection(Chapter::where('name', 'LIKE', '%'.$sort.'%')->where('partition_id', $subjectId)->get());
+            $chapter = ChapterSelectResource::collection(Chapter::where('name', 'LIKE', '%' . $sort . '%')->where('partition_id', $subjectId)->get());
         }
         if (count($chapter) === 0) {
             $chapter = ['item' => 'Nic nenalezeno!'];
         }
 
         return response()->json(['search' => $chapter]);
+    }
+
+    /**
+     * Exportování kapitoly
+     * @param Request $request
+     * @param $slug
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function exportFile(Request $request, $slug, $chapterSlug)
+    {
+        $chapter = $this->chapterModel->getChapterWithPermission($chapterSlug);
+        $this->authorize('view', $chapter);
+        $extension = $request->input('export');
+        switch ($extension) {
+            case 'pdf':
+                $sheet = Excel::download(new ChapterExport($chapter), 'uzivatele.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
+                break;
+        }
+        return $sheet;
     }
 }

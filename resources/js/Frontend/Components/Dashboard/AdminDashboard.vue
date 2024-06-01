@@ -2,7 +2,6 @@
     <div class="d-flex ga-6 flex-column dashboard">
         <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
             {{ $t('dashboard.stats') }}</h1>
-        <!-- <Toastify v-if="isActiveToast" :text="statusToast ? $page.props.flash.message : 'Nastala chyba!'" :variant="statusToast ? 'success' : 'error'" :time="3000" @close="isActiveToast = false"></Toastify>-->
         <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
             <v-col>
                 <WelcomeBox/>
@@ -54,7 +53,7 @@
             </v-card>
             <v-card elevation="4">
                 <v-card-title class="font-weight-bold text-center">
-                    Počet všech kapitol:
+                    Počet všech poznámek:
                 </v-card-title>
                 <v-card-text class="text-center">
                     {{ stats.chapters }}
@@ -122,7 +121,6 @@ const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Co
 const props = defineProps(['stats'])
 
 const restrictRegister = ref(props.stats.restrictRegister);
-
 const restrictRegisterModal = ref(false);
 
 const chartOptions = markRaw[{

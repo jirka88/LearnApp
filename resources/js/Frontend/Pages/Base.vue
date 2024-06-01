@@ -18,6 +18,11 @@ setLanguage();
               :variant="$page.props.flash.status"
               :time="3000"
               @close="toastShow(false); $page.props.flash.message = ''"></Toastify>
+    <Toastify v-if="$page.props?.errors?.message"
+              :text="$page.props.errors.message"
+              variant="error"
+              :time="3000"
+              @close="toastShow(false); $page.props.errors.message = ''"></Toastify>
     <slot>
 
     </slot>

@@ -19,7 +19,7 @@ class RegisterController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(RegisterRequest $request) {
+    public function store(RegisterRequest $request, VerifyEmailController $controller) {
         $restricted = Settings::find(1);
         if ($restricted === true) {
             return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('authentication.restricted')]);
@@ -29,7 +29,8 @@ class RegisterController extends Controller {
         $usr['slug'] = SlugService::createSlug(User::class, 'slug', $request->firstname);
         $user = User::create($usr);
         auth()->login($user);
+        $controller->requestVerification();
 
-        return redirect()->intended('/dashboard');
+        return redirect()->intended('verification.notice');
     }
 }

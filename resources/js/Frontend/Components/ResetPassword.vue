@@ -1,8 +1,6 @@
-
-
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
-        <legend align="center" class="text-h5">{{$t('userAccount.password_reset')}}:</legend>
+        <legend align="center" class="text-h5">{{ $t('userAccount.password_reset') }}:</legend>
         <v-form @submit.prevent="changePassword">
             <v-text-field v-model="formPassword.oldPassword"
                           :label="$t('userAccount.old_password')"
@@ -43,7 +41,7 @@
                    class="btn d-flex"
                    :class="{'w-100': $vuetify.display.smAndDown}"
             >
-                {{$t('userAccount.change_password')}}!
+                {{ $t('userAccount.change_password') }}!
             </v-btn>
         </v-form>
     </fieldset>
@@ -51,11 +49,13 @@
 <script setup>
 import {ref} from "vue";
 import {useForm} from "@inertiajs/inertia-vue3";
+
 const show = ref('');
 const show1 = ref('');
 const show2 = ref('');
 const props = defineProps({'usr': Object, errors: Object})
 import rules from './../rules/rules'
+
 const customRules = {
     passwordConfirm: v => v === formPassword.newPassword || "Hesla se neshodují!",
 }

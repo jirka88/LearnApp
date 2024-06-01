@@ -5,13 +5,15 @@
 ## Registrace
 
 - Umožnění registrace pomocí emailu
+- Ověření emailu pomocí zaslání ověřovacího odkazu přes email
 - Hashování hesla
 - Nastavení typ účtu
 
 ## přihlášení
 
-- Ochrana proti spam útokům
+- Ochrana proti spam útokům (Recaptcha)
 - Validace údajů
+- Možnost zapomenuté heslo
 
 ## Běžný uživatel
 
@@ -55,15 +57,15 @@
 - Role: Admin, Operátor, Tester
 - Chráněné routy podle rolí a uživatelů
 - Automatizované testy (Features - PhpUnit)
-- Filtrace dat (Default,ASC,DESC)
-- Zrychlení načítání pomocí cachovani dat (Redis)
-- Úprava kódu pomocí pint 
+- Filtrace dat (Default,ASC,DESC...)
+- Vyhledávání
+- Možnost exportovat data v podobě (PDF, HTML, CSV, Excel)
+- Cachovani dat za pomocí REDIS
 
 # TO DO
 
 - Optimalizace komponent
 - Přidání vlastních statistik běžnému uživateli
 - Přidání více možností pro testera
-- Možnost zapomenuté heslo
 - Lepší ukládání obrázků v poznámkách
 

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\ToastifyStatus;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -21,10 +23,10 @@ class LoginController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(LoginRequest $request) {
+    public function login(LoginRequest $request, User $user) {
         $this->checkTooManyFailedAttempts();
         $credentials = $request->only('email', 'password');
-        $isActive = User::where('email', $credentials['email'])->first();
+        $isActive = $user->getUserByEmail($credentials['email']);
         if ($isActive == null) {
             return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.exist')]);
         }
@@ -38,7 +40,6 @@ class LoginController extends Controller {
 
             $user = Auth::getProvider()->retrieveByCredentials($credentials);
             Auth::login($user, $request->get('remember'));
-
             return redirect()->intended('/dashboard');
         } else {
             return redirect()->back()->with(['status' => ToastifyStatus::ERROR])->withErrors(['msg' => __('auth.activate')]);
@@ -60,14 +61,11 @@ class LoginController extends Controller {
             return;
         }
         $seconds = RateLimiter::availableIn($this->throttleKey());
-        throw ValidationException::withMessages(['msg' => trans('auth.throttle',
+        throw ValidationException::withMessages(['message' => trans('auth.throttle',
             ['seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
-            ]),
+           ]),
         ]);
     }
 
-    public function passwordReset() {
-        return Inertia::render('register', ['value' => 2]);
-    }
 }

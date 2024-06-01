@@ -37,7 +37,9 @@ class DashboardUserController extends Controller {
             return AccountTypes::all();
         });
         if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $roles = Roles::all();
+            $roles = Cache::rememberForever('roles', function () {
+                return Roles::all();
+            });
             $licences = Cache::rememberForever('licences', function () {
                 return Licences::all();
             });
@@ -65,8 +67,9 @@ class DashboardUserController extends Controller {
             'lastname' => $updateRequest->lastname,
             'type_id' => $typeAccount,
         ]);
+        Cache::forget('userTypeAccount' . auth()->user()->id);
 
-        return redirect()->back()->with(['message' => 'Aktualizace úspěšná!', 'status' => ToastifyStatus::SUCCESS]);
+        return redirect()->back()->with(['message' =>  __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**

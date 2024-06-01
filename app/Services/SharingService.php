@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\ToastifyStatus;
+use App\Events\ChangedUserSharedSubject;
 use App\Http\Resources\UserSelectResource;
 use App\Models\Partition;
 use App\Models\Permission;
@@ -55,7 +56,8 @@ class SharingService {
                 $status = ToastifyStatus::INFO;
             }
         }
-        Cache::forget('sharedSubjects');
+        event(new ChangedUserSharedSubject($user));
+
         return ['message' => $sendMessage, 'status' => $status];
     }
 
@@ -77,7 +79,7 @@ class SharingService {
         $subjecModel = app('\App\Models\Partition');
         $subject = $subjecModel->getSubjectBySlug($slug);
         $user->patritions()->detach($subject->id);
-        Cache::forget('sharedSubjects');
+        event(new ChangedUserSharedSubject($user));
     }
 
     /**
@@ -119,6 +121,6 @@ class SharingService {
         $subjecModel = app('\App\Models\Partition');
         $subject = $subjecModel->getSubjectBySlug($request_slug);
         auth()->user()->patritions()->updateExistingPivot($subject->id, ['accepted' => 1]);
-        Cache::forget('sharedSubjects');
+        event(new ChangedUserSharedSubject(auth()->user()));
     }
 }

@@ -2,7 +2,7 @@
     <component :is="DashboardLayout">
         <v-container>
             <Breadcrumbs :items="[{title: 'Uživatelé', disabled: true }]"></Breadcrumbs>
-            <div v-if="$page.props.permission.view" class="btns d-flex align-center py-8">
+            <div v-if="$page.props.permission.view" class="d-flex align-center py-8 ga-8 overflow-auto">
                 <Link :href="route('adminuser.create')" data-aos="zoom-in"
                       data-aos-duration="400">
                     <v-btn
@@ -10,6 +10,8 @@
                         {{ $t('global.create_user') }}
                     </v-btn>
                 </Link>
+                <ExportBtns :showExport="['pdf', 'csv', 'html', 'excel']" :disabledExport="disabledExport"
+                            @exportFile="exportFile"></ExportBtns>
             </div>
             <v-dialog
                 v-model="status"
@@ -106,12 +108,15 @@ import {defineAsyncComponent, ref} from "vue";
 import inertia from "@inertiajs/inertia";
 import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg';
 import Breadcrumbs from "@/Frontend/Components/UI/Breadcrumbs.vue";
+import axios from "axios";
+import FileSaver from 'file-saver'
+import ExportBtns from "@/Frontend/Components/ExportBtns.vue";
 
 const activeUser = ref('');
 const status = ref(false);
 const page = ref(1);
+const disabledExport = ref(false);
 const props = defineProps({users: Object, pages: Object});
-
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')
 )
@@ -126,6 +131,16 @@ const fetchData = () => {
         }
     });
 }
+const exportFile = async (value) => {
+    disabledExport.value = true;
+    await axios.post(`/dashboard/admin/controll/users?export=${value}`, {}, {
+        responseType: 'blob'
+    }).then((response) => {
+        FileSaver.saveAs(response.data, 'uzivatele');
+        disabledExport.value = false;
+    });
+}
+
 </script>
 
 <style scoped lang="scss">
@@ -138,5 +153,6 @@ table {
         }
     }
 }
+
 
 </style>

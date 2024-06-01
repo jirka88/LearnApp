@@ -13,10 +13,10 @@ return new class extends Migration {
     public function up() {
         Schema::create('chapters', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 20);
+            $table->string('name');
             $table->string('slug')
                 ->unique();
-            $table->string('perex', 50)
+            $table->string('perex')
                 ->nullable();
             $table->longText('context');
             $table->foreignId('partition_id')
