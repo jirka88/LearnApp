@@ -69,10 +69,8 @@ class UsersExport implements WithHeadings, WithMapping, FromCollection, WithProp
 
     public function headings(): array
     {
-        $columns = Schema::getColumnListing('users');
-        $excludeColumns = ['password', 'remember_token', 'image'];
-        $filteredColumns = array_diff($columns, $excludeColumns);
-        return [$filteredColumns];
+        $columns = ['id', 'firstname', 'lastname', 'slug', 'email', 'role', 'typ', 'licence', 'active', 'canShare', 'created_at', 'updated_at'];
+        return [$columns];
     }
 
     public function properties(): array

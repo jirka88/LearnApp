@@ -48,7 +48,9 @@ class HandleInertiaRequests extends Middleware
                 'email' => auth()->user()?->id ? Cache::remember('userEmail' . auth()->user()->id, now()->addDays(30), function () {
                     return auth()->user()->email ?? '';
                 }) : '',
-                'role' => auth()->user()->roles ?? '',
+                'role' =>  auth()->user()?->id ? Cache::remember('userRole' . auth()->user()->id, now()->addDays(30), function () {
+                    return auth()->user()->roles ?? '';
+                }) : '',
                 'typeAccount' => auth()->user()?->id ? Cache::remember('userTypeAccount' . auth()->user()->id, now()->addDays(30), function () {
                     return auth()->user()->accountTypes->type ?? '';
                 }) : '',

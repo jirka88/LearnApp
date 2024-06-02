@@ -27,7 +27,7 @@
                         <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')"
                                      :value="$t('dashboard.home')"></v-list-item>
                     </Link>
-                    <Link v-if="$page.props.permission.view" :href="route('admin')">
+                    <Link v-if="$page.props.permission.view" :href="route('adminusers')">
                         <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.all_users')"
                                      :value="$t('dashboard.all_users')"></v-list-item>
                     </Link>

@@ -43,6 +43,10 @@ class Admin extends Controller
         $data = $this->service->index($request->page, $sort, $request->url(), $request->query());
         return Inertia::render('admin/listUsers', $data);
     }
+    public function sortIndex(Request $request) {
+        $sort = $request->input('sort', 'default');
+        return response()->json($this->service->index($request->page, $sort, $request->url(), $request->query()));
+    }
 
     /**
      * ADMIN - Získáné informace o uživateli

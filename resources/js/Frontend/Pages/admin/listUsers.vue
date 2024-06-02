@@ -42,8 +42,8 @@
                     <th class="font-weight-bold">{{ $t('global.setting') }}:</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr class="pa-8" v-for="user in users.data.data" :key="user.id">
+                <tbody v-if="!isLoading">
+                <tr class="pa-8" v-for="user in showUsers.data.data" :key="user.id">
                     <td>{{ user.id }}</td>
                     <td class="mx-0">
                         <v-avatar>
@@ -93,6 +93,10 @@
                     <td v-else></td>
                 </tr>
                 </tbody>
+                <tbody v-else>
+                <TableSkeleton v-for="n in showUsers.data.data" :key="n.id"
+                               :countTd="$page.props.user.role.id === 2 ? 8 : 10"></TableSkeleton>
+                </tbody>
             </v-table>
             <v-pagination
                 v-model="page"
@@ -124,10 +128,13 @@ const status = ref(false);
 const page = ref(1);
 const disabledExport = ref(false);
 const props = defineProps({users: Object, pages: Object, sort: String});
+const showUsers = ref(props.users);
 const filtrGlobal = ref('');
+const isLoading = ref(false);
 const DialogDelete = defineAsyncComponent(() =>
     import('@/Frontend/Components/UI/Dialog-delete.vue')
 )
+const TableSkeleton = defineAsyncComponent(() => import("@/Frontend/Components/Loading/TableSkeleton.vue"));
 const enableDialog = (user) => {
     activeUser.value = user;
     status.value = true;
@@ -149,13 +156,16 @@ const exportFile = async (value) => {
     });
 }
 const sortData = async (filtr) => {
+    isLoading.value = true;
     const params = useUrlSearchParams('history')
     params.sort = filtr.sort + ',' + filtr.id;
     filtrGlobal.value = filtr.sort + ',' + filtr.id;
-    await axios.get(`/dashboard/admin/controll?sort=${filtr.sort},${filtr.id}`)
+    await axios.get(`/dashboard/admin/controll/sort?sort=${filtr.sort},${filtr.id}`)
         .then(response => {
+            showUsers.value = response.data.users;
             params.page = 1;
             page.value = 1;
+            isLoading.value = false;
         })
 }
 

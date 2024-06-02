@@ -28,5 +28,6 @@ class ForgetUserCache
         Cache::forget('userLicence' . $event->user->id);
         Cache::forget('userEmail' . $event->user->id);
         Cache::forget('userTypeAccount' . $event->user->id);
+        Cache::forget('userRole' . $event->user->id);
     }
 }
