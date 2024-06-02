@@ -32,9 +32,6 @@ Route::inertia('/', 'app');
 Route::post('/language/{language}', [Controller::class, 'changeLanguage'])->name('language');
 
 Route::group(['middleware' => ['guest']], function () {
-    Route::get('/test-email', function() {
-       return view('emails.welcome_email');
-    });
     Route::get('/login', [LoginController::class, 'edit'])->name('login.edit');
     Route::post('/login', [LoginController::class, 'login'])->name('login');
     Route::get('/register', [RegisterController::class, 'create'])->name('register.create');
