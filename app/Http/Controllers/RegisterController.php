@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ToastifyStatus;
+use App\Events\SendEmailWelcome;
 use App\Http\Requests\RegisterRequest;
 use App\Models\Settings;
 use App\Models\User;
@@ -30,6 +31,7 @@ class RegisterController extends Controller {
         $user = User::create($usr);
         auth()->login($user);
         $controller->requestVerification();
+        event(new SendEmailWelcome(auth()->user()));
 
         return redirect()->intended('verification.notice');
     }
