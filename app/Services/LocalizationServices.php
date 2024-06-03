@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Http\Components;
+namespace App\Services;
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 
-class Localization {
+class LocalizationServices {
     public static $supportedLanguages = ['cs', 'en'];
 
-    public static function getLocale() {
+    public function getLocale() {
         return session::get('locale');
     }
 
-    public static function setLocale($language) {
+    public function setLocale($language) {
         Session::put('locale', $language);
         App::setlocale($language);
     }

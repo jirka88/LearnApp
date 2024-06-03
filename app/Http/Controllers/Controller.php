@@ -60,6 +60,7 @@ class Controller extends BaseController {
         if (isset($search)) {
             $user = UserSelectResource::Collection(User::where('canShare', 1)
                 ->whereNotIn('id', [auth()->user()->id, UserRoles::ADMIN])
+                ->whereNot('email_verified_at', null)
                 ->where(function ($query) use ($search) {
                     $query->where('firstname', 'LIKE', '%'.$search.'%')
                         ->orWhere('lastname', 'LIKE', '%'.$search.'%')

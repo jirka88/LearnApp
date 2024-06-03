@@ -41,22 +41,23 @@ class SharingService {
     /**
      * Vytvoření sdílení
      * @param $validated
+     * @param $auth_user
      * @return Collection
      */
-    public function store($validated): Array {
+    public function store($validated, $auth_user): Array {
 
         $sendMessage = __('share.warning.send');
         $status = ToastifyStatus::SUCCESS;
         foreach ($validated['users'] as $email) {
             $user = User::where('email', $email)->firstOrFail();
             if ($user->patritions()->where('partition_id', $validated['subject'])->first() == null) {
-                $user->patritions()->attach($validated['subject'], ['permission_id' => (int) $validated['permission'], 'accepted' => false]);
+                $user->patritions()->attach($validated['subject'], ['permission_id' => (int) $validated['permission'], 'accepted' => 0]);
             } else {
                 $sendMessage = __('share.warning.again_send');
                 $status = ToastifyStatus::INFO;
             }
         }
-        event(new ChangedUserSharedSubject($user));
+        event(new ChangedUserSharedSubject($auth_user, $user));
 
         return ['message' => $sendMessage, 'status' => $status];
     }
@@ -75,11 +76,19 @@ class SharingService {
         $subject = Partition::findOrFail($request_subject);
         $user->patritions()->updateExistingPivot($subject->id, ['permission_id' => $permission['id']]);
     }
-    public function delete($slug, $user) :Void {
+
+    /**
+     * Vymazání sdílení
+     * @param $slug
+     * @param $user
+     * @param $auth_user
+     * @return Void
+     */
+    public function delete($slug, $user, $auth_user) :Void {
         $subjecModel = app('\App\Models\Partition');
         $subject = $subjecModel->getSubjectBySlug($slug);
         $user->patritions()->detach($subject->id);
-        event(new ChangedUserSharedSubject($user));
+        event(new ChangedUserSharedSubject($auth_user, $user));
     }
 
     /**
@@ -91,8 +100,8 @@ class SharingService {
         $subjects = $user
             ->patritions()
             ->where('accepted', false)
-            ->with(['Users' => function ($query2) {
-                UserSelectResource::make($query2->where('permission_id', null))->first();
+            ->with(['Users' => function ($query) {
+                UserSelectResource::make($query->where('permission_id', null))->first();
             }])->get();
 
         return $subjects;
@@ -108,6 +117,10 @@ class SharingService {
         $subject = $subjecModel->getSubjectBySlug($request_slug);
         $user->patritions()->detach($subject->id);
 
+        $userModel = app('\App\Models\User');
+        $userOwner = $userModel->getUserById($subject->created_by);
+
+        event(new ChangedUserSharedSubject($user, $userOwner));
         return $subject;
     }
 

@@ -25,6 +25,9 @@ class ForgetUserSharedSubjectCache
      */
     public function handle(ChangedUserSharedSubject $event)
     {
-       Cache::forget('sharedSubjects' . $event->user->id);
+       Cache::forget('sharedSubjects' . $event->auth_user->id);
+       Cache::forget('sharedSubjects' . $event?->user?->id);
+       Cache::forget('subjects' . $event?->user?->id);
+       Cache::forget('subjects' . $event->auth_user->id);
     }
 }

@@ -14,14 +14,16 @@ use Illuminate\Queue\SerializesModels;
 class ChangedUserSharedSubject
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $auth_user;
     public $user;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $auth_user, User $user = null)
     {
+        $this->auth_user = $auth_user;
         $this->user = $user;
     }
 

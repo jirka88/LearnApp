@@ -42,7 +42,7 @@ class SharingController extends Controller {
             'subject' => 'required',
         ], $customMessages);
 
-        $data =  $this->service->store($validated);
+        $data = $this->service->store($validated, auth()->user());
 
         return redirect()->back()->with($data);
     }
@@ -64,7 +64,7 @@ class SharingController extends Controller {
      * @return \Illuminate\Http\RedirectResponse
      */
     public function delete($slug, User $user) {
-        $this->service->delete($slug, $user);
+        $this->service->delete($slug, $user, auth()->user());
         return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
     }
 

@@ -18,6 +18,7 @@ trait userTrait {
         if (auth()->user()) {
             return Cache::remember('sharedSubjects' . auth()->user()->id, now()->addMinutes(10), function () {
                 $shared = auth()->user()->patritions()
+                    ->where('accepted', null)
                     ->withCount(['Users' => function ($query) {
                         $query->whereNot('user_id', auth()->user()->id);
                     }])->get();
