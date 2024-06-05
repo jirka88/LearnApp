@@ -32,7 +32,7 @@ class adminTest extends TestCase {
         for ($i = 0; $i < fake()->numberBetween(1, 25); $i++) {
             $this->createUser(0);
         }
-        $response = $this->actingAs($this->user)->get(route('admin'));
+        $response = $this->actingAs($this->user)->get(route('adminusers'));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }

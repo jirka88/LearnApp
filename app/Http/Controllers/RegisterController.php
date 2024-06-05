@@ -33,6 +33,6 @@ class RegisterController extends Controller {
         $controller->requestVerification();
         event(new SendEmailWelcome(auth()->user()));
 
-        return redirect()->intended('verification.notice');
+        return to_route('verification.notice');
     }
 }

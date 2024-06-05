@@ -7,7 +7,6 @@ use App\Enums\UserRoles;
 use App\Http\Resources\UserSelectResource;
 use App\Models\Partition;
 use App\Models\User;
-use App\Services\SubjectService;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -24,6 +23,7 @@ class Controller extends BaseController {
      */
     public function sort(Request $request, Partition $partition) {
         $sort = $request->input('sort', 'default');
+
         return response()->json(['search' => $partition->sortSubjects($sort, $request->page, $request->url(), $request->query())]);
     }
 
@@ -46,6 +46,7 @@ class Controller extends BaseController {
 
     public function changeLanguage($language, ChangeLanguageAction $action) {
         $action->handle($language);
+
         return Redirect()->back();
     }
 

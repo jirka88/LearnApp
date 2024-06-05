@@ -19,7 +19,7 @@ class WelcomeEmail extends Mailable
      *
      * @return void
      */
-    protected $user;
+    public $user;
     public function __construct(User $user)
     {
         $this->user = $user;

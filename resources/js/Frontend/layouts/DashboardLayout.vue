@@ -1,44 +1,65 @@
 <template>
     <Base>
         <v-layout class="flex-column">
-            <v-navigation-drawer
-                v-model="drawer"
-                prominent
-                location="left"
-            >
+            <v-navigation-drawer v-model="drawer" prominent location="left">
                 <div class="usr">
-                    <Link :href="!$page.props.user.verified ? '' : route('user.info')"
-                          class="text-decoration-none text-black">
+                    <Link
+                        :href="
+                            !$page.props.user.verified ? '' : route('user.info')
+                        "
+                        class="text-decoration-none text-black"
+                    >
                         <v-list-item
-                            :prepend-avatar="$page.props.user.image ? '/storage/' + $page.props.user.image : undefinedProfilePicture"
+                            :prepend-avatar="
+                                $page.props.user.image
+                                    ? '/storage/' + $page.props.user.image
+                                    : undefinedProfilePicture
+                            "
                             :title="$page.props.user.firstname"
                             nav
                             height="64"
                             :disabled="!$page.props.user.verified"
-                            class=" d-flex align-center ga-2"
+                            class="d-flex align-center ga-2"
                         >
-                            <div class="text-subtitle-2">{{ $page.props.user.email }}</div>
+                            <div class="text-subtitle-2">
+                                {{ $page.props.user.email }}
+                            </div>
                         </v-list-item>
                     </Link>
                 </div>
                 <v-divider></v-divider>
-                <v-list density="compact" nav :disabled="!$page.props.user.verified">
+                <v-list
+                    density="compact"
+                    nav
+                    :disabled="!$page.props.user.verified"
+                >
                     <Link :href="route('dashboard')">
-                        <v-list-item prepend-icon="mdi-home-city" :title="$t('dashboard.home')"
-                                     :value="$t('dashboard.home')"></v-list-item>
+                        <v-list-item
+                            prepend-icon="mdi-home-city"
+                            :title="$t('dashboard.home')"
+                            :value="$t('dashboard.home')"
+                        ></v-list-item>
                     </Link>
-                    <Link v-if="$page.props.permission.view" :href="route('adminusers')">
-                        <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.all_users')"
-                                     :value="$t('dashboard.all_users')"></v-list-item>
+                    <Link
+                        v-if="$page.props.permission.view"
+                        :href="route('adminusers')"
+                    >
+                        <v-list-item
+                            prepend-icon="mdi-account-cog"
+                            :title="$t('dashboard.all_users')"
+                            :value="$t('dashboard.all_users')"
+                        ></v-list-item>
                     </Link>
-                    <v-list-group
-                        id="group"
-                        value="group1">
+                    <v-list-group id="group" value="group1">
                         <template v-slot:activator="{ props }">
                             <v-list-item
                                 v-bind="props"
                                 prepend-icon="mdi-account-circle"
-                                :title="$page.props.user.typeAccount == 'Osobní' ? $t('dashboard.section') : $t('dashboard.subjects')"
+                                :title="
+                                    $page.props.user.typeAccount == 'Osobní'
+                                        ? $t('dashboard.section')
+                                        : $t('dashboard.subjects')
+                                "
                             >
                             </v-list-item>
                         </template>
@@ -46,54 +67,89 @@
                             <v-list-item
                                 class="subItem"
                                 prepend-icon="mdi-folder-edit"
-                                :title="$t('dashboard.organization')">
+                                :title="$t('dashboard.organization')"
+                            >
                             </v-list-item>
                         </Link>
-                        <Link v-for="subject in $page.props.user.subjects" :key="subject.id"
-                              :href="route('subject.show', subject.slug)">
+                        <Link
+                            v-for="subject in $page.props.user.subjects"
+                            :key="subject.id"
+                            :href="route('subject.show', subject.slug)"
+                        >
                             <v-list-item
                                 v-if="subject.permission.accepted != 0"
                                 class="subItem"
                                 :prepend-icon="subject.icon"
-                                :title="subject.name">
+                                :title="subject.name"
+                            >
                             </v-list-item>
                         </Link>
                     </v-list-group>
-                    <Link :href="route('share.show')"
-                          v-if="$page.props.user.sharedSubjects > 0"
+                    <Link
+                        :href="route('share.show')"
+                        v-if="$page.props.user.sharedSubjects > 0"
                     >
-                        <v-list-item prepend-icon="mdi-share" title="Zobrazit sdílení"
-                                     value="zobrazit sdílení">
+                        <v-list-item
+                            prepend-icon="mdi-share"
+                            title="Zobrazit sdílení"
+                            value="zobrazit sdílení"
+                        >
                         </v-list-item>
                     </Link>
-                    <Link :href="route('share.view')"
-                          v-if="$page.props.user.subjects.some(subject => subject.permission.accepted == 0)">
-                        <v-list-item prepend-icon="mdi-share" title="Povolit sdílení"
-                                     value="Povolit sdílení">
+                    <Link
+                        :href="route('share.view')"
+                        v-if="
+                            $page.props.user.subjects.some(
+                                (subject) => subject.permission.accepted == 0
+                            )
+                        "
+                    >
+                        <v-list-item
+                            prepend-icon="mdi-share"
+                            title="Povolit sdílení"
+                            value="Povolit sdílení"
+                        >
                             <template v-slot:append>
                                 <v-badge
                                     color="info"
-                                    :content="$page.props.user.subjects.filter(item => item.permission.accepted == 0).length"
+                                    :content="
+                                        $page.props.user.subjects.filter(
+                                            (item) =>
+                                                item.permission.accepted == 0
+                                        ).length
+                                    "
                                     inline
                                 ></v-badge>
                             </template>
                         </v-list-item>
                     </Link>
                     <Link :href="route('user.info')">
-                        <v-list-item prepend-icon="mdi-account-cog" :title="$t('dashboard.set_profile')"
-                                     :value="$t('dashboard.set_profile')"></v-list-item>
+                        <v-list-item
+                            prepend-icon="mdi-account-cog"
+                            :title="$t('dashboard.set_profile')"
+                            :value="$t('dashboard.set_profile')"
+                        ></v-list-item>
                     </Link>
                     <Link :href="route('user.report')">
-                        <v-list-item prepend-icon="mdi-alert" title="Nahlásit chybu"
-                                     value="Nahlásit chybu"></v-list-item>
+                        <v-list-item
+                            prepend-icon="mdi-alert"
+                            title="Nahlásit chybu"
+                            value="Nahlásit chybu"
+                        ></v-list-item>
                     </Link>
                 </v-list>
             </v-navigation-drawer>
             <v-app-bar>
-                <v-btn v-if="$vuetify.display.lgAndUp" :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'"
-                       @click.stop="drawer = !drawer"></v-btn>
-                <v-btn v-if="$vuetify.display.mdAndDown" icon="mdi-format-list-bulleted"
-                       @click.stop="drawer = !drawer"></v-btn>
+                <v-btn
+                    v-if="$vuetify.display.lgAndUp"
+                    :icon="!drawer ? 'mdi-chevron-left' : 'mdi-chevron-right'"
+                    @click.stop="drawer = !drawer"
+                ></v-btn>
+                <v-btn
+                    v-if="$vuetify.display.mdAndDown"
+                    icon="mdi-format-list-bulleted"
+                    @click.stop="drawer = !drawer"
+                ></v-btn>
                 <v-spacer></v-spacer>
                 <v-select
                     v-model="select"
@@ -104,17 +160,29 @@
                     hide-details
                     return-object
                 >
-                    <template v-slot:selection="{item}">
-                        <div class="d-flex justify-content-center align-items-center ga-2">
-                            <v-img width="2em" max-height="2em" :src="item.raw.image"/>
+                    <template v-slot:selection="{ item }">
+                        <div
+                            class="d-flex justify-content-center align-items-center ga-2"
+                        >
+                            <v-img
+                                width="2em"
+                                max-height="2em"
+                                :src="item.raw.image"
+                            />
                             {{ item.title }}
                         </div>
                     </template>
                     <template v-slot:item="{ item, props }">
                         <v-list-item v-bind="props">
                             <template #title>
-                                <div class="d-flex justify-content-center align-items-center ga-2">
-                                    <v-img max-width="2em" max-height="2em" :src="item.raw.image"/>
+                                <div
+                                    class="d-flex justify-content-center align-items-center ga-2"
+                                >
+                                    <v-img
+                                        max-width="2em"
+                                        max-height="2em"
+                                        :src="item.raw.image"
+                                    />
                                     {{ item.title }}
                                 </div>
                             </template>
@@ -128,52 +196,55 @@
                 </Link>
             </v-app-bar>
             <v-main class="vh-calc">
-                <slot>
-                </slot>
+                <slot></slot>
             </v-main>
             <v-footer class="pa-0 primary-bg">
-                <p class="text-center pa-4 w-100 text-white" :class="drawer ? 'move' : 'move-back'">
-                    {{ $t('authentication.welcome.created') }} Jiří
-                    Navrátil - {{ new Date().getFullYear() }}</p>
+                <p
+                    class="text-center pa-4 w-100 text-white"
+                    :class="drawer ? 'move' : 'move-back'"
+                >
+                    {{ $t('authentication.welcome.created') }} Jiří Navrátil -
+                    {{ new Date().getFullYear() }}
+                </p>
             </v-footer>
         </v-layout>
     </Base>
 </template>
 <script setup>
-import {Link} from "@inertiajs/inertia-vue3";
-import {ref} from "vue";
-import {loadLanguageAsync} from 'laravel-vue-i18n';
-import Base from "./../Pages/Base.vue"
-import {Inertia} from "@inertiajs/inertia";
-import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg';
-import czechFlag from "./../../../assets/ui/flags/czech.svg"
-import britishFlag from "./../../../assets/ui/flags/united_kingdom.svg"
+import { Link } from '@inertiajs/inertia-vue3'
+import { ref } from 'vue'
+import { loadLanguageAsync } from 'laravel-vue-i18n'
+import Base from './../Pages/Base.vue'
+import { Inertia } from '@inertiajs/inertia'
+import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg'
+import czechFlag from './../../../assets/ui/flags/czech.svg'
+import britishFlag from './../../../assets/ui/flags/united_kingdom.svg'
 
-const drawer = ref(true);
+const drawer = ref(true)
 
 const select = ref({
     language: localStorage.getItem('langTitle') || 'Česky',
     ISO: localStorage.getItem('lang') || 'cs',
-    'image': localStorage.getItem('langImage') || czechFlag
-});
+    image: localStorage.getItem('langImage') || czechFlag
+})
 
-const openedGroup = ref(['group1']);
-
-const item = ref();
+const item = ref()
 
 const languages = [
-    {language: 'Česky', ISO: 'cs', image: czechFlag}, {
+    { language: 'Česky', ISO: 'cs', image: czechFlag },
+    {
         language: 'English',
         ISO: 'en',
         image: britishFlag
-    }]
+    }
+]
 
 const changeLanguage = () => {
-    Inertia.post(route('language', {'language': select.value.ISO}));
-    localStorage.setItem('langTitle', select.value.language);
-    localStorage.setItem('lang', select.value.ISO);
+    Inertia.post(route('language', { language: select.value.ISO }))
+    localStorage.setItem('langTitle', select.value.language)
+    localStorage.setItem('lang', select.value.ISO)
     localStorage.setItem('langImage', select.value.image)
-    loadLanguageAsync(select.value.ISO);
+    loadLanguageAsync(select.value.ISO)
 }
 const itemProps = (item) => {
     return {
@@ -219,12 +290,12 @@ const itemProps = (item) => {
 
 .v-footer {
     .move {
-        transition: .8s;
+        transition: 0.8s;
         margin-left: 255px;
     }
 
     .move-back {
-        transition: .8s;
+        transition: 0.8s;
     }
 }
 </style>
