@@ -16,10 +16,12 @@ use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
 use App\Services\AdminService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Activitylog\Models\Activity;
 
 class Admin extends Controller
 {
@@ -240,4 +242,19 @@ class Admin extends Controller
         }
         return $sheet;
     }
+    public function logIndex() {
+        $this->authorize('viewAdmin', Auth()->user());
+        $data = Activity::orderBy('created_at', 'DESC')->get();
+        foreach ($data as $activity) {
+            $activity->causedBy = $activity->causer;
+            $activity->created_at = Carbon::parse($activity->created_at)->format('d.m.Y H:i:s');
+        }
+        return Inertia::render('Log', ['data' => $data]);
+    }
+    public function logShow(Request $request, Activity $activity)
+    {
+        dd($activity);
+        $this->authorize('viewAdmin', Auth()->user());
+    }
+
 }

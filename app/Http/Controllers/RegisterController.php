@@ -9,6 +9,7 @@ use App\Models\Settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use Inertia\Inertia;
+use Spatie\Activitylog\Models\Activity;
 
 class RegisterController extends Controller {
     public function create() {
@@ -30,9 +31,11 @@ class RegisterController extends Controller {
         $usr['slug'] = SlugService::createSlug(User::class, 'slug', $request->firstname);
         $user = User::create($usr);
         auth()->login($user);
+        activity()
+            ->causedBy($user)
+            ->log('Registrace uživatele');
         $controller->requestVerification();
         event(new SendEmailWelcome(auth()->user()));
-
         return to_route('verification.notice');
     }
 }

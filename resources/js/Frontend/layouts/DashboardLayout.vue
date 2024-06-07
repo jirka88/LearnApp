@@ -50,6 +50,17 @@
                             :value="$t('dashboard.all_users')"
                         ></v-list-item>
                     </Link>
+                    <Link
+                        v-if="$page.props.permission.view"
+                        :href="route('adminlog')"
+                    >
+                        <v-list-item
+                            prepend-icon="mdi-file-document"
+                            title="Logování"
+                            value="Logování"
+                        >
+                        </v-list-item>
+                    </Link>
                     <v-list-group id="group" value="group1">
                         <template v-slot:activator="{ props }">
                             <v-list-item

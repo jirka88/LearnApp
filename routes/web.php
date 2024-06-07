@@ -90,6 +90,8 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
     });
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'], function () {
         route::get('/controll', [Admin::class, 'index'])->name('users');
+        route::get('/controll/log', [Admin::class, 'logIndex'])->name('log');
+        route::get('/controll/log/{activity}', [Admin::class, 'logShow'])->name('log.show');
         route::get('/controll/sort', [Admin::class, 'sortIndex'])->name('users.sort');
         Route::post('/controll/users', [Admin::class, 'userExportPDF'])->name('users.exportPDF');
         route::get('/controll/{user}', [Admin::class, 'edit'])->name('user.edit');
