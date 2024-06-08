@@ -200,6 +200,7 @@ class Admin extends Controller
     {
         $this->authorize('viewAdmin', Auth()->user());
         $this->service->changeRestriction($register);
+        $activity = Activity::all()->last();
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
@@ -242,19 +243,4 @@ class Admin extends Controller
         }
         return $sheet;
     }
-    public function logIndex() {
-        $this->authorize('viewAdmin', Auth()->user());
-        $data = Activity::orderBy('created_at', 'DESC')->get();
-        foreach ($data as $activity) {
-            $activity->causedBy = $activity->causer;
-            $activity->created_at = Carbon::parse($activity->created_at)->format('d.m.Y H:i:s');
-        }
-        return Inertia::render('Log', ['data' => $data]);
-    }
-    public function logShow(Request $request, Activity $activity)
-    {
-        dd($activity);
-        $this->authorize('viewAdmin', Auth()->user());
-    }
-
 }

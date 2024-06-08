@@ -5,6 +5,7 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DashboardUserController;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\PasswordReset;
@@ -90,8 +91,9 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
     });
     Route::group(['middleware' => 'is_admin', 'prefix' => 'admin', 'as' => 'admin'], function () {
         route::get('/controll', [Admin::class, 'index'])->name('users');
-        route::get('/controll/log', [Admin::class, 'logIndex'])->name('log');
-        route::get('/controll/log/{activity}', [Admin::class, 'logShow'])->name('log.show');
+        route::get('/controll/log', [LogController::class, 'index'])->name('log');
+        route::get('/controll/log/{activity}', [LogController::class, 'show'])->name('log.show');
+        route::delete('/controll/log/{activity}', [LogController::class, 'destroy'])->name('log.destroy');
         route::get('/controll/sort', [Admin::class, 'sortIndex'])->name('users.sort');
         Route::post('/controll/users', [Admin::class, 'userExportPDF'])->name('users.exportPDF');
         route::get('/controll/{user}', [Admin::class, 'edit'])->name('user.edit');

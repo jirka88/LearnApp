@@ -2,8 +2,28 @@
 import DashboardLayout from '@/Frontend/layouts/DashboardLayout.vue'
 import Breadcrumbs from '@/Frontend/Components/UI/Breadcrumbs.vue'
 import { Link } from '@inertiajs/inertia-vue3'
+import { ref } from 'vue'
+import inertia from '@inertiajs/inertia'
+import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
+const dialogDeleteStore = useDialogDeleteStore()
+const props = defineProps({ data: Array, pages: Number })
+const page = ref(1)
 
-const props = defineProps({ data: Array })
+const fetchData = () => {
+    inertia.Inertia.get(
+        route('adminlog'),
+        { page: page.value },
+        {
+            preserveState: true,
+            onSuccess: (response) => {
+                props.data = response.props.data
+            }
+        }
+    )
+}
+const deleteDialog = (log) => {
+    dialogDeleteStore.setDialog(true, log, 'adminlog.destroy')
+}
 </script>
 
 <template>
@@ -22,12 +42,17 @@ const props = defineProps({ data: Array })
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="pa-8" v-for="log in data" :key="log.id">
+                    <tr class="pa-8" v-for="log in data.data" :key="log.id">
                         <td>
                             {{ log.description }}
                         </td>
                         <td>
-                            {{ log.causedBy?.email }}
+                            <Link
+                                class="text-decoration-underline"
+                                :href="route('adminuser.edit', log.causer.slug)"
+                            >
+                                {{ log.causer?.email }}
+                            </Link>
                         </td>
                         <td>
                             {{ log.created_at }}
@@ -37,7 +62,7 @@ const props = defineProps({ data: Array })
                                 <v-btn class="bg-green" icon="mdi-open-in-new">
                                 </v-btn>
                             </Link>
-                            <Link>
+                            <Link @click="deleteDialog(log)">
                                 <v-btn class="bg-red" icon="mdi-trash-can">
                                 </v-btn>
                             </Link>
@@ -45,6 +70,14 @@ const props = defineProps({ data: Array })
                     </tr>
                 </tbody>
             </v-table>
+
+            <v-pagination
+                v-model="page"
+                :length="pages"
+                prev-icon="mdi-menu-left"
+                next-icon="mdi-menu-right"
+                @update:modelValue="fetchData"
+            ></v-pagination>
         </v-container>
     </component>
 </template>
