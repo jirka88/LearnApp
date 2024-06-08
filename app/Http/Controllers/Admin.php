@@ -124,7 +124,7 @@ class Admin extends Controller
     {
         $this->service->store($adminCreateUser);
 
-        return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
+        return to_route('adminusers')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -137,7 +137,7 @@ class Admin extends Controller
         $this->authorize('view', $user);
         event(new ChangeUserInformation($user));
         $this->service->destroy($user);
-        return redirect()->back()->with(['message' => __('validation.custom.delete'), 'status' => ToastifyStatus::SUCCESS]);
+        return redirect()->back()->with(['message' => __('validation.custom.deleted'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**

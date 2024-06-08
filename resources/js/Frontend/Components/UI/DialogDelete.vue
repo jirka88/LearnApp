@@ -1,15 +1,19 @@
 <script setup>
 import { Inertia } from '@inertiajs/inertia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import { Link } from '@inertiajs/inertia-vue3'
 import { useDialogDeleteStore } from '../../../../states/dialogDeleteData'
 const dialogDeleteStore = useDialogDeleteStore()
 
 const dialog = computed(() => dialogDeleteStore.dialog)
 const object = computed(() => dialogDeleteStore.object)
 const url = computed(() => dialogDeleteStore.url)
+const disabledBtn = ref(false);
 const destroy = (id) => {
+    disabledBtn.value = true
     Inertia.delete(route(url.value, id))
     dialogDeleteStore.setDefault()
+    disabledBtn.value = false;
 }
 </script>
 
@@ -31,13 +35,16 @@ const destroy = (id) => {
                 >
                     Zřušit
                 </v-btn>
-                <v-btn
-                    class="bg-red"
-                    @click="destroy(object.id)"
-                    size="x-large"
-                >
-                    Smazat!
-                </v-btn>
+                <Link>
+                    <v-btn
+                        class="bg-red"
+                        @click="destroy(object.id)"
+                        size="x-large"
+                        :disabled="disabledBtn"
+                    >
+                        Smazat!
+                    </v-btn>
+                </Link>
             </v-card-actions>
         </v-card>
     </v-dialog>

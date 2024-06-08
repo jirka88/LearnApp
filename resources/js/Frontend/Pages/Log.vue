@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue'
 import inertia from '@inertiajs/inertia'
 import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
+
 const dialogDeleteStore = useDialogDeleteStore()
 const props = defineProps({ data: Array, pages: Number })
 const page = ref(1)
@@ -62,10 +63,12 @@ const deleteDialog = (log) => {
                                 <v-btn class="bg-green" icon="mdi-open-in-new">
                                 </v-btn>
                             </Link>
-                            <Link @click="deleteDialog(log)">
-                                <v-btn class="bg-red" icon="mdi-trash-can">
-                                </v-btn>
-                            </Link>
+                            <v-btn
+                                @click="deleteDialog(log)"
+                                class="bg-red"
+                                icon="mdi-trash-can"
+                            >
+                            </v-btn>
                         </td>
                     </tr>
                 </tbody>
