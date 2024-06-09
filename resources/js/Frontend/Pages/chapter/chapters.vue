@@ -79,11 +79,10 @@ const DialogShare = defineAsyncComponent(() => import("@/Frontend/Components/Dia
 
 const page = ref(1);
 const sharing = ref(false);
-const status = ref(false);
 const showSearchMobile = ref(false);
 const props = defineProps({
     chapters: Object,
-    subject: Array,
+    subject: Object,
     errors: Object,
     sharingUsr: Object,
     pages: Number,

@@ -1,55 +1,21 @@
 <script setup>
 import {Link} from "@inertiajs/inertia-vue3";
-import {ref} from "vue";
-import {Inertia} from "@inertiajs/inertia";
+import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
 
 const props = defineProps({chapter: Object, subject: Object, key: Number})
-const status = ref(false);
-const activeChapter = ref("");
+
+const dialogDeleteStore = useDialogDeleteStore()
 const enableDialog = (chapter) => {
-    activeChapter.value = chapter;
-    status.value = true;
-}
-const destroy = () => {
-    Inertia.delete(route('chapter.destroy', {slug: props.subject.slug, chapter: activeChapter.value.slug}));
-    status.value = false;
+    dialogDeleteStore.setDialogWithUrlParams(true, 'chapter.destroy', {slug: props.subject.slug, chapter: chapter.slug} )
 }
 </script>
 
 <template>
-    <v-dialog
-        v-model="status"
-        persistent
-        width="auto"
-    >
-        <v-card>
-            <v-card-title class="text-h5 text-center">
-                Opravdu si přejete smazat kapitolu <strong>{{ activeChapter.name }}</strong>
-            </v-card-title>
-            <v-card-text class="text-center">Tato akce je nenávratná!</v-card-text>
-            <v-card-actions class="margin-center">
-                <v-spacer></v-spacer>
-                <v-btn
-                    class="bg-white"
-                    @click="status = false"
-                    size="x-large"
-                >
-                    Zřušit
-                </v-btn>
-                <v-btn
-                    class="bg-red"
-                    @click="destroy()"
-                    size="x-large"
-                >
-                    Smazat!
-                </v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
         <v-card
             data-aos="zoom-in" data-aos-delay="200" data-aos-duration="300"
             data-aos-anchor-placement="top-bottom"
             class="pa-2 elevation-20"
+            min-width="15em"
             :max-width="$vuetify.display.smAndDown ? '' : '30em'"
         >
             <v-card-text>

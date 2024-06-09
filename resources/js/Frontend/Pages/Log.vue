@@ -43,7 +43,7 @@ const deleteDialog = (log) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="pa-8" v-for="log in data.data" :key="log.id">
+                    <tr v-if="data.data.length > 0" class="pa-8" v-for="log in data.data" :key="log.id">
                         <td>
                             {{ log.description }}
                         </td>
@@ -71,10 +71,14 @@ const deleteDialog = (log) => {
                             </v-btn>
                         </td>
                     </tr>
+                <tr v-else>
+                    <td colspan="4" class="text-center">Žádný log k zobrazení!</td>
+                </tr>
                 </tbody>
             </v-table>
 
             <v-pagination
+                v-if="data.data.length > 0"
                 v-model="page"
                 :length="pages"
                 prev-icon="mdi-menu-left"

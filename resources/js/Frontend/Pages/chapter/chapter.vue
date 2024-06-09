@@ -2,12 +2,11 @@
     <component :is="DashboardLayout">
         <div class="chapterBg">
             <v-container class="py-12">
-                <div class="chapter pa-10 elevation-20">
-                    <div class="d-flex ga-8 pb-4">
+                <div class="chapter elevation-20" :class="$vuetify.display.smAndDown ? 'pa-6' : 'pa-10'">
+                    <div class="d-flex ga-8 pb-4 overflow-auto">
                         <ChapterSettings
                             :chapter="chapter"
-                            :slug="slug"
-                            @modal="status = true">
+                            :slug="slug">
                         </ChapterSettings>
                         <ExportBtns :showExport="['pdf']" :disabledExport="disabledExport"
                                     @exportFile="exportFile"></ExportBtns>
@@ -19,35 +18,6 @@
                     <p class="text-left" v-html="chapter.context"></p>
                 </div>
             </v-container>
-            <v-dialog
-                v-model="status"
-                persistent
-                width="auto"
-            >
-                <v-card>
-                    <v-card-title class="text-h5 text-center">
-                        Opravdu si přejete smazat kapitolu <strong>{{ chapter.name }}</strong>
-                    </v-card-title>
-                    <v-card-text class="text-center">Tato akce je nenávratná!</v-card-text>
-                    <v-card-actions class="margin-center">
-                        <v-spacer></v-spacer>
-                        <v-btn
-                            class="bg-white"
-                            @click="status = false"
-                            size="x-large"
-                        >
-                            Zřušit
-                        </v-btn>
-                        <v-btn
-                            class="bg-red"
-                            @click="destroy()"
-                            size="x-large"
-                        >
-                            Smazat!
-                        </v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
         </div>
     </component>
 </template>
@@ -56,18 +26,12 @@
 import DashboardLayout from "@/Frontend/layouts/DashboardLayout.vue";
 import {ref} from "vue";
 import ChapterSettings from "@/Frontend/Components/ChapterSettings.vue";
-import {Inertia} from "@inertiajs/inertia";
 import ExportBtns from "@/Frontend/Components/ExportBtns.vue";
 import FileSaver from 'file-saver'
 import axios from "axios";
 
-const status = ref(false);
 const disabledExport = ref(false);
 const props = defineProps({chapter: Object, slug: String})
-const destroy = () => {
-    Inertia.delete(route('chapter.destroy', {slug: props.slug, chapter: props.chapter.slug}));
-    emit('delete');
-}
 const exportFile = async (value) => {
     disabledExport.value = true;
     await axios.post(`/dashboard/manager/subject/${props.slug}/chapter/${props.chapter.slug}/export?export=${value}`, {}, {

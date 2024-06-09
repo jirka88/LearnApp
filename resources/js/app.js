@@ -73,7 +73,6 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(vuetify)
-            .use(router)
             .use(ZiggyVue)
             .use(pinia)
             .use(i18nVue, {
