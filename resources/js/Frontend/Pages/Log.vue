@@ -5,11 +5,13 @@ import { Link } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue'
 import inertia from '@inertiajs/inertia'
 import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
+import ExportBtns from '@/Frontend/Components/ExportBtns.vue'
+import axios from 'axios'
 
 const dialogDeleteStore = useDialogDeleteStore()
 const props = defineProps({ data: Array, pages: Number })
 const page = ref(1)
-
+const disabledExport = ref(false);
 const fetchData = () => {
     inertia.Inertia.get(
         route('adminlog'),
@@ -25,6 +27,15 @@ const fetchData = () => {
 const deleteDialog = (log) => {
     dialogDeleteStore.setDialog(true, log, 'adminlog.destroy')
 }
+const exportFile = async(value) => {
+    disabledExport.value = true;
+    await axios.post(`/dashboard/manager/controll/log/export?export=${value}`, {}, {
+        responseType: 'blob'
+    }).then((response) => {
+        FileSaver.saveAs(response.data, props.chapter.slug);
+        disabledExport.value = false;
+    });
+}
 </script>
 
 <template>
@@ -33,6 +44,9 @@ const deleteDialog = (log) => {
             <Breadcrumbs
                 :items="[{ title: 'Log', disabled: true }]"
             ></Breadcrumbs>
+            <ExportBtns :showExport="['pdf', 'excel', 'csv']" @exportFile="exportFile" class="pt-6">
+
+            </ExportBtns>
             <v-table class="text-left py-8">
                 <thead>
                     <tr class="pa-4">

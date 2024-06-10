@@ -75,6 +75,7 @@ createInertiaApp({
             .use(vuetify)
             .use(ZiggyVue)
             .use(pinia)
+            .use(router)
             .use(i18nVue, {
                 lang: 'cs',
                 fallbackLang: 'en',

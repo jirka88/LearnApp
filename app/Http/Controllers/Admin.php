@@ -200,7 +200,6 @@ class Admin extends Controller
     {
         $this->authorize('viewAdmin', Auth()->user());
         $this->service->changeRestriction($register);
-        $activity = Activity::all()->last();
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 

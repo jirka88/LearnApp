@@ -142,7 +142,7 @@ const enableDialog = (user) => {
   dialogDeleteStore.setDialog(true, user, 'adminuser.destroy')
 }
 const fetchData = () => {
-    inertia.Inertia.get(route('admin'), {page: page.value}, {
+    inertia.Inertia.get(route('adminusers'), {page: page.value}, {
         preserveState: true, onSuccess: (response) => {
             props.users = response.props.users;
         }

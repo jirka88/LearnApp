@@ -24,7 +24,8 @@ class Settings extends Model {
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->logOnly(['*']);
+            ->logOnly(['*'])
+            ->setDescriptionForEvent(fn(string $eventName) => "Změna nastavení");
     }
 
     use HasFactory;

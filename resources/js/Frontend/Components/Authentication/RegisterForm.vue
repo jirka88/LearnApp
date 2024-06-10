@@ -148,6 +148,7 @@ const register = async () => {
 }
 
 const confirmRules = (val) => {
+    console.log(val);
     form.confirm = val;
 }
 </script>
