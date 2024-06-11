@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ExportAction;
 use App\Enums\ToastifyStatus;
+use App\Exports\LogExport;
+use App\Exports\UsersExport;
 use App\Http\Components\globalSettings;
 use App\Http\Resources\UserSelectResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Activitylog\Models\Activity;
 
 class LogController extends Controller
@@ -33,5 +37,12 @@ class LogController extends Controller
     {
         $activity->delete();
         return redirect()->back()->with(['message' => __('validation.custom.deleted'), 'status' => ToastifyStatus::SUCCESS]);
+    }
+    public function exportFile(Request $request, ExportAction $action) {
+        $extension = $request->input('export');
+        $class = new LogExport();
+        $sheet = $action->handle($extension, $class);
+        return $sheet;
+
     }
 }

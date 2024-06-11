@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ExportAction;
 use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Events\ChangeUserInformation;
@@ -219,27 +220,13 @@ class Admin extends Controller
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
-    public function userExportPDF(Request $request)
+    public function userExportPDF(Request $request, ExportAction $action)
     {
         $extension = $request->input('export');
         $this->authorize('viewAdmin', Auth()->user());
-        switch ($extension) {
-            case 'pdf':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
-                break;
-            case 'xlsx':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.xlsx');
-                break;
-            case 'csv':
-                $sheet =  Excel::download(new UsersExport, 'uzivatele.csv', \Maatwebsite\Excel\Excel::CSV);
-                break;
-            case 'html':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.html', \Maatwebsite\Excel\Excel::HTML);
-                break;
-            case 'xml':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.xml', \Maatwebsite\Excel\Excel::XML);
-                break;
-        }
+        $class = new UsersExport();
+        $sheet = $action->handle($extension, $class);
+
         return $sheet;
     }
 }

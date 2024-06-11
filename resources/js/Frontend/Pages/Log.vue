@@ -7,6 +7,7 @@ import inertia from '@inertiajs/inertia'
 import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
 import ExportBtns from '@/Frontend/Components/ExportBtns.vue'
 import axios from 'axios'
+import FileSaver from 'file-saver'
 
 const dialogDeleteStore = useDialogDeleteStore()
 const props = defineProps({ data: Array, pages: Number })
@@ -29,10 +30,10 @@ const deleteDialog = (log) => {
 }
 const exportFile = async(value) => {
     disabledExport.value = true;
-    await axios.post(`/dashboard/manager/controll/log/export?export=${value}`, {}, {
+    await axios.post(`/dashboard/admin/controll/log/export?export=${value}`, {}, {
         responseType: 'blob'
     }).then((response) => {
-        FileSaver.saveAs(response.data, props.chapter.slug);
+        FileSaver.saveAs(response.data, 'Log');
         disabledExport.value = false;
     });
 }
@@ -44,7 +45,7 @@ const exportFile = async(value) => {
             <Breadcrumbs
                 :items="[{ title: 'Log', disabled: true }]"
             ></Breadcrumbs>
-            <ExportBtns :showExport="['pdf', 'excel', 'csv']" @exportFile="exportFile" class="pt-6">
+            <ExportBtns :showExport="['pdf', 'excel', 'csv', 'html']" @exportFile="exportFile" :disabledExport="disabledExport" class="pt-6">
 
             </ExportBtns>
             <v-table class="text-left py-8">

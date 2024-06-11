@@ -94,6 +94,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
         route::get('/controll/log', [LogController::class, 'index'])->name('log');
         route::get('/controll/log/{activity}', [LogController::class, 'show'])->name('log.show');
         route::delete('/controll/log/{activity}', [LogController::class, 'destroy'])->name('log.destroy');
+        Route::post('/controll/log/export', [LogController::class, 'exportFile']);
         route::get('/controll/sort', [Admin::class, 'sortIndex'])->name('users.sort');
         Route::post('/controll/users', [Admin::class, 'userExportPDF'])->name('users.exportPDF');
         route::get('/controll/{user}', [Admin::class, 'edit'])->name('user.edit');
