@@ -11,7 +11,7 @@ defineProps({ activity: Object })
         <v-container>
             <Breadcrumbs
                 :items="[
-                    { title: 'Log', disabled: false, href: route('adminlog') },
+                    { title: 'Log', disabled: false, to: 'adminlog' },
                     { title: activity.description, disabled: true }
                 ]"
             ></Breadcrumbs>

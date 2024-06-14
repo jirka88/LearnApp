@@ -51,6 +51,7 @@ const exportFile = async(value) => {
             <v-table class="text-left py-8">
                 <thead>
                     <tr class="pa-4">
+                        <th class="font-weight-bold">Id:</th>
                         <th class="font-weight-bold">Událost:</th>
                         <th class="font-weight-bold">Způsobil:</th>
                         <th class="font-weight-bold">Kdy:</th>
@@ -59,6 +60,7 @@ const exportFile = async(value) => {
                 </thead>
                 <tbody>
                     <tr v-if="data.data.length > 0" class="pa-8" v-for="log in data.data" :key="log.id">
+                        <td>{{log.id}}</td>
                         <td>
                             {{ log.description }}
                         </td>

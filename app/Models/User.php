@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\EmailVerificationNotification;
+use App\Traits\RelationsManager;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -38,6 +39,8 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     protected $append = ['get_count_users'];

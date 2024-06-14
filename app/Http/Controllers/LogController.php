@@ -5,20 +5,19 @@ namespace App\Http\Controllers;
 use App\Actions\ExportAction;
 use App\Enums\ToastifyStatus;
 use App\Exports\LogExport;
-use App\Exports\UsersExport;
 use App\Http\Components\globalSettings;
+use App\Http\Resources\LogResource;
 use App\Http\Resources\UserSelectResource;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Maatwebsite\Excel\Facades\Excel;
 use Spatie\Activitylog\Models\Activity;
 
 class LogController extends Controller
 {
     public function index(Request $request) {
         $this->authorize('viewAdmin', Auth()->user());
-        $data = Activity::orderBy('created_at', 'DESC')->paginate(globalSettings::ITEMS_IN_PAGE);
+        $data = LogResource::collection(Activity::orderBy('created_at', 'DESC')->paginate(globalSettings::ITEMS_IN_PAGE));
         $pages = ceil(count($data) / globalSettings::ITEMS_IN_PAGE);
 
         foreach ($data as $activity) {
