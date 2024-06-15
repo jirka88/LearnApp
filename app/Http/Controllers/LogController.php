@@ -16,7 +16,7 @@ use Spatie\Activitylog\Models\Activity;
 class LogController extends Controller
 {
     public function index(Request $request) {
-        $this->authorize('viewAdmin', Auth()->user());
+        $this->authorize('viewAny', Auth()->user());
         $data = LogResource::collection(Activity::orderBy('created_at', 'DESC')->paginate(globalSettings::ITEMS_IN_PAGE));
         $pages = ceil(count($data) / globalSettings::ITEMS_IN_PAGE);
 
@@ -28,8 +28,12 @@ class LogController extends Controller
     }
     public function show(Request $request, Activity $activity)
     {
-        $this->authorize('viewAdmin', Auth()->user());
+        $this->authorize('viewAny', Auth()->user());
+        $activity->created_at = Carbon::parse($activity->created_at)->format('d.m.Y H:i:s');
         new UserSelectResource($activity->causer->loadMissing(['roles']));
+        if($activity->properties->isEmpty()) {
+            $activity->subject->loadMissing(['roles', 'accountTypes', 'licences']);
+        }
         return Inertia::render('admin/logShow', ['activity' => $activity]);
     }
     public function destroy(Request $request, Activity $activity)

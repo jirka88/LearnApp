@@ -2,8 +2,18 @@
 import DashboardLayout from '@/Frontend/layouts/DashboardLayout.vue'
 import Breadcrumbs from '@/Frontend/Components/UI/Breadcrumbs.vue'
 import { Link } from '@inertiajs/inertia-vue3'
+import { computed } from 'vue'
 
-defineProps({ activity: Object })
+const props = defineProps({ activity: Object })
+
+const event = computed(() => {
+    switch (props.activity.event) {
+        case 'created':
+            return 'Vytvořen:';
+        case 'deleted':
+            return 'Vymazán:'
+    }
+} );
 </script>
 
 <template>
@@ -99,6 +109,48 @@ defineProps({ activity: Object })
                         </tbody>
                     </v-table>
                     <Link :href="route('adminuser.edit', activity.causer.slug)">
+                        <v-btn
+                            class="align-self-start bg-green"
+                            :class="{ 'w-100': $vuetify.display.smAndDown }"
+                        >Zobrazit profil
+                        </v-btn>
+                    </Link>
+                </div>
+                <div class="d-flex flex-column ga-8" v-if="activity?.subject">
+                    <p
+                        class="font-weight-bold"
+                        :class="{ 'text-center': $vuetify.display.smAndDown }"
+                    >
+                        {{event}}
+                    </p>
+                    <v-table
+                        class="w-50"
+                        :class="{ 'w-100': $vuetify.display.smAndDown }"
+                    >
+                        <thead>
+                        <tr align="left">
+                            <th class="font-weight-bold">ID:</th>
+                            <th class="font-weight-bold">Jméno:</th>
+                            <th class="font-weight-bold">Příjmení:</th>
+                            <th class="font-weight-bold">Email:</th>
+                            <th class="font-weight-bold">Role:</th>
+                            <th class="font-weight-bold">Typ účtu:</th>
+                            <th class="font-weight-bold">Licence:</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{ activity.subject.id }}</td>
+                            <td>{{ activity.subject.firstname }}</td>
+                            <td>{{ activity.subject.lastname }}</td>
+                            <td>{{ activity.subject.email }}</td>
+                            <td>{{ activity.subject.roles.role}}</td>
+                            <td>{{ activity.subject.account_types.type}}</td>
+                            <td>{{activity.subject.licences.Licence}}</td>
+                        </tr>
+                        </tbody>
+                    </v-table>
+                    <Link :href="route('adminuser.edit', activity.subject.slug)">
                         <v-btn
                             class="align-self-start bg-green"
                             :class="{ 'w-100': $vuetify.display.smAndDown }"
