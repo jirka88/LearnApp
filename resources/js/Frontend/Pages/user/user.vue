@@ -25,12 +25,13 @@
                     <div class="text-subtitle-2">{{ usr.account_types.type }} účet</div>
                 </div>
             </div>
+            <h3 class="font-weight-bold text-red text-center pb-4" v-if="!usr.user_active">Účet není aktivní!</h3>
             <v-tabs
                 v-model="tab"
                 align-tabs="center"
             >
                 <v-tab value="1">{{ $t('userAccount.information_user') }}</v-tab>
-                <v-tab value="2">{{ $t('userAccount.password_reset') }}</v-tab>
+                <v-tab value="2" v-if="usr.user_active">{{ $t('userAccount.password_reset') }}</v-tab>
                 <v-tab v-if="$page.props.user.role.id !== 1" value="3">{{ $t('userAccount.share') }}</v-tab>
             </v-tabs>
             <div class="d-flex justify-center">
@@ -38,7 +39,7 @@
                     <v-window-item value="1">
                         <UpdateUser :usr="usr" :roles="roles" :accountTypes="accountTypes" :licences="licences"/>
                     </v-window-item>
-                    <v-window-item value="2">
+                    <v-window-item v-if="usr.user_active" value="2">
                         <ResetPassword :usr="usr" :errors="errors"/>
                     </v-window-item>
                     <v-window-item v-if="$page.props.user.role.id !== 1" value="3">

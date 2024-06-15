@@ -31,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
         'slug',
         'canShare',
         'image',
+        'user_active'
     ];
 
     protected $hidden = [
@@ -60,7 +61,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
 
     protected function getCountUsers(): Attribute {
         return new Attribute(
-            get: fn () => $this->all()->count()
+            get: fn () => $this->where('user_active', 1)->count()
         );
     }
 
@@ -80,7 +81,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
      * Vrátí počet uživatelů podle role
      */
     public function getUserCountByRole($role): ?int {
-        return $this->where('role_id', $role)->get()->count();
+        return $this->where('role_id', $role)->where('user_active', 1)->get()->count();
     }
 
     public function roles(): BelongsTo {

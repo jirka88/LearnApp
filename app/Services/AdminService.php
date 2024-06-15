@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
+use App\Events\ChangeUserInformation;
 use App\Http\Components\globalSettings;
 use App\Models\AccountTypes;
 use App\Models\Licences;
@@ -21,6 +22,7 @@ class AdminService
         if ($sort && strtolower($sort) !== 'default') {
             $data = User::filter()
                 ->with(['roles', 'licences'])
+                ->where('user_active', 1)
                 ->paginate(globalSettings::ITEMS_IN_PAGE);
             $users = new LengthAwarePaginator($data, count($data), globalSettings::ITEMS_IN_PAGE, $page, [
                 'path' => $url,
@@ -30,6 +32,7 @@ class AdminService
         else {
             $data = User::orderBy('role_id', 'ASC')
                 ->orderBy('id', 'ASC')
+                ->where('user_active', 1)
                 ->with(['roles', 'licences'])
                 ->paginate(globalSettings::ITEMS_IN_PAGE);
             $users = new LengthAwarePaginator($data, count($data), globalSettings::ITEMS_IN_PAGE, $page, [
@@ -68,7 +71,7 @@ class AdminService
      * @return void
      */
     public function store($user) {
-        User::create([
+        $createdUser = User::create([
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
             'email' => $user->email,
@@ -78,16 +81,21 @@ class AdminService
             'licences_id' => $user->licence['id'],
             'slug' => SlugService::createSlug(User::class, 'slug', $user->firstname),
         ]);
+        Activity()->event('created')->causedBy(auth()->user())->performedOn($createdUser)->log('Vytvoření uživatele');
     }
 
     /**
-     * Vymazání uživatele
+     * Vymazání vytvořených předmětů a deaktivace uživatele
      * @param $user
      * @return void
      */
     public function destroy($user) {
         $user->patritions()->detach();
-        User::destroy($user->id);
+        $user->update(['user_active' => 0, 'active' => 0]);
+        Activity()->event('deleted')->causedBy(auth()->user())->performedOn($user)->log('Vymazání uživatele');
+        event(new ChangeUserInformation($user));
+        Cache::forget('subjects' . $user->id);
+        Cache::forget('userCount');
     }
 
     public function changeRestriction(String $register)
