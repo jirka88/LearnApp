@@ -78,7 +78,7 @@ const event = computed(() => {
                         </v-table>
                     </v-sheet>
                 </div>
-                <div class="d-flex flex-column ga-8">
+                <v-sheet class="d-flex flex-column ga-8 pa-8" elevation="4">
                     <p
                         class="font-weight-bold"
                         :class="{ 'text-center': $vuetify.display.smAndDown }"
@@ -86,8 +86,6 @@ const event = computed(() => {
                         Od uživatele:
                     </p>
                     <v-table
-                        class="w-50"
-                        :class="{ 'w-100': $vuetify.display.smAndDown }"
                     >
                         <thead>
                             <tr align="left">
@@ -110,13 +108,13 @@ const event = computed(() => {
                     </v-table>
                     <Link :href="route('adminuser.edit', activity.causer.slug)">
                         <v-btn
-                            class="align-self-start bg-green"
+                            class="bg-green"
                             :class="{ 'w-100': $vuetify.display.smAndDown }"
                         >Zobrazit profil
                         </v-btn>
                     </Link>
-                </div>
-                <div class="d-flex flex-column ga-8" v-if="activity?.subject">
+                </v-sheet>
+                <v-sheet class="d-flex flex-column ga-8 pa-8" elevation="4" v-if="activity?.subject">
                     <p
                         class="font-weight-bold"
                         :class="{ 'text-center': $vuetify.display.smAndDown }"
@@ -124,8 +122,6 @@ const event = computed(() => {
                         {{event}}
                     </p>
                     <v-table
-                        class="w-50"
-                        :class="{ 'w-100': $vuetify.display.smAndDown }"
                     >
                         <thead>
                         <tr align="left">
@@ -157,7 +153,7 @@ const event = computed(() => {
                         >Zobrazit profil
                         </v-btn>
                     </Link>
-                </div>
+                </v-sheet>
             </v-sheet>
         </v-container>
     </component>
