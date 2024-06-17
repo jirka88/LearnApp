@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendVerificationEmailJob;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Spatie\Activitylog\Models\Activity;
 
 class VerifyEmailController extends Controller
 {
@@ -42,7 +41,8 @@ class VerifyEmailController extends Controller
     {
         $user = Auth()->user();
         if (!$user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
+            SendVerificationEmailJob::dispatch($user);
+            //$user->sendEmailVerificationNotification();
         }
         return response()->json(['message' => __('email.emailVerify.notice')]);
     }

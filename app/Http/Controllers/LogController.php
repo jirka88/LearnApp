@@ -8,6 +8,7 @@ use App\Exports\LogExport;
 use App\Http\Components\globalSettings;
 use App\Http\Resources\LogResource;
 use App\Http\Resources\UserSelectResource;
+use App\Services\LogService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,25 +16,21 @@ use Spatie\Activitylog\Models\Activity;
 
 class LogController extends Controller
 {
+    private $service;
+    public function __construct(LogService $service)
+    {
+        $this->service = $service;
+    }
+
     public function index(Request $request) {
         $this->authorize('viewAny', Auth()->user());
-        $data = LogResource::collection(Activity::orderBy('created_at', 'DESC')->paginate(globalSettings::ITEMS_IN_PAGE));
-        $pages = ceil(count($data) / globalSettings::ITEMS_IN_PAGE);
-
-        foreach ($data as $activity) {
-            $activity->causer = $activity->causer;
-            $activity->created_at = Carbon::parse($activity->created_at)->format('d.m.Y H:i:s');
-        }
-        return Inertia::render('Log', ['data' => $data, 'pages' => $pages]);
+        $data = $this->service->index();
+        return Inertia::render('Log', $data);
     }
     public function show(Request $request, Activity $activity)
     {
         $this->authorize('viewAny', Auth()->user());
-        $activity->created_at = Carbon::parse($activity->created_at)->format('d.m.Y H:i:s');
-        new UserSelectResource($activity->causer->loadMissing(['roles']));
-        if($activity->properties->isEmpty()) {
-            $activity->subject->loadMissing(['roles', 'accountTypes', 'licences']);
-        }
+        $activity = $this->service->show($activity);
         return Inertia::render('admin/logShow', ['activity' => $activity]);
     }
     public function destroy(Request $request, Activity $activity)
@@ -42,9 +39,7 @@ class LogController extends Controller
         return redirect()->back()->with(['message' => __('validation.custom.deleted'), 'status' => ToastifyStatus::SUCCESS]);
     }
     public function exportFile(Request $request, ExportAction $action) {
-        $extension = $request->input('export');
-        $class = new LogExport();
-        $sheet = $action->handle($extension, $class);
+        $sheet = $this->service->exportFile($request->input('export'), $action);
         return $sheet;
 
     }

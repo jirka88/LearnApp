@@ -21,6 +21,12 @@ class ForgotPasswordController extends Controller
         return Inertia::render('register', ['value' => 2]);
     }
 
+    /**
+     * Zaslání odkazu pro resetování hesla
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
     public function passwordResetStore(Request $request)
     {
         $request->validate(['email' => 'required|email']);
