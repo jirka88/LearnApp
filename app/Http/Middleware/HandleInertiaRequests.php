@@ -71,6 +71,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'settings' => [
                 'theme' => $this->getCurrentColor(),
+                'url' => $request->path(),
             ],
 
         ]);

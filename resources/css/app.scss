@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 .primary-bg {
     background: rgb(var(--v-theme-accentCustom)) !important;
@@ -14,9 +15,6 @@
 }
 .w-85 {
     width: 85% !important;
-}
-.w-95 {
-    width: 95% !important;
 }
 .margin-center {
     margin: 0 auto !important;
@@ -65,4 +63,7 @@ a {
 .bigHeader {
     font-size: 2em;
 }
-
+.v-navigation-drawer {
+    font-family: "Inter", sans-serif;
+    color: #56565c !important;
+}
