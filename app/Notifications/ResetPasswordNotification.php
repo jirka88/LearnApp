@@ -2,23 +2,26 @@
 
 namespace App\Notifications;
 
-use Illuminate\Auth\Notifications\VerifyEmail;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EmailVerificationNotification extends VerifyEmail
+class ResetPasswordNotification extends ResetPassword implements ShouldQueue
 {
+    use Queueable;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public $token;
+    public function __construct($token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -40,11 +43,13 @@ class EmailVerificationNotification extends VerifyEmail
      */
     public function toMail($notifiable)
     {
-        $verificationUrl = $this->verificationUrl($notifiable);
-
+        $url = url(config('app.url') . route('password.reset', [
+                'token' => $this->token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
         return (new MailMessage)
-            ->subject('LearnApp - Ověření emailové adresy')
-            ->view('emails.verify_email', ['actionUrl' => $verificationUrl, 'applicationName' => config('app.name')]);
+            ->subject('LearnApp - Resetování hesla')
+            ->view('emails.passwordReset_email', ['actionUrl' => $url, 'applicationName' => config('app.name')]);
     }
 
     /**

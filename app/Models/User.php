@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\EmailVerificationNotification;
+use App\Notifications\ResetPasswordNotification;
 use App\Traits\RelationsManager;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\CanResetPassword;
@@ -104,5 +105,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     public function sendEmailVerificationNotification()
     {
         $this->notify(new EmailVerificationNotification());
+    }
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
