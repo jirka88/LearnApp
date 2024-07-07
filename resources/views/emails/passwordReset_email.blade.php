@@ -83,7 +83,8 @@
 <div class="center pa-1">
     <div class="email-body">
         <p>Zdravíme,
-            Tento e-mail jste obdrželi, protože jsme obdrželi žádost o resetování hesla k vašemu účtu. Pro resetování klikněte na toto tlačítko:</p>
+            <br>
+            tento e-mail jste obdrželi, protože jsme obdrželi žádost o resetování hesla k vašemu účtu. Pro resetování klikněte na toto tlačítko:</p>
         <div class="center py-2">
             <a href="{{$actionUrl}}" style="display: inline-block; padding: 1.4em 2em; color: white; font-size: 1em; background-color:
                  #4398f0;
@@ -93,6 +94,7 @@
         </div>
         <p style="font-size: 0.8em">Pokud vám nefunguje tlačítko, můžete použít tento
             odkaz:<a href="{{$actionUrl}}">{{$actionUrl}}</a></p>
+        <p>Platnost tohoto odkazu na obnovení hesla vyprší za 60 minut.</p>
         <p>Pokud jste tuto žádost o resetování hesla neprováděli, prosím ignorujte tento email.</p>
         <p class="end">Děkujeme,
             <br>Team {{$applicationName}}</p>
