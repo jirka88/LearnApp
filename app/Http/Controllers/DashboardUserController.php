@@ -19,9 +19,11 @@ use Inertia\Inertia;
 
 class DashboardUserController extends Controller {
     protected $userModel;
+    private $service;
 
-    public function __construct(User $user) {
+    public function __construct(User $user, DashboardService $service) {
         $this->userModel = $user;
+        $this->service = $service;
     }
 
     /**
@@ -30,29 +32,9 @@ class DashboardUserController extends Controller {
      * @return \Inertia\Response
      */
     public function view() {
-        $usr = auth()->user()->loadMissing(['roles', 'accountTypes', 'licences']);
-        $roles = [];
-        $licences = [];
-        $accountTypes = Cache::rememberForever('accountTypes', function () {
-            return AccountTypes::all();
-        });
-        if (auth()->user()->role_id == UserRoles::ADMIN) {
-            $roles = Cache::rememberForever('roles', function () {
-                return Roles::all();
-            });
-            $licences = Cache::rememberForever('licences', function () {
-                return Licences::all();
-            });
-        } elseif (auth()->user()->role_id == UserRoles::OPERATOR) {
-            $roles = Roles::whereNot('id', UserRoles::ADMIN)->get();
-            $licences = Cache::rememberForever('licences', function () {
-                return Licences::all();
-            });
-        } else {
-            $roles = Roles::find(UserRoles::BASIC_USER)->get();
-        }
+        $data = $this->service->getUserInfo(auth()->user());
 
-        return Inertia::render('user/user', compact('usr', 'roles', 'accountTypes', 'licences'));
+        return Inertia::render('user/user', $data);
     }
 
     /**
@@ -124,8 +106,8 @@ class DashboardUserController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function getUserStats(DashboardService $service) {
-        $stats = $service->index($this->userModel, auth()->user()->role_id);
+    public function getUserStats() {
+        $stats = $this->service->index($this->userModel, auth()->user()->role_id);
 
         return Inertia::render('dashboard', compact('stats'));
     }

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\ChangedUserSharedSubject;
 use App\Events\ChangeUserInformation;
+use App\Events\SendEmailWelcome;
 use App\Listeners\forgetUserCache;
 use App\Listeners\ForgetUserSharedSubjectCache;
 use App\Models\Chapter;
@@ -31,6 +32,9 @@ class EventServiceProvider extends ServiceProvider {
         ],
         ChangedUserSharedSubject::class => [
             ForgetUserSharedSubjectCache::class
+        ],
+        SendEmailWelcome::class => [
+            \App\Listeners\SendEmailWelcome::class
         ]
     ];
 

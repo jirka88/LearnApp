@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Components\Localization;
+use App\Services\LocalizationServices;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -12,11 +12,11 @@ class LogoutController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function logout() {
-        $language = Localization::getLocale();
+    public function logout(LocalizationServices $services) {
+        $language = $services->getLocale();
         Session::flush();
         Auth::logout();
-        Localization::setLocale($language);
+        $services->setLocale($language);
 
         return redirect()->route('login.edit');
     }

@@ -50,7 +50,7 @@
                             <v-btn
                                 color="red"
                                 append-icon="mdi-delete"
-                                @click="setId(subjectData.id, subjectData.name)"
+                                @click="destroySubject(subjectData)"
                             >{{ $t('global.delete') }}!
                             </v-btn>
                         </td>
@@ -83,20 +83,6 @@
                 </div>
             </div>
         </v-container>
-        <v-row justify="center">
-            <DialogDelete
-                v-if="dialog"
-                v-model:dialog="dialog"
-                :subject="subject">
-                <v-btn
-                    class="bg-red"
-                    @click="destroySubject()"
-                    size="x-large"
-                >
-                    {{ $t('global.delete') }}
-                </v-btn>
-            </DialogDelete>
-        </v-row>
     </component>
 </template>
 <script setup>
@@ -110,8 +96,6 @@ import {useUrlSearchParams} from '@vueuse/core';
 import SortSelect from "@/Frontend/Components/SortSelect.vue";
 import SearchSubject from "@/Frontend/Components/SearchSubject.vue";
 
-const dialog = ref(false);
-const DialogDelete = defineAsyncComponent(() => import("@/Frontend/Components/DialogBeforeDeleteSubject.vue"));
 const TableSkeleton = defineAsyncComponent(() => import("@/Frontend/Components/Loading/TableSkeleton.vue"));
 const props = defineProps({
     subjects: Object,
@@ -119,28 +103,16 @@ const props = defineProps({
     sort: String,
 });
 
-const subject = ref({
-    subjectName: '',
-    subjectId: ''
-});
 const page = ref(props.subjects.current_page);
 const subjectsShow = ref(props.subjects.data);
 const loading = ref(false);
 const filtrGlobal = ref('');
 
+import { useDialogDeleteStore } from '../../../../states/dialogDeleteData'
 
-const setId = (id, name) => {
-    dialog.value = true;
-    subject.value.subjectId = id;
-    subject.value.subjectName = name;
-}
-const destroySubject = () => {
-    Inertia.delete(route('subject.destroy', subject.value.subjectId), {
-        preserveState: true, onSuccess: (response) => {
-            subjectsShow.value = response.props.subjects.data;
-            dialog.value = false;
-        }
-    });
+const dialogDeleteStore = useDialogDeleteStore()
+const destroySubject = (subject) => {
+    dialogDeleteStore.setDialog(true, subject, 'subject.destroy')
 }
 
 const fetchData = () => {

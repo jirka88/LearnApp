@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ExportAction;
 use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Events\ChangeUserInformation;
@@ -16,10 +17,12 @@ use App\Models\Roles;
 use App\Models\settings;
 use App\Models\User;
 use App\Services\AdminService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Maatwebsite\Excel\Facades\Excel;
+use Spatie\Activitylog\Models\Activity;
 
 class Admin extends Controller
 {
@@ -37,10 +40,15 @@ class Admin extends Controller
      *
      * @return \Inertia\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = $this->service->index();
+        $sort = $request->input('sort', 'default');
+        $data = $this->service->index($request->page, $sort, $request->url(), $request->query());
         return Inertia::render('admin/listUsers', $data);
+    }
+    public function sortIndex(Request $request) {
+        $sort = $request->input('sort', 'default');
+        return response()->json($this->service->index($request->page, $sort, $request->url(), $request->query()));
     }
 
     /**
@@ -117,7 +125,7 @@ class Admin extends Controller
     {
         $this->service->store($adminCreateUser);
 
-        return to_route('admin')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
+        return to_route('adminusers')->with(['message' => 'Uživatel byl úspěšně vytvořen!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -130,7 +138,7 @@ class Admin extends Controller
         $this->authorize('view', $user);
         event(new ChangeUserInformation($user));
         $this->service->destroy($user);
-        return redirect()->back()->with(['message' => __('validation.custom.delete'), 'status' => ToastifyStatus::SUCCESS]);
+        return redirect()->back()->with(['message' => __('validation.custom.deleted'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
@@ -212,27 +220,13 @@ class Admin extends Controller
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
-    public function userExportPDF(Request $request)
+    public function userExportPDF(Request $request, ExportAction $action)
     {
         $extension = $request->input('export');
         $this->authorize('viewAdmin', Auth()->user());
-        switch ($extension) {
-            case 'pdf':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.pdf', \Maatwebsite\Excel\Excel::DOMPDF);
-                break;
-            case 'xlsx':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.xlsx');
-                break;
-            case 'csv':
-                $sheet =  Excel::download(new UsersExport, 'uzivatele.csv', \Maatwebsite\Excel\Excel::CSV);
-                break;
-            case 'html':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.html', \Maatwebsite\Excel\Excel::HTML);
-                break;
-            case 'xml':
-                $sheet = Excel::download(new UsersExport, 'uzivatele.xml', \Maatwebsite\Excel\Excel::XML);
-                break;
-        }
+        $class = new UsersExport();
+        $sheet = $action->handle($extension, $class);
+
         return $sheet;
     }
 }

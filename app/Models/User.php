@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Notifications\EmailVerificationNotification;
+use App\Notifications\ResetPasswordNotification;
+use App\Traits\RelationsManager;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -13,9 +15,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Mehradsadeghi\FilterQueryString\FilterQueryString;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword {
-    use HasApiTokens, HasFactory, Notifiable, Sluggable;
+    use HasApiTokens, HasFactory, Notifiable, Sluggable, FilterQueryString;
 
     protected $fillable = [
         'firstname',
@@ -29,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
         'slug',
         'canShare',
         'image',
+        'user_active'
     ];
 
     protected $hidden = [
@@ -37,9 +41,13 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
     ];
 
     protected $append = ['get_count_users'];
+
+    protected $filters = ['sort'];
 
     public function sluggable(): array {
         return [
@@ -54,7 +62,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
 
     protected function getCountUsers(): Attribute {
         return new Attribute(
-            get: fn () => $this->all()->count()
+            get: fn () => $this->where('user_active', 1)->count()
         );
     }
 
@@ -74,7 +82,7 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
      * Vrátí počet uživatelů podle role
      */
     public function getUserCountByRole($role): ?int {
-        return $this->where('role_id', $role)->get()->count();
+        return $this->where('role_id', $role)->where('user_active', 1)->get()->count();
     }
 
     public function roles(): BelongsTo {
@@ -97,5 +105,9 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword 
     public function sendEmailVerificationNotification()
     {
         $this->notify(new EmailVerificationNotification());
+    }
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

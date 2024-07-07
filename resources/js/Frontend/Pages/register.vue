@@ -1,10 +1,10 @@
 <template>
     <Layout>
-        <div class="justify-center align-center menu w-100">
-            <v-sheet :width="900" :class="{'w-100': $vuetify.display.mdAndDown, 'h-100': $vuetify.display.smAndDown}"
+        <div class="d-flex justify-center align-center menu w-100">
+            <v-sheet :width="900" :class="{'w-100 h-100': $vuetify.display.smAndDown, 'w-75': $vuetify.display.md}"
                      :elevation="$vuetify.display.smAndDown ? '' : 15">
                 <div class="d-flex"
-                     :class="{'justify-center': $vuetify.display.mdAndDown, 'align-center h-100': $vuetify.display.smAndDown}">
+                     :class="{'justify-center': $vuetify.display.mdAndDown, 'align-center': $vuetify.display.smAndDown}">
                     <v-sheet class="flex-column justify-center align-center w-30 author pa-4"
                              :class="{'d-none': $vuetify.display.mdAndDown}">
                         <div v-if="tab===1">
@@ -16,7 +16,7 @@
                         <h2>LearnApp</h2>
                         <p>{{ $t('authentication.welcome.created') }}<br> Jiří Navrátil</p>
                     </v-sheet>
-                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown}"
+                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown,  'w-100 pa-8 rounded-lg': $vuetify.display.md}"
                              :elevation="$vuetify.display.smAndDown ? 4: 0">
                         <v-tabs
                             v-model="tab"
@@ -97,8 +97,7 @@ watch((tab), (val) => {
 }
 
 .menu {
-    display: flex;
-    min-height: 100vh;
+    min-height: inherit;
 
     .author {
         display: flex;
@@ -108,7 +107,7 @@ watch((tab), (val) => {
 
     .authentication {
         box-sizing: border-box;
-        width: 75%;
+        width: 100%;
         padding: 16px;
     }
 }
@@ -119,8 +118,5 @@ watch((tab), (val) => {
     }
 }
 
-@media #{map-get($display-breakpoints, 'sm-and-down')} {
-
-}
 
 </style>

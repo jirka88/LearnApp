@@ -2,7 +2,7 @@
 <template>
     <fieldset class="menus pa-8" :class="{'w-100': $vuetify.display.smAndDown}">
         <legend align="center" class="text-h5">{{$t('userAccount.information_account')}}:</legend>
-        <v-form ref="formResetPassword" @submit.prevent="$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
+        <v-form ref="formResetPassword" :disabled="!usr.user_active" @submit.prevent="$page.props.permission.view ?  updateAdminUser(usr.id) : updateUser(usr.id)">
             <table class="w-100">
                 <tbody>
                 <tr>
@@ -22,7 +22,7 @@
                     <td >
                         <v-text-field v-model="form.email"
                                       :rules="[rules.email, rules.required]"
-                                      :disabled="$page.props.permission.view ? false : true"
+                                      :disabled="($page.props.permission.view ? false : true) || !usr.user_active"
                                       variant="outlined"></v-text-field>
                     </td>
                 </tr>
@@ -32,7 +32,7 @@
                         <v-select
                             v-model="form.role"
                             :items="roles"
-                            :disabled="permission($page.props.permission.view, $page.props.user.role.id )"
+                            :disabled="permission($page.props.permission.view, $page.props.user.role.id ) || !usr.user_active"
                             item-title="role"
                             item-value="id"
                             label="Select"
@@ -97,6 +97,7 @@
             <v-btn type="submit"
                    color="blue"
                    class="btn d-flex"
+                   :disabled="!usr.user_active"
                    :class="{'w-100': $vuetify.display.smAndDown}"
             >
                 {{$t('global.edit')}}

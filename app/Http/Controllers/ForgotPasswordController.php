@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Spatie\Activitylog\Models\Activity;
 
 class ForgotPasswordController extends Controller
 {
@@ -20,12 +21,19 @@ class ForgotPasswordController extends Controller
         return Inertia::render('register', ['value' => 2]);
     }
 
+    /**
+     * Zaslání odkazu pro resetování hesla
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
     public function passwordResetStore(Request $request)
     {
         $request->validate(['email' => 'required|email']);
         $status = Password::sendResetLink(
             $request->only('email')
         );
+        activity()->causedBy(User::where('email',$request->only('email'))->first())->log('Žádost o resetování hesla');
 
         return $status === Password::RESET_LINK_SENT
             ? redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Email o resetování hesla Vám byl zaslán!'])
@@ -56,7 +64,7 @@ class ForgotPasswordController extends Controller
                 event(new PasswordReset($user));
             }
         );
-
+        Activity()->causedBy(User::where('email', $credentials['email'])->first())->log('Úspěšně resetované heslo');
         return $status === Password::PASSWORD_RESET
             ? to_route('login')->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Heslo bylo úspěšně resetováno!'])
             : back()->with(['status' => ToastifyStatus::ERROR, 'message' => 'Nastala chyba!']);

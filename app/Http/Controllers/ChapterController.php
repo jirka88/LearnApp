@@ -138,7 +138,6 @@ class ChapterController extends Controller
     {
         $chapterDelete = $this->chapterModel->getChapter($chapter);
         $chapterDelete->delete();
-
         return to_route('subject.show', $slug)->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Kapitola byla úspěšně vymazána']);
     }
 

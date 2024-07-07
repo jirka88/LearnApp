@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use App\Enums\UserLicences;
+use App\Mail\WelcomeEmail;
 use App\Models\Licences;
+use App\Models\Partition;
 use App\Models\User;
 use App\Traits\testTrait;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class userTest extends TestCase {
@@ -44,7 +47,10 @@ class userTest extends TestCase {
             'email' => $user['email'],
         ]);
         $this->assertAuthenticated();
-        $response->assertRedirect('/dashboard');
+        Mail::fake();
+        Mail::to($user['email'])->send(new WelcomeEmail(User::where('email', $user['email'])->first()));
+        Mail::assertSent(WelcomeEmail::class);
+        $response->assertRedirect(route('verification.notice'));
     }
 
     /**
@@ -134,7 +140,8 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_profile_can_be_rendered() {
-        $response = $this->actingAs($this->user)->get('/dashboard/user');
+        $this->actingAs($this->user);
+        $response = $this->get(route('user.info'));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
@@ -155,15 +162,13 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_change_profile() {
+        $this->actingAs($this->user);
         $userUpdate = [
             'firstname' => fake()->firstName(),
             'lastname' => fake()->lastName(),
             'type' => ['id' => fake()->numberBetween(1, 2)],
-            'active' => 1,
-            'role' => ['id' => fake()->numberBetween(1, 2)],
-            'licences' => ['id' => $this->user->licences_id],
         ];
-        $response = $this->actingAs($this->user)->put(route('user.update'), $userUpdate);
+        $response = $this->put(route('user.update'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
@@ -179,10 +184,11 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_share_change() {
+        $this->actingAs($this->user);
         $userUpdate = [
             'share' => ['id' => fake()->boolean()],
         ];
-        $response = $this->actingAs($this->user)->put(route('user.share'), $userUpdate);
+        $response = $this->put(route('user.share'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
@@ -196,13 +202,14 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_change_password() {
+        $this->actingAs($this->user);
         $newPassword = fake()->password(8, 20);
         $userUpdate = [
             'oldPassword' => $this->user->password,
             'newPassword' => $newPassword,
             'againNewPassword' => $newPassword,
         ];
-        $response = $this->actingAs($this->user)->put(route('user.passwordReset'), $userUpdate);
+        $response = $this->put(route('user.passwordReset'), $userUpdate);
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', [
@@ -216,10 +223,11 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_organisation_screen_can_be_rendered() {
+        $this->actingAs($this->user);
         for ($x = 0; $x <= 20; $x++) {
             $this->createSubject($this->user);
         }
-        $response = $this->actingAs($this->user)->get(route('subject.index'));
+        $response = $this->get(route('subject.index'));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
@@ -230,11 +238,12 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_create_subject() {
+        $this->actingAs($this->user);
         $subject = [
             'name' => fake()->text(10),
             'icon' => fake()->text(5),
         ];
-        $response = $this->actingAs($this->user)->post(route('subject.store', $subject));
+        $response = $this->post(route('subject.store', $subject));
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $createdSubject = User::with('patritions')->find($this->user->id);
@@ -249,6 +258,7 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_standart_can_create_subject_because_of_limit() {
+        $this->actingAs($this->user);
         for ($x = 0; $x <= Licences::standartUserPartitions; $x++) {
             $subject = $this->createSubject($this->user);
             $subject->Users()->attach($this->user->id);
@@ -258,13 +268,14 @@ class userTest extends TestCase {
             'icon' => ['iconName' => fake()->text(20)],
         ];
 
-        $response = $this->actingAs($this->user)->post(route('subject.store', $newSubject));
+        $response = $this->post(route('subject.store', $newSubject));
         $this->assertAuthenticated();
         $response->assertRedirect();
         $response->assertSessionHasErrors(['msg']);
     }
 
     public function test_user_standart_cant_create_chapter_because_of_limit() {
+        $this->actingAs($this->user);
         $this->user->licences_id = UserLicences::STANDART;
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
@@ -278,9 +289,9 @@ class userTest extends TestCase {
             'contentChapter' => fake()->text(2000),
             'slug' => $subject->slug,
         ];
-        $response = $this->actingAs($this->user)->post(route('chapter.store', ['slug' => $subject->slug]), $newChapter);
+        $response = $this->post(route('chapter.store', ['slug' => $subject->slug]), $newChapter);
         $response->assertRedirect();
-        $response->assertSessionHasErrors('message');
+        $response->assertSessionHasErrors('msg');
     }
 
     /**
@@ -289,12 +300,13 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_delete_subject() {
+        $this->actingAs($this->user);
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
         for ($x = 0; $x <= fake()->numberBetween(0, 18); $x++) {
             $this->createChapter($subject);
         }
-        $response = $this->actingAs($this->user)->delete(route('subject.destroy', $subject->id));
+        $response = $this->delete(route('subject.destroy', $subject->id));
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseMissing('partitions', [
@@ -308,12 +320,13 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_subject_screen_can_be_rendered() {
+        $this->actingAs($this->user);
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
         for ($x = 0; $x <= fake()->numberBetween(0, 18); $x++) {
             $this->createChapter($subject);
         }
-        $response = $this->actingAs($this->user)->get(route('subject.show', $subject->slug));
+        $response = $this->get(route('subject.show', $subject->slug));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
@@ -324,11 +337,12 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_chapter_can_be_rendered() {
+        $this->actingAs($this->user);
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
         $chapter = $this->createChapter($subject);
 
-        $response = $this->actingAs($this->user)->get(route('chapter.show', ['chapter' => $chapter->slug, 'slug' => $subject->slug]));
+        $response = $this->get(route('chapter.show', ['chapter' => $chapter->slug, 'slug' => $subject->slug]));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
@@ -339,11 +353,12 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_delete_chapter() {
+        $this->actingAs($this->user);
         $subject = $this->createSubject($this->user);
         $subject->Users()->attach($this->user->id);
         $chapter = $this->createChapter($subject);
 
-        $response = $this->actingAs($this->user)->delete(route('chapter.destroy', ['slug' => $subject->slug, 'chapter' => $chapter->slug]));
+        $response = $this->delete(route('chapter.destroy', ['slug' => $subject->slug, 'chapter' => $chapter->slug]));
         $this->assertAuthenticated();
         $response->assertStatus(302);
         $this->assertDatabaseMissing('chapters', [
@@ -357,8 +372,9 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_cant_access_to_another_user_profile() {
+        $this->actingAs($this->user);
         $user = User::factory()->create();
-        $this->actingAs($this->user)->get(route('adminuser.edit', $user->slug))->assertRedirect('/dashboard')->assertStatus(302);
+        $this->get(route('adminuser.edit', $user->slug))->assertStatus(302);
         $this->assertAuthenticated();
     }
 
@@ -368,8 +384,9 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_access_to_list_of_active_user_for_sharing_subject() {
+        $this->actingAs($this->user);
         $subject = $this->createSubject($this->user);
-        $response = $this->actingAs($this->user)->get(route('sharing', $subject->slug));
+        $response = $this->get(route('sharing', $subject->slug));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }
@@ -380,12 +397,13 @@ class userTest extends TestCase {
      * @return void
      */
     public function test_user_can_sort_subjects() {
+        $this->actingAs($this->user);
         for ($i = 0; $i <= Licences::standartUserPartitions; $i++) {
             $subject = $this->createSubject($this->user);
             $subject->Users()->attach($this->user->id);
         }
         $sort = $this->getSort();
-        $response = $this->actingAs($this->user)->get(route('subject.sort', $sort));
+        $response = $this->get(route('subject.sort', $sort));
         $this->assertAuthenticated();
         $response->assertStatus(200);
     }

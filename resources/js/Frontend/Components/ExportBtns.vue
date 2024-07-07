@@ -22,7 +22,10 @@ const props = defineProps({disabledExport: Boolean, showExport: Array})
                 :loading="disabledExport"
                 :disabled="disabledExport"
                 @click="emit('exportFile', 'pdf')">
-
+                <v-tooltip
+                    activator="parent"
+                    location="bottom"
+                >PDF</v-tooltip>
             </v-btn>
             <v-btn
                 v-if="showExport.find(item => item === 'excel')"
@@ -33,7 +36,10 @@ const props = defineProps({disabledExport: Boolean, showExport: Array})
                 :loading="disabledExport"
                 :disabled="disabledExport"
                 @click="emit('exportFile', 'xlsx')">
-
+                <v-tooltip
+                    activator="parent"
+                    location="bottom"
+                >Excel</v-tooltip>
             </v-btn>
             <v-btn
                 v-if="showExport.find(item => item === 'csv')"
@@ -44,6 +50,10 @@ const props = defineProps({disabledExport: Boolean, showExport: Array})
                 prepend-icon="mdi-file"
                 stacked
                 @click="emit('exportFile', 'csv')">
+                <v-tooltip
+                    activator="parent"
+                    location="bottom"
+                >CSV</v-tooltip>
                 csv
             </v-btn>
             <v-btn
@@ -55,7 +65,10 @@ const props = defineProps({disabledExport: Boolean, showExport: Array})
                 :loading="disabledExport"
                 :disabled="disabledExport"
                 @click="emit('exportFile', 'html')">
-
+                <v-tooltip
+                    activator="parent"
+                    location="bottom"
+                >HTML</v-tooltip>
             </v-btn>
             <v-btn
                 v-if="showExport.find(item => item === 'xml')"

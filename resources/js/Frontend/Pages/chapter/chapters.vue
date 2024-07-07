@@ -5,7 +5,7 @@
         </div>
         <v-container v-scroll="onScroll">
             <Breadcrumbs
-                :items="[{title: 'předměty', disabled: false, href: route('subject.index') }, {title: subject.name, disabled: true }]"></Breadcrumbs>
+                :items="[{title: 'předměty', disabled: false, to: 'subject.index' }, {title: subject.name, disabled: true }]"></Breadcrumbs>
             <div class="d-flex justify-content-between align-center py-5"
                  :class="{'flex-column-reverse': $vuetify.display.xs}">
                 <div class="d-flex flex-1-1-100 flex-wrap"
@@ -79,11 +79,10 @@ const DialogShare = defineAsyncComponent(() => import("@/Frontend/Components/Dia
 
 const page = ref(1);
 const sharing = ref(false);
-const status = ref(false);
 const showSearchMobile = ref(false);
 const props = defineProps({
     chapters: Object,
-    subject: Array,
+    subject: Object,
     errors: Object,
     sharingUsr: Object,
     pages: Number,

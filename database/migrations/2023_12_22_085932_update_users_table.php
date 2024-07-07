@@ -14,6 +14,7 @@ return new class extends Migration {
         Schema::table('users', function (Blueprint $table) {
             $table->string('image')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->boolean('user_active')->default(true);
         });
     }
 
@@ -24,8 +25,7 @@ return new class extends Migration {
      */
     public function down() {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['image']);
-            $table->dropColumn('email_verified_at');
+            $table->dropColumn(['image', 'email_verified_at', 'user_active']);
         });
 
     }

@@ -12,12 +12,22 @@
                 </v-icon>
             </Link>
         </template>
+     <template v-slot:item="{ item }">
+         <v-breadcrumbs-item
+             class="text-subtitle-2 crumb-item"
+             :disabled="item.disabled"
+             exact
+         >
+            <Link v-if="item.to" :href="route(item.to)">{{item.title}}</Link>
+             <p v-else>{{item.title}}</p>
+         </v-breadcrumbs-item>
+     </template>
 
     </v-breadcrumbs>
 </template>
 <script setup>
 import { ref} from "vue";
-import { Link, useInertia } from '@inertiajs/inertia-vue3';
+import { Link } from '@inertiajs/inertia-vue3';
 const props = defineProps({items: Array})
 
 const rewriteItems = ref(props.items);

@@ -14,7 +14,6 @@ class Licences extends Model {
     public const standartUserPartitions = 10;
 
     public const standartUserChaptersInPartitions = 10;
-
     public const standartPlusUserPartitions = 40;
 
     public function Users(): HasMany {

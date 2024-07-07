@@ -10,7 +10,6 @@ use Illuminate\Notifications\Notification;
 
 class EmailVerificationNotification extends VerifyEmail
 {
-    use Queueable;
 
     /**
      * Create a new notification instance.

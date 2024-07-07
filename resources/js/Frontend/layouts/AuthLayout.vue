@@ -14,5 +14,6 @@ import Base from "./../Pages/Base.vue"
 .auth {
     background: url('./../../../assets/authentication/d.svg') no-repeat center;
     background-size: cover;
+    min-height: 100vh;
 }
 </style>

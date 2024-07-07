@@ -23,7 +23,7 @@ class Chapter extends Model {
         'name' => 'encrypted',
         'perex' => 'encrypted',
         'context' => 'encrypted',
-        'slug' => 'encrypted'
+        //'slug' => 'encrypted'
     ];
 
     public function sluggable(): array {
@@ -68,8 +68,8 @@ class Chapter extends Model {
     }
 
     public function getChapterWithPermission($slug): ?Chapter {
-        return $this->where('slug', $slug)->with(['Partition.Users' => function ($query2) {
-            $query2->where('user_id', auth()->user()->id)->firstOrFail();
+        return $this->where('slug', $slug)->with(['Partition.Users' => function ($query) {
+            $query->where('user_id', auth()->user()->id)->first();
         }])->firstOrFail();
     }
 }
