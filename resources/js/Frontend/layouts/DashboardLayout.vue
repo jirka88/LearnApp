@@ -51,7 +51,7 @@
                     nav
                     v-if="$page.props.permission.view"
                     @update:opened="
-                        (newOpened) => (openedN = newOpened.slice(-1))
+                        (newOpened) => (openedN = newOpened?.slice(-1))
                     "
                     v-model:opened="opened"
                 >
@@ -302,7 +302,7 @@ const selected = computed(() => {
 const opened = ref(selected.value)
 
 watch([openedN, selected], () => {
-    opened.value = openedN.value.length > 0 ? openedN.value : selected
+    opened.value = openedN.value.length > 0 ? openedN.value : []
 })
 const select = ref({
     language: localStorage.getItem('langTitle') || 'Česky',
