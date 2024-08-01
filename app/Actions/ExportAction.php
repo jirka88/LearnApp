@@ -14,7 +14,7 @@ class ExportAction
         try {
             $reflectionClass = new ReflectionClass($class);
         } catch (\ReflectionException $e) {
-            return redirect()->back()->with(['status' => ToastifyStatus::ERROR, 'message' => 'Natala nečekaná chyba!']);
+            return redirect()->back()->with(['status' => ToastifyStatus::ERROR, 'message' => 'Nastala nečekaná chyba!']);
         }
         $instance = $reflectionClass->newInstance();
         switch ($extension) {

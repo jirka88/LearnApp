@@ -62,8 +62,7 @@ class Admin extends Controller
     {
         $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->firstOrFail();
         $this->authorize('view', $usr);
-        $isAdmin = auth()->user()->role_id == 1 ? true : false;
-        if ($isAdmin) {
+        if (auth()->user()->role_id === UserRoles::ADMIN) {
             $roles = Cache::rememberForever('roles', function () {
                 return Roles::all();
             });
@@ -201,6 +200,7 @@ class Admin extends Controller
     {
         $this->authorize('viewAdmin', Auth()->user());
         $this->service->changeRestriction($register);
+
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
