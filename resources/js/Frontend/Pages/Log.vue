@@ -12,7 +12,7 @@ import FileSaver from 'file-saver'
 const dialogDeleteStore = useDialogDeleteStore()
 const props = defineProps({ data: Array, pages: Number })
 const page = ref(1)
-const disabledExport = ref(false);
+const disabledExport = ref(false)
 const fetchData = () => {
     inertia.Inertia.get(
         route('adminlog'),
@@ -45,8 +45,12 @@ const exportFile = async(value) => {
             <Breadcrumbs
                 :items="[{ title: 'Log', disabled: true }]"
             ></Breadcrumbs>
-            <ExportBtns :showExport="['pdf', 'excel', 'csv', 'html']" @exportFile="exportFile" :disabledExport="disabledExport" class="pt-6">
-
+            <ExportBtns
+                :showExport="['pdf', 'excel', 'csv', 'html']"
+                @exportFile="exportFile"
+                :disabledExport="disabledExport"
+                class="pt-6"
+            >
             </ExportBtns>
             <v-table class="text-left py-8">
                 <thead>
@@ -59,12 +63,17 @@ const exportFile = async(value) => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="data.data.length > 0" class="pa-8" v-for="log in data.data" :key="log.id">
-                        <td>{{log.id}}</td>
+                    <tr
+                        v-if="data.data.length > 0"
+                        class="pa-8"
+                        v-for="log in data.data"
+                        :key="log.id"
+                    >
+                        <td>{{ log.id }}</td>
                         <td>
                             {{ log.description }}
                         </td>
-                        <td>
+                        <td v-if="log.causer?.slug">
                             <Link
                                 class="text-decoration-underline"
                                 :href="route('adminuser.edit', log.causer.slug)"
@@ -88,9 +97,11 @@ const exportFile = async(value) => {
                             </v-btn>
                         </td>
                     </tr>
-                <tr v-else>
-                    <td colspan="4" class="text-center">Žádný log k zobrazení!</td>
-                </tr>
+                    <tr v-else>
+                        <td colspan="4" class="text-center">
+                            Žádný log k zobrazení!
+                        </td>
+                    </tr>
                 </tbody>
             </v-table>
 
