@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
     <v-sheet
@@ -10,10 +9,10 @@
         class="d-flex justify-center align-center flex-column py-2"
     >
         <div class="text-h5 font-weight-bold">LearnApp</div>
-        <a href="http://github.com" class="underlineLink" target="_blank">Github</a>
+        <a href="http://github.com" class="underlineLink" target="_blank"
+            >Github</a
+        >
     </v-sheet>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

@@ -1,9 +1,13 @@
 <template>
     <v-form @submit.prevent="login">
-        <v-container class="d-flex flex-column pa-3 w-75" :class="{'w-100': $vuetify.display.mdAndDown}">
+        <v-container
+            class="d-flex flex-column pa-3 w-75"
+            :class="{ 'w-100': $vuetify.display.mdAndDown }"
+        >
             <h1 class="pa-5 text-center">{{ $t('authentication.login') }}</h1>
             <v-text-field
                 v-model="form.email"
+                id="email"
                 prepend-inner-icon="mdi-email"
                 variant="outlined"
                 label="E-mail"
@@ -13,6 +17,7 @@
             ></v-text-field>
             <v-text-field
                 v-model="form.password"
+                id="password"
                 :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                 :type="show ? 'text' : 'password'"
                 prepend-inner-icon="mdi-lock"
@@ -26,8 +31,8 @@
                     v-model="form.remember"
                     hide-details
                     color="blue"
-                    :label="$t('authentication.remember')">
-
+                    :label="$t('authentication.remember')"
+                >
                 </v-checkbox>
                 <Link class="forgetPassword" :href="route('password.request')">
                     {{ $t('authentication.forget') }}
@@ -38,7 +43,7 @@
                 color="blue"
                 class="mt-2"
                 :disabled="off"
-                :class="{'w-100': $vuetify.display.smAndDown}"
+                :class="{ 'w-100': $vuetify.display.smAndDown }"
             >
                 {{ $t('authentication.loginBtn') }}
             </v-btn>
@@ -46,33 +51,32 @@
     </v-form>
 </template>
 <script setup>
-import {ref} from "vue";
-import {useForm, Link} from "@inertiajs/inertia-vue3";
-import {toastShow} from "@/Toast";
-import rules from "./../../rules/rules"
+import { ref } from 'vue'
+import { useForm, Link } from '@inertiajs/inertia-vue3'
+import { toastShow } from '@/Toast'
+import rules from './../../rules/rules'
 
-defineProps({errors: Object})
+defineProps({ errors: Object })
 
-const show = ref(false);
-const off = ref(false);
+const show = ref(false)
+const off = ref(false)
 
 const form = useForm({
     email: '',
     password: '',
-    remember: '',
+    remember: ''
 })
 
-
 const login = () => {
-    off.value = true;
+    off.value = true
     form.post(route('login'), {
         onError: () => {
             if (form.errors.msg !== undefined) {
                 toastShow(true)
             }
         }
-    });
-    off.value = false;
+    })
+    off.value = false
 }
 </script>
 
@@ -101,7 +105,7 @@ const login = () => {
 
     &::before {
         position: absolute;
-        content: "";
+        content: '';
         height: 2px;
         width: 0;
         background: black;
@@ -118,5 +122,4 @@ const login = () => {
         transition: 0.3s;
     }
 }
-
 </style>

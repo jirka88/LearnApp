@@ -9,11 +9,11 @@ const props = defineProps({ activity: Object })
 const event = computed(() => {
     switch (props.activity.event) {
         case 'created':
-            return 'Vytvořen:';
+            return 'Vytvořen:'
         case 'deleted':
             return 'Vymazán:'
     }
-} );
+})
 </script>
 
 <template>
@@ -31,7 +31,7 @@ const event = computed(() => {
                     class="font-weight-bold"
                     :class="{ 'text-center': $vuetify.display.smAndDown }"
                 >
-                    {{ activity.description }} v {{activity.created_at}}
+                    {{ activity.description }} v {{ activity.created_at }}
                 </p>
                 <div
                     v-if="activity.properties.old"
@@ -85,8 +85,7 @@ const event = computed(() => {
                     >
                         Od uživatele:
                     </p>
-                    <v-table
-                    >
+                    <v-table>
                         <thead>
                             <tr align="left">
                                 <th class="font-weight-bold">ID:</th>
@@ -110,47 +109,54 @@ const event = computed(() => {
                         <v-btn
                             class="bg-green"
                             :class="{ 'w-100': $vuetify.display.smAndDown }"
-                        >Zobrazit profil
+                            >Zobrazit profil
                         </v-btn>
                     </Link>
                 </v-sheet>
-                <v-sheet class="d-flex flex-column ga-8 pa-8" elevation="4" v-if="activity?.subject">
+                <v-sheet
+                    class="d-flex flex-column ga-8 pa-8"
+                    elevation="4"
+                    v-if="activity?.subject"
+                >
                     <p
                         class="font-weight-bold"
                         :class="{ 'text-center': $vuetify.display.smAndDown }"
                     >
-                        {{event}}
+                        {{ event }}
                     </p>
-                    <v-table
-                    >
+                    <v-table>
                         <thead>
-                        <tr align="left">
-                            <th class="font-weight-bold">ID:</th>
-                            <th class="font-weight-bold">Jméno:</th>
-                            <th class="font-weight-bold">Příjmení:</th>
-                            <th class="font-weight-bold">Email:</th>
-                            <th class="font-weight-bold">Role:</th>
-                            <th class="font-weight-bold">Typ účtu:</th>
-                            <th class="font-weight-bold">Licence:</th>
-                        </tr>
+                            <tr align="left">
+                                <th class="font-weight-bold">ID:</th>
+                                <th class="font-weight-bold">Jméno:</th>
+                                <th class="font-weight-bold">Příjmení:</th>
+                                <th class="font-weight-bold">Email:</th>
+                                <th class="font-weight-bold">Role:</th>
+                                <th class="font-weight-bold">Typ účtu:</th>
+                                <th class="font-weight-bold">Licence:</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>{{ activity.subject.id }}</td>
-                            <td>{{ activity.subject.firstname }}</td>
-                            <td>{{ activity.subject.lastname }}</td>
-                            <td>{{ activity.subject.email }}</td>
-                            <td>{{ activity.subject.roles.role}}</td>
-                            <td>{{ activity.subject.account_types.type}}</td>
-                            <td>{{activity.subject.licences.Licence}}</td>
-                        </tr>
+                            <tr>
+                                <td>{{ activity.subject.id }}</td>
+                                <td>{{ activity.subject.firstname }}</td>
+                                <td>{{ activity.subject.lastname }}</td>
+                                <td>{{ activity.subject.email }}</td>
+                                <td>{{ activity.subject.roles.role }}</td>
+                                <td>
+                                    {{ activity.subject.account_types.type }}
+                                </td>
+                                <td>{{ activity.subject.licences.Licence }}</td>
+                            </tr>
                         </tbody>
                     </v-table>
-                    <Link :href="route('adminuser.edit', activity.subject.slug)">
+                    <Link
+                        :href="route('adminuser.edit', activity.subject.slug)"
+                    >
                         <v-btn
                             class="align-self-start bg-green"
                             :class="{ 'w-100': $vuetify.display.smAndDown }"
-                        >Zobrazit profil
+                            >Zobrazit profil
                         </v-btn>
                     </Link>
                 </v-sheet>

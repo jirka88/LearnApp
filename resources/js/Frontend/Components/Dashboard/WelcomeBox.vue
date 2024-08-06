@@ -1,6 +1,6 @@
 <script setup>
-import {Link} from "@inertiajs/inertia-vue3";
-import undefinedProfilePicture from "../../../../assets/user/Default_pfp.svg";
+import { Link } from '@inertiajs/inertia-vue3'
+import undefinedProfilePicture from '../../../../assets/user/Default_pfp.svg'
 </script>
 
 <template>
@@ -10,16 +10,30 @@ import undefinedProfilePicture from "../../../../assets/user/Default_pfp.svg";
         border
         rounded
         class="info align-center"
-        :class="{'sm-center d-flex justify-center align-center ga-4': $vuetify.display.mdAndDown}"
+        :class="{
+            'sm-center d-flex justify-center align-center ga-4':
+                $vuetify.display.mdAndDown
+        }"
     >
-        <Link :href="route('user.info')" >  <v-img
-            class="margin-center"
-            :src="$page.props.user.image ? '/storage/' + $page.props.user.image : undefinedProfilePicture"></v-img>
+        <Link :href="route('user.info')">
+            <v-img
+                class="margin-center"
+                :src="
+                    $page.props.user.image
+                        ? '/storage/' + $page.props.user.image
+                        : undefinedProfilePicture
+                "
+            ></v-img>
         </Link>
         <div>
-            <p class="font-weight-bold text-h6">{{$t('dashboard.welcome')}},
-                {{ $page.props.user.firstname }}</p>
-            <Link :href="route('logout')" class="position-relative underlineLink">{{$t('dashboard.sign_out')}}</Link>
+            <p class="font-weight-bold text-h6">
+                {{ $t('dashboard.welcome') }}, {{ $page.props.user.firstname }}
+            </p>
+            <Link
+                :href="route('logout')"
+                class="position-relative underlineLink"
+                >{{ $t('dashboard.sign_out') }}</Link
+            >
         </div>
     </v-sheet>
 </template>

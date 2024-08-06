@@ -17,16 +17,15 @@ trait userTrait {
     public function getActivedShared() {
         if (auth()->user()) {
             return Cache::remember('sharedSubjects' . auth()->user()->id, now()->addMinutes(10), function () {
+                $totalUsersCount = 0;
                 $shared = auth()->user()->patritions()
                     ->where('accepted', null)
                     ->withCount(['Users' => function ($query) {
                         $query->whereNot('user_id', auth()->user()->id);
                     }])->get();
-                $dataArray = json_decode($shared, true);
-                $totalUsersCount = 0;
-                foreach ($dataArray as $item) {
-                    $totalUsersCount += (int) $item['users_count'];
-                }
+                $shared->each(function ($item) use (&$totalUsersCount){
+                    $totalUsersCount += $item->users_count;
+                });
                 return $totalUsersCount;
             });
         }

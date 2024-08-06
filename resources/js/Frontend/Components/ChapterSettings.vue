@@ -6,10 +6,15 @@ import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
 const dialogDeleteStore = useDialogDeleteStore()
 const props = defineProps({ chapter: Object, slug: String })
 const enableDialog = () => {
-    dialogDeleteStore.setDialogWithUrlParams(true, 'chapter.destroy', {
-        slug: props.slug,
-        chapter: props.chapter.slug
-    }, false)
+    dialogDeleteStore.setDialogWithUrlParams(
+        true,
+        'chapter.destroy',
+        {
+            slug: props.slug,
+            chapter: props.chapter.slug
+        },
+        false
+    )
 }
 </script>
 
@@ -30,17 +35,17 @@ const enableDialog = () => {
             <v-btn icon="mdi-pencil" variant="flat" color="blue" size="large">
             </v-btn>
         </Link>
-            <v-btn
-                v-if="chapter.partition.users[0].permission.permission_id != 1"
-                data-aos="zoom-in"
-                data-aos-duration="400"
-                icon="mdi-trash-can"
-                variant="flat"
-                color="red"
-                size="large"
-                @click="enableDialog"
-            >
-            </v-btn>
+        <v-btn
+            v-if="chapter.partition.users[0].permission.permission_id != 1"
+            data-aos="zoom-in"
+            data-aos-duration="400"
+            icon="mdi-trash-can"
+            variant="flat"
+            color="red"
+            size="large"
+            @click="enableDialog"
+        >
+        </v-btn>
     </div>
 </template>
 

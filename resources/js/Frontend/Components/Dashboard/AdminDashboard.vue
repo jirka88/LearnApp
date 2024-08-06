@@ -1,24 +1,29 @@
 <template>
     <div class="d-flex ga-6 flex-column dashboard">
-        <h1 class="text-h3 font-weight-bold" :class="{'text-center': $vuetify.display.mdAndDown}">
-            {{ $t('dashboard.stats') }}</h1>
-        <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
+        <h1
+            class="text-h3 font-weight-bold"
+            :class="{ 'text-center': $vuetify.display.mdAndDown }"
+        >
+            {{ $t('dashboard.stats') }}
+        </h1>
+        <v-row
+            class="d-flex"
+            :class="{ 'flex-column': $vuetify.display.mdAndDown }"
+        >
             <v-col>
-                <WelcomeBox/>
+                <WelcomeBox />
             </v-col>
             <v-col>
-                <ProjectInfoBox/>
+                <ProjectInfoBox />
             </v-col>
         </v-row>
     </div>
     <div class="py-4 d-flex flex-column">
-        <Bar
-            id="my-chart-id"
-            :options="chartOptions"
-            :data="chartData"
-        />
-        <div class="d-flex w-100 ga-4 py-8 text-center"
-             :class="{'flex-column': $vuetify.display.mdAndDown}">
+        <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+        <div
+            class="d-flex w-100 ga-4 py-8 text-center"
+            :class="{ 'flex-column': $vuetify.display.mdAndDown }"
+        >
             <v-card elevation="4">
                 <v-card-title class="font-weight-bold">
                     {{ $t('dashboard.users') }}:
@@ -61,17 +66,28 @@
             </v-card>
         </div>
     </div>
-    <v-row class="d-flex" :class="{'flex-column': $vuetify.display.mdAndDown}">
+    <v-row
+        class="d-flex"
+        :class="{ 'flex-column': $vuetify.display.mdAndDown }"
+    >
         <v-col>
             <v-sheet
                 :elevation="8"
                 border
                 min-height="10em"
                 rounded
-                class="py-8 px-8 d-flex justify-center align-center flex-column">
-                <div class="text-h6 font-weight-bold">{{ $t('dashboard.restrict_register') }}</div>
-                <v-switch v-model="restrictRegister" inset color="green" @change="(() => restrictRegisterModal = true)"
-                          hide-details></v-switch>
+                class="py-8 px-8 d-flex justify-center align-center flex-column"
+            >
+                <div class="text-h6 font-weight-bold">
+                    {{ $t('dashboard.restrict_register') }}
+                </div>
+                <v-switch
+                    v-model="restrictRegister"
+                    inset
+                    color="green"
+                    @change="() => (restrictRegisterModal = true)"
+                    hide-details
+                ></v-switch>
             </v-sheet>
         </v-col>
         <v-col>
@@ -82,61 +98,70 @@
                 rounded
                 class="py-8 px-8 d-flex justify-center align-center"
             >
-                <v-btn
-                    @click="setColorTheme"
-                    color="green">
+                <v-btn @click="setColorTheme" color="green">
                     Změnit barvu aplikace
                 </v-btn>
             </v-sheet>
         </v-col>
-        <v-col>
-
-        </v-col>
+        <v-col> </v-col>
     </v-row>
     <DialogChangeColorTheme
         v-if="themeModal"
         v-model="themeModal"
-        @close="themeModal = false">
-
+        @close="themeModal = false"
+    >
     </DialogChangeColorTheme>
     <DialogRegisterRestrict
         v-if="restrictRegisterModal"
         v-model="restrictRegisterModal"
         :restricted="restrictRegister"
-        @close="restrictRegisterModal = false;
-        restrictRegister = stats.restrictRegister;">
+        @close="restrictRegisterModal = false"
+    >
     </DialogRegisterRestrict>
 </template>
 
 <script setup>
-import Chart from 'chart.js/auto';
-import {defineAsyncComponent, markRaw, ref} from "vue";
-import {Bar} from 'vue-chartjs'
-import WelcomeBox from "@/Frontend/Components/Dashboard/WelcomeBox.vue";
-import ProjectInfoBox from "@/Frontend/Components/Dashboard/ProjectInfoBox.vue";
+import Chart from 'chart.js/auto'
+import { defineAsyncComponent, markRaw, ref } from 'vue'
+import { Bar } from 'vue-chartjs'
+import WelcomeBox from '@/Frontend/Components/Dashboard/WelcomeBox.vue'
+import ProjectInfoBox from '@/Frontend/Components/Dashboard/ProjectInfoBox.vue'
 
-const DialogChangeColorTheme = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue"));
-const DialogRegisterRestrict = defineAsyncComponent(() => import ("@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue"));
+const DialogChangeColorTheme = defineAsyncComponent(
+    () => import('@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue')
+)
+const DialogRegisterRestrict = defineAsyncComponent(
+    () => import('@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue')
+)
 
 const props = defineProps(['stats'])
 
-const restrictRegister = ref(props.stats.restrictRegister);
-const restrictRegisterModal = ref(false);
+const restrictRegister = ref(props.stats.restrictRegister)
+const restrictRegisterModal = ref(false)
 
-const chartOptions = markRaw[{
-    responsive: true
-}
+const chartOptions =
+    markRaw[
+        {
+            responsive: true
+        }
     ]
 const chartData = ref({
-    datasets: [{
-        data: [props.stats.normalUsers, props.stats.testersCount, props.stats.operators],
-        label: 'Uživatelé'
-    }], labels: ["Běžný uživatelé", "Testeři", "Operátoři"]
-});
+    datasets: [
+        {
+            data: [
+                props.stats.normalUsers,
+                props.stats.testersCount,
+                props.stats.operators
+            ],
+            label: 'Uživatelé'
+        }
+    ],
+    labels: ['Běžný uživatelé', 'Testeři', 'Operátoři']
+})
 
-const themeModal = ref(false);
+const themeModal = ref(false)
 const setColorTheme = () => {
-    themeModal.value = true;
+    themeModal.value = true
 }
 </script>
 
@@ -171,7 +196,9 @@ const setColorTheme = () => {
     width: 100%;
     height: 0.1em;
     background-color: #4398f0;
-    transition: opacity 300ms, transform 300ms;
+    transition:
+        opacity 300ms,
+        transform 300ms;
     transform: scale(0);
     transform-origin: center;
 }

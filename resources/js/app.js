@@ -15,6 +15,7 @@ import AOS from 'aos'
 import 'aos/dist/aos.css'
 import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
+import VueSafeTeleport from 'vue-safe-teleport'
 
 const page = usePage()
 import { VueReCaptcha, useReCaptcha } from 'vue-recaptcha-v3'
@@ -88,6 +89,7 @@ createInertiaApp({
                 siteKey: '6LdpIXMpAAAAAHM1GBYAPAv884fSC7_hCwx8JPW9',
                 loaderOptions: { autoHideBadge: true, useRecaptchaNet: true }
             })
+            .use(VueSafeTeleport)
             .mount(el)
     }
 }).then(() => {

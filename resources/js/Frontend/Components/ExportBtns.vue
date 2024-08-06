@@ -1,9 +1,8 @@
 <script setup>
-import {ref} from "vue";
+import { ref } from 'vue'
 
 const emit = defineEmits(['exportFile'])
-const props = defineProps({disabledExport: Boolean, showExport: Array})
-
+const props = defineProps({ disabledExport: Boolean, showExport: Array })
 </script>
 
 <template>
@@ -14,77 +13,69 @@ const props = defineProps({disabledExport: Boolean, showExport: Array})
         </div>
         <div class="d-flex ga-4">
             <v-btn
-                v-if="showExport.find(item => item === 'pdf')"
+                v-if="showExport.find((item) => item === 'pdf')"
                 min-width="1em"
                 max-height="3.6em"
                 prepend-icon="mdi-file-pdf-box"
                 stacked
                 :loading="disabledExport"
                 :disabled="disabledExport"
-                @click="emit('exportFile', 'pdf')">
-                <v-tooltip
-                    activator="parent"
-                    location="bottom"
-                >PDF</v-tooltip>
+                @click="emit('exportFile', 'pdf')"
+            >
+                <v-tooltip activator="parent" location="bottom">PDF</v-tooltip>
             </v-btn>
             <v-btn
-                v-if="showExport.find(item => item === 'excel')"
+                v-if="showExport.find((item) => item === 'excel')"
                 min-width="2em"
                 max-height="3.6em"
                 prepend-icon="mdi-file-excel"
                 stacked
                 :loading="disabledExport"
                 :disabled="disabledExport"
-                @click="emit('exportFile', 'xlsx')">
-                <v-tooltip
-                    activator="parent"
-                    location="bottom"
-                >Excel</v-tooltip>
+                @click="emit('exportFile', 'xlsx')"
+            >
+                <v-tooltip activator="parent" location="bottom"
+                    >Excel</v-tooltip
+                >
             </v-btn>
             <v-btn
-                v-if="showExport.find(item => item === 'csv')"
+                v-if="showExport.find((item) => item === 'csv')"
                 min-width="2em"
                 max-height="3.6em"
                 :loading="disabledExport"
                 :disabled="disabledExport"
                 prepend-icon="mdi-file"
                 stacked
-                @click="emit('exportFile', 'csv')">
-                <v-tooltip
-                    activator="parent"
-                    location="bottom"
-                >CSV</v-tooltip>
+                @click="emit('exportFile', 'csv')"
+            >
+                <v-tooltip activator="parent" location="bottom">CSV</v-tooltip>
                 csv
             </v-btn>
             <v-btn
-                v-if="showExport.find(item => item === 'html')"
+                v-if="showExport.find((item) => item === 'html')"
                 min-width="2em"
                 max-height="3.6em"
                 prepend-icon="mdi-language-html5"
                 stacked
                 :loading="disabledExport"
                 :disabled="disabledExport"
-                @click="emit('exportFile', 'html')">
-                <v-tooltip
-                    activator="parent"
-                    location="bottom"
-                >HTML</v-tooltip>
+                @click="emit('exportFile', 'html')"
+            >
+                <v-tooltip activator="parent" location="bottom">HTML</v-tooltip>
             </v-btn>
             <v-btn
-                v-if="showExport.find(item => item === 'xml')"
+                v-if="showExport.find((item) => item === 'xml')"
                 min-width="2em"
                 max-height="3.6em"
                 prepend-icon="mdi-xml"
                 stacked
                 :loading="disabledExport"
                 :disabled="disabledExport"
-                @click="emit('exportFile', 'xml')">
-
+                @click="emit('exportFile', 'xml')"
+            >
             </v-btn>
         </div>
     </div>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

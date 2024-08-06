@@ -1,14 +1,12 @@
 <template>
     <Base>
-    <div class="auth">
-        <slot>
-
-        </slot>
-    </div>
+        <div class="auth">
+            <slot> </slot>
+        </div>
     </Base>
 </template>
 <script setup>
-import Base from "./../Pages/Base.vue"
+import Base from './../Pages/Base.vue'
 </script>
 <style scoped lang="scss">
 .auth {

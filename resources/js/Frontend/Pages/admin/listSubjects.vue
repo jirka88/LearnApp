@@ -76,12 +76,12 @@
                                 </Link>
                             </td>
                             <td>
-                                    <v-btn
-                                        color="red"
-                                        append-icon="mdi-delete"
-                                        @click="destroySubject(subjectData)"
-                                        >Smazat!
-                                    </v-btn>
+                                <v-btn
+                                    color="red"
+                                    append-icon="mdi-delete"
+                                    @click="destroySubject(subjectData)"
+                                    >Smazat!
+                                </v-btn>
                             </td>
                         </tr>
                     </tbody>
@@ -99,7 +99,7 @@
     </component>
 </template>
 <script setup>
-import { Link} from '@inertiajs/inertia-vue3'
+import { Link } from '@inertiajs/inertia-vue3'
 import DashboardLayout from '../../layouts/DashboardLayout.vue'
 import { useDialogDeleteStore } from '../../../../states/dialogDeleteData'
 

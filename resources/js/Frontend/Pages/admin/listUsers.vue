@@ -33,73 +33,140 @@
             </div>
             <v-table class="text-left">
                 <thead>
-                <tr>
-                    <th class="font-weight-bold">ID:</th>
-                    <th class="font-weight-bold">{{ $t('userAccount.image') }}:</th>
-                    <th class="font-weight-bold">{{ $t('global.name') }}:</th>
-                    <th class="font-weight-bold">{{ $t('global.surname') }}:</th>
-                    <th class="font-weight-bold">Email:</th>
-                    <th class="font-weight-bold">Role:</th>
-                    <th class="font-weight-bold">Licence:</th>
-                    <th class="font-weight-bold">{{ $t('dashboard.active') }}:</th>
-                    <th class="font-weight-bold">Předměty:</th>
-                    <th class="font-weight-bold">{{ $t('global.setting') }}:</th>
-                </tr>
+                    <tr>
+                        <th class="font-weight-bold">ID:</th>
+                        <th class="font-weight-bold">
+                            {{ $t('userAccount.image') }}:
+                        </th>
+                        <th class="font-weight-bold">
+                            {{ $t('global.name') }}:
+                        </th>
+                        <th class="font-weight-bold">
+                            {{ $t('global.surname') }}:
+                        </th>
+                        <th class="font-weight-bold">Email:</th>
+                        <th class="font-weight-bold">Role:</th>
+                        <th class="font-weight-bold">Licence:</th>
+                        <th class="font-weight-bold">
+                            {{ $t('dashboard.active') }}:
+                        </th>
+                        <th class="font-weight-bold">Předměty:</th>
+                        <th class="font-weight-bold">
+                            {{ $t('global.setting') }}:
+                        </th>
+                    </tr>
                 </thead>
                 <tbody v-if="!isLoading">
-                <tr class="pa-8" v-for="user in showUsers.data.data" :key="user.id">
-                    <td>{{ user.id }}</td>
-                    <td class="mx-0">
-                        <v-avatar>
-                            <v-img
-                                :src="user.image ? '/storage/' + user.image : undefinedProfilePicture"
-                                alt="John"
-                            ></v-img>
-                        </v-avatar>
-                    </td>
-                    <td>{{ user.firstname }}</td>
-                    <td>{{ user.lastname }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.roles.role }}</td>
-                    <td>{{ user.licences.Licence }}</td>
-                    <td class="text-uppercase">{{ user.active == 1 ? $t('global.yes') : $t("global.no") }}</td>
-                    <td v-if="user.id == $page.props.user.id || $page.props.permission.administrator_view">
-                        <Link :href="route('adminuser.subjects', user.slug)">
-                            <v-btn class="bg-green">
-                                {{ $t('global.show') }}
-                            </v-btn>
-                        </Link>
-                    </td>
-                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && $page.props.permission.operator_view">
-                        <Link :href="route('adminuser.subjects', user.slug)">
-                            <v-btn class="bg-green">
-                                {{ $t('global.show') }}
-                            </v-btn>
-                        </Link>
-                    </td>
-                    <td v-else></td>
-                    <td v-if="$page.props.permission.administrator_view || user.id == $page.props.user.id"
-                        class="d-flex align-center ga-2">
-                        <Link :href="route('adminuser.edit', user.slug)">
-                            <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
-                        </Link>
-                        <v-btn v-if="user.id !== $page.props.user.id" class="bg-red" icon="mdi-trash-can"
-                               @click="enableDialog(user)"></v-btn>
-                    </td>
-                    <td v-else-if="user.roles.id !== 1 && user.roles.id !== 2 && $page.props.permission.operator_view"
-                        class="d-flex align-center ga-2">
-                        <Link :href="route('adminuser.edit', user.slug)">
-                            <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
-                        </Link>
-                        <v-btn v-if="user.id !== $page.props.user.id" class="bg-red" icon="mdi-trash-can"
-                               @click="enableDialog(user)"></v-btn>
-                    </td>
-                    <td v-else></td>
-                </tr>
+                    <tr
+                        class="pa-8"
+                        v-for="user in showUsers.data.data"
+                        :key="user.id"
+                    >
+                        <td>{{ user.id }}</td>
+                        <td class="mx-0">
+                            <v-avatar>
+                                <v-img
+                                    :src="
+                                        user.image
+                                            ? '/storage/' + user.image
+                                            : undefinedProfilePicture
+                                    "
+                                    alt="John"
+                                ></v-img>
+                            </v-avatar>
+                        </td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.lastname }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.roles.role }}</td>
+                        <td>{{ user.licences.Licence }}</td>
+                        <td class="text-uppercase">
+                            {{
+                                user.active == 1
+                                    ? $t('global.yes')
+                                    : $t('global.no')
+                            }}
+                        </td>
+                        <td
+                            v-if="
+                                user.id == $page.props.user.id ||
+                                $page.props.permission.administrator_view
+                            "
+                        >
+                            <Link
+                                :href="route('adminuser.subjects', user.slug)"
+                            >
+                                <v-btn class="bg-green">
+                                    {{ $t('global.show') }}
+                                </v-btn>
+                            </Link>
+                        </td>
+                        <td
+                            v-else-if="
+                                user.roles.id !== 1 &&
+                                user.roles.id !== 2 &&
+                                $page.props.permission.operator_view
+                            "
+                        >
+                            <Link
+                                :href="route('adminuser.subjects', user.slug)"
+                            >
+                                <v-btn class="bg-green">
+                                    {{ $t('global.show') }}
+                                </v-btn>
+                            </Link>
+                        </td>
+                        <td v-else></td>
+                        <td
+                            v-if="
+                                $page.props.permission.administrator_view ||
+                                user.id == $page.props.user.id
+                            "
+                            class="d-flex align-center ga-2"
+                        >
+                            <Link :href="route('adminuser.edit', user.slug)">
+                                <v-btn
+                                    class="bg-green"
+                                    icon="mdi-pencil"
+                                ></v-btn>
+                            </Link>
+                            <v-btn
+                                v-if="user.id !== $page.props.user.id"
+                                class="bg-red"
+                                icon="mdi-trash-can"
+                                @click="enableDialog(user)"
+                            ></v-btn>
+                        </td>
+                        <td
+                            v-else-if="
+                                user.roles.id !== 1 &&
+                                user.roles.id !== 2 &&
+                                $page.props.permission.operator_view
+                            "
+                            class="d-flex align-center ga-2"
+                        >
+                            <Link :href="route('adminuser.edit', user.slug)">
+                                <v-btn
+                                    class="bg-green"
+                                    icon="mdi-pencil"
+                                ></v-btn>
+                            </Link>
+                            <v-btn
+                                v-if="user.id !== $page.props.user.id"
+                                class="bg-red"
+                                icon="mdi-trash-can"
+                                @click="enableDialog(user)"
+                            ></v-btn>
+                        </td>
+                        <td v-else></td>
+                    </tr>
                 </tbody>
                 <tbody v-else>
-                <TableSkeleton v-for="n in showUsers.data.data" :key="n.id"
-                               :countTd="$page.props.user.role.id === 2 ? 8 : 10"></TableSkeleton>
+                    <TableSkeleton
+                        v-for="n in showUsers.data.data"
+                        :key="n.id"
+                        :countTd="$page.props.user.role.id === 2 ? 8 : 10"
+                    ></TableSkeleton>
                 </tbody>
             </v-table>
             <v-pagination
@@ -139,23 +206,34 @@ const TableSkeleton = defineAsyncComponent(
 
 const dialogDeleteStore = useDialogDeleteStore()
 const enableDialog = (user) => {
-  dialogDeleteStore.setDialog(true, user, 'adminuser.destroy')
+    dialogDeleteStore.setDialog(true, user, 'adminuser.destroy')
 }
 const fetchData = () => {
-    inertia.Inertia.get(route('adminusers'), {page: page.value}, {
-        preserveState: true, onSuccess: (response) => {
-            props.users = response.props.users;
+    inertia.Inertia.get(
+        route('adminusers'),
+        { page: page.value },
+        {
+            preserveState: true,
+            onSuccess: (response) => {
+                props.users = response.props.users
+            }
         }
-    })
+    )
 }
 const exportFile = async (value) => {
-    disabledExport.value = true;
-    await axios.post(`/dashboard/admin/controll/users?export=${value}`, {}, {
-        responseType: 'blob'
-    }).then((response) => {
-        FileSaver.saveAs(response.data, 'uzivatele')
-        disabledExport.value = false
-    });
+    disabledExport.value = true
+    await axios
+        .post(
+            `/dashboard/admin/controll/users?export=${value}`,
+            {},
+            {
+                responseType: 'blob'
+            }
+        )
+        .then((response) => {
+            FileSaver.saveAs(response.data, 'uzivatele')
+            disabledExport.value = false
+        })
 }
 const sortData = async (filtr) => {
     isLoading.value = true

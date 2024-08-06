@@ -1,35 +1,31 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-vue';
-import i18n from "laravel-vue-i18n/vite";
+import { defineConfig } from 'vite'
+import laravel from 'laravel-vite-plugin'
+import vue from '@vitejs/plugin-vue'
+import i18n from 'laravel-vue-i18n/vite'
 export default defineConfig({
     plugins: [
         laravel({
-            input: [
-                'resources/sass/app.scss',
-                'resources/js/app.js',
-            ],
+            input: ['resources/sass/app.scss', 'resources/js/app.js'],
             ssr: 'resources/js/ssr.js',
-            refresh: true,
+            refresh: true
         }),
         vue({
             template: {
                 transformAssetUrls: {
                     base: null,
-                    includeAbsolute: false,
-                },
-            },
+                    includeAbsolute: false
+                }
+            }
         }),
-        i18n(),
+        i18n()
     ],
     resolve: {
         alias: {
             //ziggy: 'vendor/tightenco/ziggy/dist',
             ziggy: 'vendor/tightenco/ziggy/dist/vue.es.js'
-        },
+        }
     },
     ssr: {
-        noExternal: [ /\.css$/, /^vuetify/ ],
-    },
-
-});
+        noExternal: [/\.css$/, /^vuetify/]
+    }
+})

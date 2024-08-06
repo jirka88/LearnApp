@@ -65,7 +65,13 @@ class SharingController extends Controller {
      */
     public function delete($slug, User $user) {
         $this->service->delete($slug, $user, auth()->user());
-        return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
+        $data = $this->service->index(auth()->user());
+        if(count($data['subjects']) > 0) {
+            return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
+        }
+        else {
+            return to_route('subject.index');
+        }
     }
 
     /**

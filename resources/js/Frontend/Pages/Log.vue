@@ -28,14 +28,20 @@ const fetchData = () => {
 const deleteDialog = (log) => {
     dialogDeleteStore.setDialog(true, log, 'adminlog.destroy')
 }
-const exportFile = async(value) => {
-    disabledExport.value = true;
-    await axios.post(`/dashboard/admin/controll/log/export?export=${value}`, {}, {
-        responseType: 'blob'
-    }).then((response) => {
-        FileSaver.saveAs(response.data, 'Log');
-        disabledExport.value = false;
-    });
+const exportFile = async (value) => {
+    disabledExport.value = true
+    await axios
+        .post(
+            `/dashboard/admin/controll/log/export?export=${value}`,
+            {},
+            {
+                responseType: 'blob'
+            }
+        )
+        .then((response) => {
+            FileSaver.saveAs(response.data, 'Log')
+            disabledExport.value = false
+        })
 }
 </script>
 

@@ -39,7 +39,7 @@ const destroy = () => {
                     @click="() => dialogDeleteStore.setOnlyDialog(false)"
                     size="x-large"
                 >
-                    {{$t('global.close')}}
+                    {{ $t('global.close') }}
                 </v-btn>
                 <Link v-if="link">
                     <v-btn
@@ -48,7 +48,7 @@ const destroy = () => {
                         size="x-large"
                         :disabled="disabledBtn"
                     >
-                        {{$t('global.delete')}}
+                        {{ $t('global.delete') }}
                     </v-btn>
                 </Link>
                 <v-btn
@@ -58,7 +58,7 @@ const destroy = () => {
                     size="x-large"
                     :disabled="disabledBtn"
                 >
-                    {{$t('global.delete')}}
+                    {{ $t('global.delete') }}
                 </v-btn>
             </v-card-actions>
         </v-card>

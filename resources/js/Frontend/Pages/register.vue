@@ -1,46 +1,68 @@
 <template>
     <Layout>
         <div class="d-flex justify-center align-center menu w-100">
-            <v-sheet :width="900" :class="{'w-100 h-100': $vuetify.display.smAndDown, 'w-75': $vuetify.display.md}"
-                     :elevation="$vuetify.display.smAndDown ? '' : 15">
-                <div class="d-flex"
-                     :class="{'justify-center': $vuetify.display.mdAndDown, 'align-center': $vuetify.display.smAndDown}">
-                    <v-sheet class="flex-column justify-center align-center w-30 author pa-4"
-                             :class="{'d-none': $vuetify.display.mdAndDown}">
-                        <div v-if="tab===1">
-                            <div class="text-h4 pa-4 font-weight-thin text-center">
+            <v-sheet
+                :width="900"
+                :class="{
+                    'w-100 h-100': $vuetify.display.smAndDown,
+                    'w-75': $vuetify.display.md
+                }"
+                :elevation="$vuetify.display.smAndDown ? '' : 15"
+            >
+                <div
+                    class="d-flex"
+                    :class="{
+                        'justify-center': $vuetify.display.mdAndDown,
+                        'align-center': $vuetify.display.smAndDown
+                    }"
+                >
+                    <v-sheet
+                        class="flex-column justify-center align-center w-30 author pa-4"
+                        :class="{ 'd-none': $vuetify.display.mdAndDown }"
+                    >
+                        <div v-if="tab === 1">
+                            <div
+                                class="text-h4 pa-4 font-weight-thin text-center"
+                            >
                                 {{ $t('authentication.welcome.back') }}
                             </div>
-                            <v-divider class="border-opacity-50 pa-2" color="white"></v-divider>
+                            <v-divider
+                                class="border-opacity-50 pa-2"
+                                color="white"
+                            ></v-divider>
                         </div>
                         <h2>LearnApp</h2>
-                        <p>{{ $t('authentication.welcome.created') }}<br> Jiří Navrátil</p>
+                        <p>
+                            {{ $t('authentication.welcome.created') }}<br />
+                            Jiří Navrátil
+                        </p>
                     </v-sheet>
-                    <v-sheet class="authentication" :class="{'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown,  'w-100 pa-8 rounded-lg': $vuetify.display.md}"
-                             :elevation="$vuetify.display.smAndDown ? 4: 0">
-                        <v-tabs
-                            v-model="tab"
-                            align-tabs="center"
-                        >
+                    <v-sheet
+                        class="authentication"
+                        :class="{
+                            'w-90 pa-8 rounded-lg': $vuetify.display.smAndDown,
+                            'w-100 pa-8 rounded-lg': $vuetify.display.md
+                        }"
+                        :elevation="$vuetify.display.smAndDown ? 4 : 0"
+                    >
+                        <v-tabs v-model="tab" align-tabs="center">
                             <v-tab>
                                 {{ $t('authentication.register.register') }}
                             </v-tab>
                             <v-tab>
                                 {{ $t('authentication.login') }}
                             </v-tab>
-                            <v-tab v-if="tab === 2">
-                                Reset hesla
-                            </v-tab>
+                            <v-tab v-if="tab === 2"> Reset hesla </v-tab>
                         </v-tabs>
                         <v-window v-model="tab">
                             <v-window-item :key="1">
-                                <RegisterForm/>
+                                <RegisterForm />
                             </v-window-item>
                             <v-window-item :key="2">
-                                <LoginForm/>
+                                <LoginForm />
                             </v-window-item>
                             <v-window-item :key="3">
-                                <ResetPassword/>
+                                <ResetPassword />
                             </v-window-item>
                         </v-window>
                     </v-sheet>
@@ -51,31 +73,33 @@
 </template>
 
 <script setup>
-import {defineAsyncComponent, ref, watch} from "vue";
+import { defineAsyncComponent, ref, watch } from 'vue'
 import Layout from '../layouts/AuthLayout.vue'
-import RegisterForm from "../Components/Authentication/RegisterForm.vue"
-import LoginForm from "../Components/Authentication/LoginForm.vue"
-import {useRouter} from "vue-router";
+import RegisterForm from '../Components/Authentication/RegisterForm.vue'
+import LoginForm from '../Components/Authentication/LoginForm.vue'
+import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const ResetPassword = defineAsyncComponent(() => import("@/Frontend/Components/Authentication/ResetPassword.vue"));
+const ResetPassword = defineAsyncComponent(
+    () => import('@/Frontend/Components/Authentication/ResetPassword.vue')
+)
 //Register x login
-const props = defineProps(['value']);
-const tab = ref(props.value);
+const props = defineProps(['value'])
+const tab = ref(props.value)
 
-watch((tab), (val) => {
+watch(tab, (val) => {
     switch (val) {
         case 0: {
-            router.replace("/register")
-            break;
+            router.replace('/register')
+            break
         }
         case 1: {
             router.replace('/login')
-            break;
+            break
         }
         case 2: {
             router.replace('/forgot-password')
-            break;
+            break
         }
     }
 })
@@ -117,6 +141,4 @@ watch((tab), (val) => {
         background: unset !important;
     }
 }
-
-
 </style>
