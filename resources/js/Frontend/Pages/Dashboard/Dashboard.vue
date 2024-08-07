@@ -1,7 +1,7 @@
 <script setup>
-import DashboardLayout from '../layouts/DashboardLayout.vue'
-import AdminDashboard from '@/Frontend/Components/Dashboard/AdminDashboard.vue'
-import UserDashboard from '@/Frontend/Components/Dashboard/UserDashboard.vue'
+import DashboardLayout from '../../layouts/DashboardLayout.vue'
+import AdminDashboard from './Partials/AdminDashboard.vue'
+import UserDashboard from './Partials/UserDashboard.vue'
 
 const props = defineProps({ stats: Array })
 </script>
@@ -9,10 +9,7 @@ const props = defineProps({ stats: Array })
 <template>
     <component :is="DashboardLayout">
         <v-container class="py-8">
-            <AdminDashboard
-                v-if="$page.props.user.role.id === 1"
-                :stats="stats"
-            />
+            <AdminDashboard v-if="$page.props.user.role.id === 1" :stats="stats" />
             <UserDashboard v-else></UserDashboard>
         </v-container>
     </component>

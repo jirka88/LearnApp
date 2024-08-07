@@ -5,7 +5,7 @@
                 <v-sheet class="pa-8" rounded="" elevation="10">
                     <h1 class="py-4">Resetování hesla</h1>
                     <v-form
-                        @submit.prevent="ch0angePassword"
+                        @submit.prevent="changePassword"
                         class="d-flex flex-column ga-1"
                     >
                         <v-text-field
@@ -51,7 +51,7 @@ import { useForm } from '@inertiajs/inertia-vue3'
 const show1 = ref('')
 const show2 = ref('')
 const props = defineProps({ token: String })
-import rules from './../rules/rules'
+import rules from './../../rules/rules'
 import Layout from '@/Frontend/layouts/AuthLayout.vue'
 
 const customRules = {

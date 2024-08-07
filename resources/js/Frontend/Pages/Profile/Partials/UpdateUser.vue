@@ -1,8 +1,5 @@
 <template>
-    <fieldset
-        class="menus pa-8"
-        :class="{ 'w-100': $vuetify.display.smAndDown }"
-    >
+    <fieldset class="menus pa-8" :class="{ 'w-100': $vuetify.display.smAndDown }">
         <legend align="center" class="text-h5">
             {{ $t('userAccount.information_account') }}:
         </legend>
@@ -10,9 +7,7 @@
             ref="formResetPassword"
             :disabled="!usr.user_active"
             @submit.prevent="
-                $page.props.permission.view
-                    ? updateAdminUser(usr.id)
-                    : updateUser(usr.id)
+                $page.props.permission.view ? updateAdminUser(usr.id) : updateUser(usr.id)
             "
         >
             <table class="w-100">
@@ -44,9 +39,8 @@
                                 v-model="form.email"
                                 :rules="[rules.email, rules.required]"
                                 :disabled="
-                                    ($page.props.permission.view
-                                        ? false
-                                        : true) || !usr.user_active
+                                    ($page.props.permission.view ? false : true) ||
+                                    !usr.user_active
                                 "
                                 variant="outlined"
                             ></v-text-field>
@@ -96,12 +90,7 @@
                             ></v-select>
                         </td>
                     </tr>
-                    <tr
-                        v-if="
-                            !$page.props.permission.view ||
-                            props.usr.role_id == 4
-                        "
-                    >
+                    <tr v-if="!$page.props.permission.view || props.usr.role_id == 4">
                         <td class="w-50">Licence:</td>
                         <td
                             v-if="!$page.props.permission.view"
@@ -125,8 +114,7 @@
                     </tr>
                     <tr
                         v-if="
-                            $page.props.permission.view &&
-                            $page.props.user.id !== usr.id
+                            $page.props.permission.view && $page.props.user.id !== usr.id
                         "
                     >
                         <td class="w-50">Aktivní:</td>
@@ -162,7 +150,7 @@
 <script setup>
 import { useForm } from '@inertiajs/inertia-vue3'
 import { markRaw } from 'vue'
-import rules from './../rules/rules'
+import rules from './../../../rules/rules'
 const props = defineProps({
     usr: Object,
     roles: Array,
@@ -182,10 +170,7 @@ const form = useForm({
         Licence: props.usr.licences.Licence,
         id: props.usr.licences.id
     },
-    active:
-        props.usr.active == 1
-            ? { state: 'ANO', id: '1' }
-            : { state: 'NE', id: '0' }
+    active: props.usr.active == 1 ? { state: 'ANO', id: '1' } : { state: 'NE', id: '0' }
 })
 
 const status = markRaw([

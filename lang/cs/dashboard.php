@@ -7,7 +7,7 @@ return [
     'set_profile' => 'Nastavení profilu',
     'active' => 'Aktivní',
     'section' => 'Sekce',
-    'subjects' => 'Předměty',
+    'Subjects' => 'Předměty',
     'users' => 'Všichni uživatelé',
     'operators' => 'Operátoři',
     'testers' => 'Testeři',

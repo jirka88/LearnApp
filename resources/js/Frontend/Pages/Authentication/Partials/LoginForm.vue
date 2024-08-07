@@ -54,7 +54,7 @@
 import { ref } from 'vue'
 import { useForm, Link } from '@inertiajs/inertia-vue3'
 import { toastShow } from '@/Toast'
-import rules from './../../rules/rules'
+import rules from './../../../rules/rules'
 
 defineProps({ errors: Object })
 

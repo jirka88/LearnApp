@@ -13,7 +13,7 @@ use Spatie\Activitylog\Models\Activity;
 
 class RegisterController extends Controller {
     public function create() {
-        return Inertia::render('register', ['value' => 0]);
+        return Inertia::render('Authentication/Authentication', ['value' => 0]);
     }
 
     /**

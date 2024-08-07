@@ -45,9 +45,7 @@
                         {{ usr.firstname + ' ' + usr.lastname }}
                     </div>
                     <div class="text-subtitle-1">{{ usr.email }}</div>
-                    <div class="text-subtitle-2">
-                        {{ usr.account_types.type }} účet
-                    </div>
+                    <div class="text-subtitle-2">{{ usr.account_types.type }} účet</div>
                 </div>
             </div>
             <h3
@@ -57,9 +55,7 @@
                 Účet není aktivní!
             </h3>
             <v-tabs v-model="tab" align-tabs="center">
-                <v-tab value="1">{{
-                    $t('userAccount.information_user')
-                }}</v-tab>
+                <v-tab value="1">{{ $t('userAccount.information_user') }}</v-tab>
                 <v-tab value="2" v-if="usr.user_active">{{
                     $t('userAccount.password_reset')
                 }}</v-tab>
@@ -80,11 +76,8 @@
                     <v-window-item v-if="usr.user_active" value="2">
                         <ResetPassword :usr="usr" :errors="errors" />
                     </v-window-item>
-                    <v-window-item
-                        v-if="$page.props.user.role.id !== 1"
-                        value="3"
-                    >
-                        <share-options :usr="usr" :errors="errors" />
+                    <v-window-item v-if="$page.props.user.role.id !== 1" value="3">
+                        <ShareOptions :usr="usr" :errors="errors" />
                     </v-window-item>
                 </v-window>
             </div>
@@ -95,10 +88,10 @@
 <script></script>
 <script setup>
 import AdminLayout from '../../layouts/DashboardLayout.vue'
-import UpdateUser from '../../Components/UpdateUser.vue'
-import ResetPassword from '../../Components/ResetPassword.vue'
-import { defineAsyncComponent, ref, watch } from 'vue'
-import ShareOptions from '@/Frontend/Components/shareOptions.vue'
+import UpdateUser from './Partials/UpdateUser.vue'
+import ResetPassword from './Partials/ResetPassword.vue'
+import { defineAsyncComponent, ref } from 'vue'
+import ShareOptions from './Partials/ShareOptions.vue'
 import Breadcrumbs from '../../Components/UI/Breadcrumbs.vue'
 
 const UploadImage = defineAsyncComponent(

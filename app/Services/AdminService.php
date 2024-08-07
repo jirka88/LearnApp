@@ -94,7 +94,7 @@ class AdminService
         $user->update(['user_active' => 0, 'active' => 0]);
         Activity()->event('deleted')->causedBy(auth()->user())->performedOn($user)->log('Vymazání uživatele');
         event(new ChangeUserInformation($user));
-        Cache::forget('subjects' . $user->id);
+        Cache::forget('Subjects' . $user->id);
         Cache::forget('userCount');
     }
 

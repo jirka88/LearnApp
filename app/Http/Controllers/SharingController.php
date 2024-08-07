@@ -24,7 +24,7 @@ class SharingController extends Controller {
         $user = auth()->user();
         $data = $this->service->index($user);
 
-        return Inertia::render('subjects/sharedSubjects', $data);
+        return Inertia::render('Subjects/Shared', $data);
     }
     /**
      * Slouží ke vytvoření sdílení
@@ -66,7 +66,7 @@ class SharingController extends Controller {
     public function delete($slug, User $user) {
         $this->service->delete($slug, $user, auth()->user());
         $data = $this->service->index(auth()->user());
-        if(count($data['subjects']) > 0) {
+        if(count($data['Subjects']) > 0) {
             return redirect()->back()->with(['status' => ToastifyStatus::SUCCESS, 'message' => 'Sdílení bylo smazáno']);
         }
         else {
@@ -82,7 +82,7 @@ class SharingController extends Controller {
     public function showOfferShare() {
         $subjects =  $this->service->showOfferShare(auth()->user());
 
-        return Inertia::render('subjects/acceptSubject', compact('subjects'));
+        return Inertia::render('Subjects/OfferShare', compact('subjects'));
     }
 
     /**

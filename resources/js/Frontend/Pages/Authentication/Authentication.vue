@@ -21,9 +21,7 @@
                         :class="{ 'd-none': $vuetify.display.mdAndDown }"
                     >
                         <div v-if="tab === 1">
-                            <div
-                                class="text-h4 pa-4 font-weight-thin text-center"
-                            >
+                            <div class="text-h4 pa-4 font-weight-thin text-center">
                                 {{ $t('authentication.welcome.back') }}
                             </div>
                             <v-divider
@@ -74,15 +72,13 @@
 
 <script setup>
 import { defineAsyncComponent, ref, watch } from 'vue'
-import Layout from '../layouts/AuthLayout.vue'
-import RegisterForm from '../Components/Authentication/RegisterForm.vue'
-import LoginForm from '../Components/Authentication/LoginForm.vue'
+import Layout from '../../layouts/AuthLayout.vue'
+import RegisterForm from './Partials/RegisterForm.vue'
+import LoginForm from './Partials/LoginForm.vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const ResetPassword = defineAsyncComponent(
-    () => import('@/Frontend/Components/Authentication/ResetPassword.vue')
-)
+const ResetPassword = defineAsyncComponent(() => import('./Partials/ResetPassword.vue'))
 //Register x login
 const props = defineProps(['value'])
 const tab = ref(props.value)

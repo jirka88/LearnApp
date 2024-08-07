@@ -38,7 +38,7 @@ class DashboardUserController extends Controller {
     {
         $data = $this->userService->getUserInfo(auth()->user());
 
-        return Inertia::render('user/user', $data);
+        return Inertia::render('Profile/Profile', $data);
     }
 
     /**
@@ -109,7 +109,7 @@ class DashboardUserController extends Controller {
     public function getUserStats() {
         $stats = $this->dashboardService->index($this->userModel, auth()->user()->role_id);
 
-        return Inertia::render('dashboard', compact('stats'));
+        return Inertia::render('Dashboard/Dashboard', compact('stats'));
     }
 
     /**

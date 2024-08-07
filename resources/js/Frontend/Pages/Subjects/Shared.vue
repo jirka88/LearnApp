@@ -9,11 +9,7 @@
             <v-table v-for="subject in subjects" :key="subject.id">
                 <thead>
                     <tr>
-                        <Link
-                            :href="
-                                route('subject.show', { subject: subject.slug })
-                            "
-                        >
+                        <Link :href="route('subject.show', { subject: subject.slug })">
                             <th
                                 colspan="6"
                                 class="font-weight-bold text-subtitle-1 text-decoration-underline"
@@ -73,11 +69,7 @@
                         <td width="25%">
                             <v-chip
                                 variant="flat"
-                                :color="
-                                    user.permission.accepted != 0
-                                        ? 'green'
-                                        : 'red'
-                                "
+                                :color="user.permission.accepted != 0 ? 'green' : 'red'"
                             >
                                 {{
                                     user.permission.accepted != 0
@@ -101,10 +93,7 @@
                                     color="red"
                                     icon="mdi-trash-can"
                                     @click="
-                                        deleteShare(
-                                            subject.slug,
-                                            user.permission.user_id
-                                        )
+                                        deleteShare(subject.slug, user.permission.user_id)
                                     "
                                 >
                                 </v-btn>
@@ -134,7 +123,7 @@ import undefinedPicture from './../../../../assets/user/Default_pfp.svg'
 
 const shareFormActive = ref(false)
 const ShareForm = defineAsyncComponent(
-    () => import('@/Frontend/Components/shareForm.vue')
+    () => import('@/Frontend/Components/ShareForm.vue')
 )
 const usr = ref({})
 defineProps({ subjects: Object, permissions: Object })

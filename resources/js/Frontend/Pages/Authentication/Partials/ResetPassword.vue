@@ -30,7 +30,7 @@ import { ref } from 'vue'
 
 const off = ref(false)
 import { useForm } from '@inertiajs/inertia-vue3'
-import rules from './../../rules/rules'
+import rules from './../../../rules/rules'
 
 const form = useForm({
     email: ''

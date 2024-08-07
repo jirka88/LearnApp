@@ -1,9 +1,7 @@
 <template>
     <component :is="DashboardLayout">
         <v-container>
-            <Breadcrumbs
-                :items="[{ title: 'Uživatelé', disabled: true }]"
-            ></Breadcrumbs>
+            <Breadcrumbs :items="[{ title: 'Uživatelé', disabled: true }]"></Breadcrumbs>
             <div
                 v-if="$page.props.permission.view"
                 class="d-flex align-center py-8 ga-8 overflow-auto justify-space-between"
@@ -35,33 +33,19 @@
                 <thead>
                     <tr>
                         <th class="font-weight-bold">ID:</th>
-                        <th class="font-weight-bold">
-                            {{ $t('userAccount.image') }}:
-                        </th>
-                        <th class="font-weight-bold">
-                            {{ $t('global.name') }}:
-                        </th>
-                        <th class="font-weight-bold">
-                            {{ $t('global.surname') }}:
-                        </th>
+                        <th class="font-weight-bold">{{ $t('userAccount.image') }}:</th>
+                        <th class="font-weight-bold">{{ $t('global.name') }}:</th>
+                        <th class="font-weight-bold">{{ $t('global.surname') }}:</th>
                         <th class="font-weight-bold">Email:</th>
                         <th class="font-weight-bold">Role:</th>
                         <th class="font-weight-bold">Licence:</th>
-                        <th class="font-weight-bold">
-                            {{ $t('dashboard.active') }}:
-                        </th>
+                        <th class="font-weight-bold">{{ $t('dashboard.active') }}:</th>
                         <th class="font-weight-bold">Předměty:</th>
-                        <th class="font-weight-bold">
-                            {{ $t('global.setting') }}:
-                        </th>
+                        <th class="font-weight-bold">{{ $t('global.setting') }}:</th>
                     </tr>
                 </thead>
                 <tbody v-if="!isLoading">
-                    <tr
-                        class="pa-8"
-                        v-for="user in showUsers.data.data"
-                        :key="user.id"
-                    >
+                    <tr class="pa-8" v-for="user in showUsers.data.data" :key="user.id">
                         <td>{{ user.id }}</td>
                         <td class="mx-0">
                             <v-avatar>
@@ -81,11 +65,7 @@
                         <td>{{ user.roles.role }}</td>
                         <td>{{ user.licences.Licence }}</td>
                         <td class="text-uppercase">
-                            {{
-                                user.active == 1
-                                    ? $t('global.yes')
-                                    : $t('global.no')
-                            }}
+                            {{ user.active == 1 ? $t('global.yes') : $t('global.no') }}
                         </td>
                         <td
                             v-if="
@@ -93,9 +73,7 @@
                                 $page.props.permission.administrator_view
                             "
                         >
-                            <Link
-                                :href="route('adminuser.subjects', user.slug)"
-                            >
+                            <Link :href="route('adminuser.Subjects', user.slug)">
                                 <v-btn class="bg-green">
                                     {{ $t('global.show') }}
                                 </v-btn>
@@ -108,9 +86,7 @@
                                 $page.props.permission.operator_view
                             "
                         >
-                            <Link
-                                :href="route('adminuser.subjects', user.slug)"
-                            >
+                            <Link :href="route('adminuser.Subjects', user.slug)">
                                 <v-btn class="bg-green">
                                     {{ $t('global.show') }}
                                 </v-btn>
@@ -125,10 +101,7 @@
                             class="d-flex align-center ga-2"
                         >
                             <Link :href="route('adminuser.edit', user.slug)">
-                                <v-btn
-                                    class="bg-green"
-                                    icon="mdi-pencil"
-                                ></v-btn>
+                                <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                             </Link>
                             <v-btn
                                 v-if="user.id !== $page.props.user.id"
@@ -146,10 +119,7 @@
                             class="d-flex align-center ga-2"
                         >
                             <Link :href="route('adminuser.edit', user.slug)">
-                                <v-btn
-                                    class="bg-green"
-                                    icon="mdi-pencil"
-                                ></v-btn>
+                                <v-btn class="bg-green" icon="mdi-pencil"></v-btn>
                             </Link>
                             <v-btn
                                 v-if="user.id !== $page.props.user.id"

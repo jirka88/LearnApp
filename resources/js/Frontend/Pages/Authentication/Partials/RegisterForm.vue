@@ -1,9 +1,5 @@
 <template>
-    <Dialog
-        v-if="dialog"
-        v-model:active="dialog"
-        @accepted="confirmRules"
-    ></Dialog>
+    <Dialog v-if="dialog" v-model:active="dialog" @accepted="confirmRules"></Dialog>
     <v-form @submit.prevent="register">
         <v-container
             class="d-flex flex-column pa-3 w-75"
@@ -20,9 +16,7 @@
                 :rules="[rules.required, rules.firstnameLength]"
                 :error="form.errors.firstname"
                 :error-messages="form.errors.firstname?.min"
-                @input="
-                    form.errors.firstname ? delete form.errors.firstname : ''
-                "
+                @input="form.errors.firstname ? delete form.errors.firstname : ''"
                 autofocus
                 required
             />
@@ -129,11 +123,11 @@ const off = ref(false)
 const show = ref('')
 const show1 = ref('')
 const dialog = ref(false)
-const Dialog = defineAsyncComponent(() => import('../DialogAgree.vue'))
+const Dialog = defineAsyncComponent(() => import('../../../Components/DialogAgree.vue'))
 import { isActiveToast, toastShow } from '@/Toast'
 import Toastify from '@/Frontend/Components/UI/Toastify.vue'
 import { useReCaptcha } from 'vue-recaptcha-v3'
-import rules from './../../rules/rules'
+import rules from './../../../rules/rules'
 
 const { executeRecaptcha, recaptchaLoaded } = useReCaptcha()
 

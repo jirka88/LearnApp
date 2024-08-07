@@ -1,8 +1,5 @@
 <template>
-    <fieldset
-        class="menus pa-8"
-        :class="{ 'w-100': $vuetify.display.smAndDown }"
-    >
+    <fieldset class="menus pa-8" :class="{ 'w-100': $vuetify.display.smAndDown }">
         <legend align="center" class="text-h5">
             {{ $t('userAccount.password_reset') }}:
         </legend>
@@ -65,11 +62,10 @@ const show = ref('')
 const show1 = ref('')
 const show2 = ref('')
 const props = defineProps({ usr: Object, errors: Object })
-import rules from './../rules/rules'
+import rules from './../../../rules/rules'
 
 const customRules = {
-    passwordConfirm: (v) =>
-        v === formPassword.newPassword || 'Hesla se neshodují!'
+    passwordConfirm: (v) => v === formPassword.newPassword || 'Hesla se neshodují!'
 }
 const formPassword = useForm({
     oldPassword: '',
