@@ -5,7 +5,7 @@ import i18n from 'laravel-vue-i18n/vite'
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/sass/app.scss', 'resources/js/app.js'],
+            input: ['resources/sass/app.scss', 'resources/js/app.ts'],
             ssr: 'resources/js/ssr.js',
             refresh: true
         }),

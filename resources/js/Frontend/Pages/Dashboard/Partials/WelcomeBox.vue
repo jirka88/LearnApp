@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3'
-import undefinedProfilePicture from '../../../../assets/user/Default_pfp.svg'
+import undefinedProfilePicture from '../../../../../assets/user/Default_pfp.svg'
 </script>
 
 <template>
@@ -29,11 +29,9 @@ import undefinedProfilePicture from '../../../../assets/user/Default_pfp.svg'
             <p class="font-weight-bold text-h6">
                 {{ $t('dashboard.welcome') }}, {{ $page.props.user.firstname }}
             </p>
-            <Link
-                :href="route('logout')"
-                class="position-relative underlineLink"
-                >{{ $t('dashboard.sign_out') }}</Link
-            >
+            <Link :href="route('logout')" class="position-relative underlineLink">{{
+                $t('dashboard.sign_out')
+            }}</Link>
         </div>
     </v-sheet>
 </template>

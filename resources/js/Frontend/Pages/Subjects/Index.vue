@@ -7,16 +7,12 @@
                 ></Breadcrumbs>
                 <div
                     class="btns d-flex align-center justify-space-between"
-                    :class="
-                        $vuetify.display.smAndDown ? 'flex-column ga-4' : 'ga-8'
-                    "
+                    :class="$vuetify.display.smAndDown ? 'flex-column ga-4' : 'ga-8'"
                 >
                     <Link :href="route('subject.create')">
                         <v-btn
                             class="bg-green"
-                            :class="
-                                $vuetify.display.smAndDown ? 'flex-grown-1' : ''
-                            "
+                            :class="$vuetify.display.smAndDown ? 'flex-grown-1' : ''"
                         >
                             {{ $t('global.created') }}
                             {{
@@ -26,9 +22,7 @@
                             }}
                         </v-btn>
                     </Link>
-                    <SearchSubject
-                        :disabled="subjectsShow.length === 0"
-                    ></SearchSubject>
+                    <SearchSubject :disabled="subjectsShow.length === 0"></SearchSubject>
                     <SortSelect
                         :disabled="subjectsShow.length === 0"
                         @sort="sorted"
@@ -43,9 +37,7 @@
                             >
                                 ID:
                             </th>
-                            <th class="font-weight-bold">
-                                {{ $t('global.name') }}:
-                            </th>
+                            <th class="font-weight-bold">{{ $t('global.name') }}:</th>
                             <th class="font-weight-bold">Ikona:</th>
                             <th class="font-weight-bold">
                                 {{ $t('global.chapter_count') }}:
@@ -85,9 +77,7 @@
                                         })
                                     "
                                 >
-                                    <v-btn
-                                        color="green"
-                                        append-icon="mdi-pencil"
+                                    <v-btn color="green" append-icon="mdi-pencil"
                                         >{{ $t('global.edit') }}
                                     </v-btn>
                                 </Link>
@@ -150,7 +140,7 @@ import SortSelect from '@/Frontend/Components/SortSelect.vue'
 import SearchSubject from '@/Frontend/Components/SearchSubject.vue'
 
 const TableSkeleton = defineAsyncComponent(
-    () => import('@/Frontend/Components/Loading/TableSkeleton.vue')
+    () => import('@/Frontend/Components/Loading/AppTableSkeleton.vue')
 )
 const props = defineProps({
     subjects: Object,

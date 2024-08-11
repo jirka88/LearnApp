@@ -3,23 +3,33 @@ import { defineStore } from 'pinia'
 interface DialogDeleteInterface {
     dialog: boolean
     object: Object
-    url: string,
-    urlParams: Object,
+    url: string
+    urlParams: Object
     link: boolean
 }
 
 export const useDialogDeleteStore = defineStore('dialogDeleteStore', {
     state: (): DialogDeleteInterface => {
-        return { dialog: false, object: {}, url: '', urlParams: {}, link: true}
+        return { dialog: false, object: {}, url: '', urlParams: {}, link: true }
     },
     actions: {
-        setDialog(dialog: boolean, object: Object, url: String, link: Boolean = true): void {
+        setDialog(
+            dialog: boolean,
+            object: Object,
+            url: string,
+            link: boolean = true
+        ): void {
             this.dialog = dialog
             this.object = object
             this.url = url
             this.link = link
         },
-        setDialogWithUrlParams(dialog: boolean, url: string, urlParams: object, link: Boolean = true ) :void {
+        setDialogWithUrlParams(
+            dialog: boolean,
+            url: string,
+            urlParams: object,
+            link: boolean = true
+        ): void {
             this.dialog = dialog
             this.url = url
             this.urlParams = urlParams
@@ -33,7 +43,7 @@ export const useDialogDeleteStore = defineStore('dialogDeleteStore', {
             this.object = {}
             this.url = ''
             this.urlParams = {}
-            this.link = true;
+            this.link = true
         }
     }
 })

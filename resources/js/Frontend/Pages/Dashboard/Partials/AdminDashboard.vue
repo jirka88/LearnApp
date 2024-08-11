@@ -6,10 +6,7 @@
         >
             {{ $t('dashboard.stats') }}
         </h1>
-        <v-row
-            class="d-flex"
-            :class="{ 'flex-column': $vuetify.display.mdAndDown }"
-        >
+        <v-row class="d-flex" :class="{ 'flex-column': $vuetify.display.mdAndDown }">
             <v-col>
                 <WelcomeBox />
             </v-col>
@@ -66,10 +63,7 @@
             </v-card>
         </div>
     </div>
-    <v-row
-        class="d-flex"
-        :class="{ 'flex-column': $vuetify.display.mdAndDown }"
-    >
+    <v-row class="d-flex" :class="{ 'flex-column': $vuetify.display.mdAndDown }">
         <v-col>
             <v-sheet
                 :elevation="8"
@@ -124,14 +118,14 @@
 import Chart from 'chart.js/auto'
 import { defineAsyncComponent, markRaw, ref } from 'vue'
 import { Bar } from 'vue-chartjs'
-import WelcomeBox from '@/Frontend/Components/Dashboard/WelcomeBox.vue'
-import ProjectInfoBox from '@/Frontend/Components/Dashboard/ProjectInfoBox.vue'
+import ProjectInfoBox from '@/Frontend/Pages/Dashboard/Partials/ProjectInfoBox.vue'
+import WelcomeBox from '@/Frontend/Pages/Dashboard/Partials/WelcomeBox.vue'
 
 const DialogChangeColorTheme = defineAsyncComponent(
-    () => import('@/Frontend/Components/Dashboard/DialogChangeColorTheme.vue')
+    () => import('@/Frontend/Pages/Admin/DialogChangeColorTheme.vue')
 )
 const DialogRegisterRestrict = defineAsyncComponent(
-    () => import('@/Frontend/Components/Dashboard/DialogRegisterRestrict.vue')
+    () => import('@/Frontend/Pages/Admin/DialogRegisterRestrict.vue')
 )
 
 const props = defineProps(['stats'])

@@ -10,8 +10,8 @@ module.export = {
         'plugin:prettier/recommended'
     ],
     rules: {
-        'no-console': 'warn',
-        'no-debugger': 'warn',
+        'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-unused-vars': 'warn',
         'vue/valid-define-props': 'error',
         'vue/require-default-prop': 'warn'

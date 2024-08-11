@@ -13,6 +13,7 @@
     "@inertiajs/vue3": "^1.2.0",
     "@mdi/font": "^7.4.47",
     "@mdi/js": "^7.4.47",
+    "@types/aos": "^3.0.7",
     "@vue/compiler-sfc": "^3.4.35",
     "@vueup/vue-quill": "^1.2.0",
     "@vueuse/core": "^10.11.0",
@@ -32,31 +33,24 @@
     "vue-recaptcha-v3": "^2.0.1",
     "vue-router": "^4.4.2",
     "vue-safe-teleport": "^0.1.2",
-    "vue3-jest": "^27.0.0-alpha.1",
     "vuetify": "^3.6.14",
     "ziggy": "^2.4.0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.25.3",
     "@vitejs/plugin-vue": "^4.6.2",
-    "@vue/cli-plugin-unit-jest": "^5.0.8",
     "@vue/test-utils": "^2.4.6",
-    "@vue/vue3-jest": "^27.0.0",
     "axios": "^1.7.3",
-    "babel-jest": "^27.5.1",
     "bootstrap": "^5.3.3",
     "eslint-config-prettier": "^9.1.0",
-    "jest": "^27.5.1",
-    "jest-environment-jsdom": "^27.0.0",
     "laravel-vite-plugin": "^0.7.2",
     "lodash": "^4.17.19",
     "postcss": "^8.4.40",
     "prettier": "3.3.0",
     "sass": "^1.77.8",
-    "ts-jest": "^27.0.0",
     "typescript": "^5.5.4",
     "vite": "^4.5.3",
     "vue": "^3.4.35",
-    "vue-jest": "^5.0.0-alpha.10"
+    "vue-tsc": "^2.0.29"
   }
 }

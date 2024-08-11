@@ -6,10 +6,7 @@
         >
             {{ $t('dashboard.stats') }}
         </h1>
-        <v-row
-            class="d-flex"
-            :class="{ 'flex-column': $vuetify.display.mdAndDown }"
-        >
+        <v-row class="d-flex" :class="{ 'flex-column': $vuetify.display.mdAndDown }">
             <v-col>
                 <WelcomeBox />
             </v-col>
@@ -20,7 +17,7 @@
     </div>
 </template>
 <script setup>
-import WelcomeBox from '@/Frontend/Components/Dashboard/WelcomeBox.vue'
-import ProjectInfoBox from '@/Frontend/Components/Dashboard/ProjectInfoBox.vue'
+import WelcomeBox from '@/Frontend/Pages/Dashboard/Partials/WelcomeBox.vue'
+import ProjectInfoBox from '@/Frontend/Pages/Dashboard/Partials/ProjectInfoBox.vue'
 </script>
 <style scoped lang="scss"></style>

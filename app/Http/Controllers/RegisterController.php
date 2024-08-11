@@ -8,6 +8,8 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\Settings;
 use App\Models\User;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Spatie\Activitylog\Models\Activity;
 
@@ -29,6 +31,19 @@ class RegisterController extends Controller {
         $usr = $request->only(['firstname', 'email', 'lastname', 'password']);
         $usr['type_id'] = $request->type['value'];
         $usr['slug'] = SlugService::createSlug(User::class, 'slug', $request->firstname);
+
+        $endpoint = config('services.avatar_generator');
+        $response = Http::get($endpoint['url'], [
+            'background' => 'random',
+            'name' => $request->input('firstname') . ' ' . $request->input('lastname'),
+            'format' => 'svg'
+        ]);
+        if($response->ok()) {
+            $imageName = date('mdYHis') . uniqid() . '.svg';
+            $path = 'avatars/'. $imageName;
+            Storage::disk('public')->put($path, $response->body());
+            $usr['image'] = $path;
+        }
         $user = User::create($usr);
         auth()->login($user);
         activity()

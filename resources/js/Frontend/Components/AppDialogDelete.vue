@@ -2,7 +2,7 @@
 import { Inertia } from '@inertiajs/inertia'
 import { computed, ref } from 'vue'
 import { Link } from '@inertiajs/inertia-vue3'
-import { useDialogDeleteStore } from '../../../../states/dialogDeleteData'
+import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
 
 const dialogDeleteStore = useDialogDeleteStore()
 
@@ -30,9 +30,7 @@ const destroy = () => {
             <v-card-title class="text-h5 text-center">
                 Opravdu si přejete smazat tuto položku?
             </v-card-title>
-            <v-card-text class="text-center pa-2"
-                >Tato akce je nenávratná.
-            </v-card-text>
+            <v-card-text class="text-center pa-2">Tato akce je nenávratná. </v-card-text>
             <v-card-actions class="margin-center d-flex ga-2">
                 <v-btn
                     class="bg-white rounded"

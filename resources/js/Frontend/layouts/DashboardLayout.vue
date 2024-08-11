@@ -38,13 +38,17 @@
                     </Link>
                 </v-list>
                 <v-list
+                    :disabled="!$page.props.user.verified"
                     density="compact"
                     nav
-                    v-if="$page.props.permission.view"
                     @update:opened="(newOpened) => (openedN = newOpened?.slice(-1))"
                     v-model:opened="opened"
                 >
-                    <v-list-group id="group" value="groupAdmin">
+                    <v-list-group
+                        id="group"
+                        value="groupAdmin"
+                        v-if="$page.props.permission.view"
+                    >
                         <template v-slot:activator="{ props }">
                             <v-list-item v-bind="props" title="Administrace">
                             </v-list-item>
@@ -169,7 +173,7 @@
                         </Link>
                     </v-list-group>
                 </v-list>
-                <v-list density="compact" nav>
+                <v-list density="compact" nav :disabled="!$page.props.user.verified">
                     <Link :href="route('user.info')">
                         <v-list-item
                             prepend-icon="mdi-account-cog"
@@ -273,7 +277,7 @@ import { Inertia } from '@inertiajs/inertia'
 import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg'
 import czechFlag from './../../../assets/ui/flags/czech.svg'
 import britishFlag from './../../../assets/ui/flags/united_kingdom.svg'
-import prefixGroups from './urlMappings'
+import prefixGroups from './UrlMappings'
 
 const drawer = ref(true)
 

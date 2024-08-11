@@ -171,7 +171,7 @@ const filtrGlobal = ref('')
 const isLoading = ref(false)
 
 const TableSkeleton = defineAsyncComponent(
-    () => import('@/Frontend/Components/Loading/TableSkeleton.vue')
+    () => import('@/Frontend/Components/Loading/AppTableSkeleton.vue')
 )
 
 const dialogDeleteStore = useDialogDeleteStore()
