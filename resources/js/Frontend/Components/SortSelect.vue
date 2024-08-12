@@ -1,32 +1,47 @@
 <script setup>
-import {markRaw, onMounted, ref} from "vue";
-import {useUrlSearchParams} from "@vueuse/core";
+import { markRaw, onMounted, ref } from 'vue'
+import { useUrlSearchParams } from '@vueuse/core'
 
-const props = defineProps({disabled: Boolean, sortColumnAscDesc: String});
-const emit = defineEmits(['sort']);
+const props = defineProps({ disabled: Boolean, sortColumnAscDesc: String })
+const emit = defineEmits(['sort'])
 
-const filtrValue = ref({state: 'Výchozí', id: 'default', sort: 'name'});
+const filtrValue = ref({ state: 'Výchozí', id: 'default', sort: 'name' })
 
-const items = markRaw(
-    [{state: 'Výchozí', id: 'default', sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'},
-        {state: 'Sestupně', id: 'asc', sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'},
-        {state: 'Vzestupně', id: 'desc', sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'},
-        {state: 'Od nejnovějších', id: 'desc', sort: 'created_at'},
-        {state: 'Od nejstarších', id: 'asc', sort: 'created_at'}]
-);
+const items = markRaw([
+    {
+        state: 'Výchozí',
+        id: 'default',
+        sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'
+    },
+    {
+        state: 'Sestupně',
+        id: 'asc',
+        sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'
+    },
+    {
+        state: 'Vzestupně',
+        id: 'desc',
+        sort: props.sortColumnAscDesc ? props.sortColumnAscDesc : 'name'
+    },
+    { state: 'Od nejnovějších', id: 'desc', sort: 'created_at' },
+    { state: 'Od nejstarších', id: 'asc', sort: 'created_at' }
+])
 
 onMounted(() => {
-    sort();
+    sort()
 })
 const sort = () => {
     const params = useUrlSearchParams('history')
-    const sort = params.sort?.split(',');
+    const sort = params.sort?.split(',')
     if (sort && sort.length === 2) {
-        const sortValue = items.find(item => item.id === sort[sort.length - 1] && item.sort === sort[sort.length - 2]);
-        filtrValue.value = sortValue;
+        const sortValue = items.find(
+            (item) =>
+                item.id === sort[sort.length - 1] &&
+                item.sort === sort[sort.length - 2]
+        )
+        filtrValue.value = sortValue
     }
 }
-
 </script>
 
 <template>
@@ -43,11 +58,9 @@ const sort = () => {
         return-object
         hide-details
         single-line
-        variant="outlined">
-
+        variant="outlined"
+    >
     </v-select>
 </template>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

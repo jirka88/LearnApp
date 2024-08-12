@@ -31,7 +31,7 @@ class LogController extends Controller
     {
         $this->authorize('viewAny', Auth()->user());
         $activity = $this->service->show($activity);
-        return Inertia::render('admin/logShow', ['activity' => $activity]);
+        return Inertia::render('Admin/LogShow', ['activity' => $activity]);
     }
     public function destroy(Request $request, Activity $activity)
     {

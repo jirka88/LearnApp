@@ -1,34 +1,40 @@
 <script setup>
-import {onMounted, ref} from "vue";
+import { onMounted, ref } from 'vue'
 
-const props = defineProps({text: String, variant: String, time: Number})
-const emit = defineEmits(["close"])
-const toast = ref(true);
+const props = defineProps({ text: String, variant: String, time: Number })
+const emit = defineEmits(['close'])
+const toast = ref(true)
 const closed = () => {
-    toast.value = false;
+    toast.value = false
 }
 
 onMounted(() => {
-    setTimeout(() => toast.value = false, props.time ? props.time : 1000)
+    setTimeout(() => (toast.value = false), props.time ? props.time : 1000)
 })
 const handleAfterLeave = () => {
-    emit('close');
+    emit('close')
 }
 </script>
 
 <template>
-    <Transition name="bounce" mode="out-in" @after-leave="handleAfterLeave" appear>
+    <Transition
+        name="bounce"
+        mode="out-in"
+        @after-leave="handleAfterLeave"
+        appear
+    >
         <v-alert
             v-if="toast"
             height="70"
             min-width="300"
             width="300"
             :color="variant"
-            :icon="'$'+variant"
+            :icon="'$' + variant"
             class="position-fixed toastify px-4"
             :title="$t(text)"
             prominent
-            :class="{'center': $vuetify.display.mdAndDown}">
+            :class="{ center: $vuetify.display.mdAndDown }"
+        >
             <v-btn
                 @click="closed"
                 variant="plain"

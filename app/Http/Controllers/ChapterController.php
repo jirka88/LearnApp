@@ -47,7 +47,7 @@ class ChapterController extends Controller
         }
         $this->authorize('view', $chapter);
 
-        return Inertia::render('chapter/chapter', ['chapter' => $chapter, 'slug' => $slug]);
+        return Inertia::render('Chapter/Show', ['chapter' => $chapter, 'slug' => $slug]);
     }
 
     /**
@@ -62,7 +62,7 @@ class ChapterController extends Controller
         }]);
         $this->authorize('create', $user);
 
-        return Inertia::render('chapter/createChapter', ['slug' => $slug]);
+        return Inertia::render('Chapter/Create', ['slug' => $slug]);
     }
 
     /**
@@ -101,7 +101,7 @@ class ChapterController extends Controller
         $chapter = $this->chapterModel->getChapterWithPermission($chapter);
         $this->authorize('update', $chapter);
 
-        return Inertia::render('chapter/editChapter', ['chapter' => $chapter, 'slug' => $chapter->slug]);
+        return Inertia::render('Chapter/Edit', ['chapter' => $chapter, 'slug' => $chapter->slug]);
     }
 
     /**

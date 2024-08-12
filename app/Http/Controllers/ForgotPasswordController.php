@@ -18,7 +18,7 @@ class ForgotPasswordController extends Controller
 {
     public function passwordResetShow()
     {
-        return Inertia::render('register', ['value' => 2]);
+        return Inertia::render('Authentication/Authentication', ['value' => 2]);
     }
 
     /**

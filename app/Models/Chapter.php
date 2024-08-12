@@ -23,7 +23,6 @@ class Chapter extends Model {
         'name' => 'encrypted',
         'perex' => 'encrypted',
         'context' => 'encrypted',
-        //'slug' => 'encrypted'
     ];
 
     public function sluggable(): array {

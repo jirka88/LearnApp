@@ -33,7 +33,7 @@ class SubjectController extends Controller {
     public function index(Request $request) {
         $sort = $request->input('sort', 'default');
         $arr = $this->service->index($this->subjectModel, $sort, auth()->user()->id, $request->page, $request->url(), $request->query());
-        return Inertia::render('subjects/subjects', $arr);
+        return Inertia::render('Subjects/Index', $arr);
     }
 
     /**
@@ -45,7 +45,7 @@ class SubjectController extends Controller {
     public function show(Request $request, $slug) {
         $data = $this->service->show($this->subjectModel, $slug, auth()->user()->id, auth()->user()->roles->id);
         $this->authorize('view', $data['subject']);
-        return Inertia::render('chapter/chapters', $data);
+        return Inertia::render('Chapter/Index', $data);
     }
 
     /**
@@ -54,7 +54,7 @@ class SubjectController extends Controller {
      * @return \Inertia\Response
      */
     public function create() {
-        return Inertia::render('subjects/createSubjects');
+        return Inertia::render('Subjects/Create');
     }
 
     /**
@@ -93,7 +93,7 @@ class SubjectController extends Controller {
         $subject = $this->subjectModel->getSubjectBySlug($slug);
         $this->authorize('update', $subject);
 
-        return Inertia::render('subjects/editSubjects', compact('subject'));
+        return Inertia::render('Subjects/Edit', compact('subject'));
     }
 
     /**

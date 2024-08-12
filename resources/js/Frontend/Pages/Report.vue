@@ -1,46 +1,47 @@
 <template>
-<component :is="DashboardLayout">
-    <div class="report d-flex justify-center align-center" >
-        <v-form class="pa-6 d-flex flex-column overflow-auto" @submit.prevent="report" :class="{'w-85': $vuetify.display.smAndDown
-                          }">
-            <p class="text-h1 font-weight-bold text-no-wrap">Náhlásit chybu</p>
-            <v-textarea
-                v-model="form.name"
-                prepend-inner-icon="mdi-email"
-                variant="outlined"
-                label="Popište chybu"
-                :rules="[rules.required, rules.maxName]"
-            ></v-textarea>
-            <v-btn
-                type="submit"
-                color="red"
-                class="d-flex justify-center margin-center"
-                :class="{'w-100': $vuetify.display.smAndDown}"
+    <component :is="DashboardLayout">
+        <div class="report d-flex justify-center align-center">
+            <v-form
+                class="pa-6 d-flex flex-column overflow-auto"
+                @submit.prevent="report"
+                :class="{ 'w-85': $vuetify.display.smAndDown }"
             >
-                Odeslat!
-            </v-btn>
-        </v-form>
-    </div>
-</component>
+                <p class="text-h1 font-weight-bold text-no-wrap">
+                    Náhlásit chybu
+                </p>
+                <v-textarea
+                    v-model="form.name"
+                    prepend-inner-icon="mdi-email"
+                    variant="outlined"
+                    label="Popište chybu"
+                    :rules="[rules.required, rules.maxName]"
+                ></v-textarea>
+                <v-btn
+                    type="submit"
+                    color="red"
+                    class="d-flex justify-center margin-center"
+                    :class="{ 'w-100': $vuetify.display.smAndDown }"
+                >
+                    Odeslat!
+                </v-btn>
+            </v-form>
+        </div>
+    </component>
 </template>
 <script setup>
-
-import {useForm} from "@inertiajs/inertia-vue3";
-import DashboardLayout from "../layouts/DashboardLayout.vue";
+import { useForm } from '@inertiajs/inertia-vue3'
+import DashboardLayout from '../layouts/DashboardLayout.vue'
 
 const rules = {
-    required: value => !!value || 'Nutné vyplnit!',
-    maxName: v => v.length < 1200 ||'Předmět nesmí být delší!'
+    required: (value) => !!value || 'Nutné vyplnit!',
+    maxName: (v) => v.length < 1200 || 'Předmět nesmí být delší!'
 }
 
 const form = useForm({
-    name: '',
+    name: ''
 })
 
-
-const report = () => {
-
-}
+const report = () => {}
 </script>
 <style scoped lang="scss">
 .report {
@@ -55,9 +56,8 @@ const report = () => {
             font-size: 2em !important;
         }
     }
-
 }
-:deep(.v-messages__message)  {
+:deep(.v-messages__message) {
     padding-bottom: 1.2em !important;
     transition: 0.3s;
 }

@@ -4,9 +4,7 @@
             <v-navigation-drawer v-model="drawer" prominent location="left">
                 <div class="usr">
                     <Link
-                        :href="
-                            !$page.props.user.verified ? '' : route('user.info')
-                        "
+                        :href="!$page.props.user.verified ? '' : route('user.info')"
                         class="text-decoration-none text-black"
                     >
                         <v-list-item
@@ -27,19 +25,12 @@
                         </v-list-item>
                     </Link>
                 </div>
-                <v-list
-                    density="compact"
-                    nav
-                    flat
-                    :disabled="!$page.props.user.verified"
-                >
+                <v-list density="compact" nav flat :disabled="!$page.props.user.verified">
                     <Link :href="route('dashboard')">
                         <v-list-item
                             prepend-icon="mdi-home-city"
                             :class="
-                                $page.props.settings.url === 'dashboard'
-                                    ? 'active'
-                                    : ''
+                                $page.props.settings.url === 'dashboard' ? 'active' : ''
                             "
                             :title="$t('dashboard.home')"
                             :value="$t('dashboard.home')"
@@ -47,15 +38,17 @@
                     </Link>
                 </v-list>
                 <v-list
+                    :disabled="!$page.props.user.verified"
                     density="compact"
                     nav
-                    v-if="$page.props.permission.view"
-                    @update:opened="
-                        (newOpened) => (openedN = newOpened?.slice(-1))
-                    "
+                    @update:opened="(newOpened) => (openedN = newOpened?.slice(-1))"
                     v-model:opened="opened"
                 >
-                    <v-list-group id="group" value="groupAdmin">
+                    <v-list-group
+                        id="group"
+                        value="groupAdmin"
+                        v-if="$page.props.permission.view"
+                    >
                         <template v-slot:activator="{ props }">
                             <v-list-item v-bind="props" title="Administrace">
                             </v-list-item>
@@ -139,8 +132,7 @@
                         "
                     >
                         <template v-slot:activator="{ props }">
-                            <v-list-item v-bind="props" title="Sdílení">
-                            </v-list-item>
+                            <v-list-item v-bind="props" title="Sdílení"> </v-list-item>
                         </template>
                         <Link
                             :href="route('share.show')"
@@ -157,8 +149,7 @@
                             :href="route('share.view')"
                             v-if="
                                 $page.props.user.subjects.some(
-                                    (subject) =>
-                                        subject.permission.accepted == 0
+                                    (subject) => subject.permission.accepted == 0
                                 )
                             "
                         >
@@ -172,9 +163,7 @@
                                         color="info"
                                         :content="
                                             $page.props.user.subjects.filter(
-                                                (item) =>
-                                                    item.permission.accepted ==
-                                                    0
+                                                (item) => item.permission.accepted == 0
                                             ).length
                                         "
                                         inline
@@ -184,10 +173,15 @@
                         </Link>
                     </v-list-group>
                 </v-list>
-                <v-list density="compact" nav>
+                <v-list density="compact" nav :disabled="!$page.props.user.verified">
                     <Link :href="route('user.info')">
                         <v-list-item
                             prepend-icon="mdi-account-cog"
+                            :class="
+                                $page.props.settings.url === 'dashboard/user'
+                                    ? 'active'
+                                    : ''
+                            "
                             :title="$t('dashboard.set_profile')"
                             :value="$t('dashboard.set_profile')"
                         ></v-list-item>
@@ -283,7 +277,7 @@ import { Inertia } from '@inertiajs/inertia'
 import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg'
 import czechFlag from './../../../assets/ui/flags/czech.svg'
 import britishFlag from './../../../assets/ui/flags/united_kingdom.svg'
-import prefixGroups from './urlMappings'
+import prefixGroups from './UrlMappings'
 
 const drawer = ref(true)
 

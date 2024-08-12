@@ -11,6 +11,7 @@ use App\Models\Licences;
 use App\Models\Roles;
 use App\Models\User;
 use App\Services\DashboardService;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -19,11 +20,13 @@ use Inertia\Inertia;
 
 class DashboardUserController extends Controller {
     protected $userModel;
-    private $service;
+    private $dashboardService;
+    private $userService;
 
-    public function __construct(User $user, DashboardService $service) {
+    public function __construct(User $user, DashboardService $dashboardService, UserService $userService) {
         $this->userModel = $user;
-        $this->service = $service;
+        $this->dashboardService = $dashboardService;
+        $this->userService = $userService;
     }
 
     /**
@@ -31,10 +34,11 @@ class DashboardUserController extends Controller {
      *
      * @return \Inertia\Response
      */
-    public function view() {
-        $data = $this->service->getUserInfo(auth()->user());
+    public function view(): \Inertia\Response
+    {
+        $data = $this->userService->getUserInfo(auth()->user());
 
-        return Inertia::render('user/user', $data);
+        return Inertia::render('Profile/Profile', $data);
     }
 
     /**
@@ -42,14 +46,9 @@ class DashboardUserController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateRequest $updateRequest) {
-        $typeAccount = $updateRequest->type['id'];
-        $this->userModel->getUserById(auth()->user()->id)->update([
-            'firstname' => $updateRequest->firstname,
-            'lastname' => $updateRequest->lastname,
-            'type_id' => $typeAccount,
-        ]);
-        Cache::forget('userTypeAccount' . auth()->user()->id);
+    public function update(UpdateRequest $updateRequest): \Illuminate\Http\RedirectResponse
+    {
+        $this->userService->update(auth()->user(), $updateRequest);
 
         return redirect()->back()->with(['message' =>  __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
@@ -59,7 +58,8 @@ class DashboardUserController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function passwordReset(PasswordResetRequest $passwordResetRequest) {
+    public function passwordReset(PasswordResetRequest $passwordResetRequest): \Illuminate\Http\RedirectResponse
+    {
         if (!Hash::check($passwordResetRequest->oldPassword, auth()->user()->password)) {
             return back()->withErrors(['oldPassword' => 'Staré heslo se liší!']);
         }
@@ -85,7 +85,7 @@ class DashboardUserController extends Controller {
         $validated = $request->validate([
             'share' => 'required',
         ], $customMessages);
-        $this->userModel->getUserById(auth()->user()->id)->update([
+        auth()->user()->update([
             'canShare' => $validated['share']['id'],
         ]);
 
@@ -107,9 +107,9 @@ class DashboardUserController extends Controller {
      * @return \Inertia\Response
      */
     public function getUserStats() {
-        $stats = $this->service->index($this->userModel, auth()->user()->role_id);
+        $stats = $this->dashboardService->index($this->userModel, auth()->user()->role_id);
 
-        return Inertia::render('dashboard', compact('stats'));
+        return Inertia::render('Dashboard/Dashboard', compact('stats'));
     }
 
     /**

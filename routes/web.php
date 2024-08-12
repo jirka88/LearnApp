@@ -40,7 +40,7 @@ Route::group(['middleware' => ['guest']], function () {
     Route::get('/forgot-password', [ForgotPasswordController::class, 'passwordResetShow'])->name('password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'passwordResetStore'])->middleware('throttle:6,1')->name('password.email');
     Route::get('/reset-password/{token}', function (string $token) {
-        return Inertia::render('ForgotPassword', ['token' => $token]);
+        return Inertia::render('Authentication/ForgotPassword', ['token' => $token]);
     })->name('password.reset');
     Route::post('/reset-password',[ForgotPasswordController::class, 'passwordReset'])->name('reset');
     Route::get('/404', function (Request $request) {
@@ -64,18 +64,18 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
     Route::put('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
     Route::put('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
     Route::resource('/manager/subject', SubjectController::class);
-    Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
+    Route::get('/manager/Subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::get('/manager/subject/{slug}/select', [ChapterController::class, 'selectChapter'])->name('chapter.select');
     Route::resource('/manager/subject/{slug}/chapter', ChapterController::class);
     Route::post('/manager/subject/{slug}/chapter/{chapterSlug}/export', [ChapterController::class, 'exportFile']);
     Route::get('/manager/subject/{slug}/sharing/users', [Controller::class, 'showUsersForSharing'])->name('sharing');
     Route::post('/sharing/users', [SharingController::class, 'store'])->name('share');
-    Route::get('/sharing/subjects', [SharingController::class, 'showOfferShare'])->name('share.view');
-    Route::post('/sharing/subjects', [SharingController::class, 'acceptShare'])->name('share.accept');
+    Route::get('/sharing/Subjects', [SharingController::class, 'showOfferShare'])->name('share.view');
+    Route::post('/sharing/Subjects', [SharingController::class, 'acceptShare'])->name('share.accept');
     Route::get('/sharing/show', [SharingController::class, 'index'])->name('share.show');
     Route::put('/sharing/edit', [SharingController::class, 'update'])->name('share.edit');
-    Route::delete('/sharing/subjects/{slug}/user/{user}', [SharingController::class, 'delete'])->name('sharing.delete');
-    Route::delete('/sharing/subjects/{slug}', [SharingController::class, 'refuseShare'])->name('share.delete');
+    Route::delete('/sharing/Subjects/{slug}/user/{user}', [SharingController::class, 'delete'])->name('sharing.delete');
+    Route::delete('/sharing/Subjects/{slug}', [SharingController::class, 'refuseShare'])->name('share.delete');
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
     Route::get('/search/user', [Controller::class, 'searchUser'])->name('user.search');
@@ -100,7 +100,7 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
         route::get('/controll/{user}', [Admin::class, 'edit'])->name('user.edit');
         route::put('/controll/{user}', [Admin::class, 'update'])->name('user.update');
         route::delete('/controll/{user}', [Admin::class, 'destroy'])->name('user.destroy');
-        route::get('/controll/{slug}/subjects', [Admin::class, 'getUserSubjects'])->name('user.subjects');
+        route::get('/controll/{slug}/Subjects', [Admin::class, 'getUserSubjects'])->name('user.Subjects');
         route::get('/controll/{slug}/subject/create', [Admin::class, 'createUserSubject'])->name('user.createSubject');
         route::post('/controll/{slug}/subject/create', [Admin::class, 'storeUserSubject'])->name('user.storeSubject');
         route::get('controll/user/create', [Admin::class, 'create'])->name('user.create');

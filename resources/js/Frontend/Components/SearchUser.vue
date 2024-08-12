@@ -1,5 +1,8 @@
 <template>
-    <div class="d-flex justify-end align-center search" :class="{'justify-center pb-4': $vuetify.display.xs}">
+    <div
+        class="d-flex justify-end align-center search"
+        :class="{ 'justify-center pb-4': $vuetify.display.xs }"
+    >
         <v-autocomplete
             v-model="searchValue"
             :items="searchResult"
@@ -21,7 +24,11 @@
             <template v-slot:item="{ props, item }">
                 <v-list-item
                     v-bind="props"
-                    :prepend-avatar="item.raw.image ? '/storage/' + item.raw.image  : undefinedProfilePicture"
+                    :prepend-avatar="
+                        item.raw.image
+                            ? '/storage/' + item.raw.image
+                            : undefinedProfilePicture
+                    "
                     :title="item.raw.firstname + ' ' + item.raw.lastname"
                     :subtitle="item.raw.email"
                 ></v-list-item>
@@ -31,28 +38,32 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-import axios from "axios";
-const searchValue = defineModel("searchValue");
-const searchResult = ref([]);
-const isLoading = ref(false);
-import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg';
-const highlightText = (text) =>{
-    const regex = new RegExp(searchValue.value, 'gi');
-    return text.replace(regex,'<span style="background-color: #EFEFEF; ">$&</span>');
+import { ref } from 'vue'
+import axios from 'axios'
+const searchValue = defineModel('searchValue')
+const searchResult = ref([])
+const isLoading = ref(false)
+import undefinedProfilePicture from './../../../assets/user/Default_pfp.svg'
+const highlightText = (text) => {
+    const regex = new RegExp(searchValue.value, 'gi')
+    return text.replace(
+        regex,
+        '<span style="background-color: #EFEFEF; ">$&</span>'
+    )
 }
 const updateUser = (e) => {
     if (e !== null) {
         isLoading.value = true
-        axios.get(`/dashboard/search/user?select=${e}`)
-            .then(response => {
-                searchResult.value = response.data;
-            }).finally(() => {
-            isLoading.value = false;
-        })
+        axios
+            .get(`/dashboard/search/user?select=${e}`)
+            .then((response) => {
+                searchResult.value = response.data
+            })
+            .finally(() => {
+                isLoading.value = false
+            })
     }
 }
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

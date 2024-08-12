@@ -44,7 +44,7 @@ class Admin extends Controller
     {
         $sort = $request->input('sort', 'default');
         $data = $this->service->index($request->page, $sort, $request->url(), $request->query());
-        return Inertia::render('admin/listUsers', $data);
+        return Inertia::render('Admin/ListUsers', $data);
     }
     public function sortIndex(Request $request) {
         $sort = $request->input('sort', 'default');
@@ -62,8 +62,7 @@ class Admin extends Controller
     {
         $usr = User::with(['roles', 'accountTypes', 'licences'])->where('slug', $slug)->firstOrFail();
         $this->authorize('view', $usr);
-        $isAdmin = auth()->user()->role_id == 1 ? true : false;
-        if ($isAdmin) {
+        if (auth()->user()->role_id === UserRoles::ADMIN) {
             $roles = Cache::rememberForever('roles', function () {
                 return Roles::all();
             });
@@ -77,7 +76,7 @@ class Admin extends Controller
             return Licences::all();
         });
 
-        return Inertia::render('user/user', compact(['usr', 'roles', 'accountTypes', 'licences']));
+        return Inertia::render('Profile/Profile', compact(['usr', 'roles', 'accountTypes', 'licences']));
     }
 
     /**
@@ -113,7 +112,7 @@ class Admin extends Controller
         $this->authorize('viewAny', auth()->user());
         $data = $this->service->create();
 
-        return Inertia::render('admin/createUser', $data);
+        return Inertia::render('Admin/CreateUser', $data);
     }
 
     /**
@@ -155,7 +154,7 @@ class Admin extends Controller
         $subjects = $user->loadMissing('patritions');
         $subjects->patritions->each->append('chapter_count');
 
-        return Inertia::render('admin/listSubjects', compact('subjects'));
+        return Inertia::render('Admin/ListSubjects', compact('subjects'));
     }
 
     /**
@@ -171,7 +170,7 @@ class Admin extends Controller
         $this->authorize('view', $user);
         $url = '/dashboard/admin/controll/' . $user->slug . '/subject/create';
 
-        return Inertia::render('subjects/createSubjects', compact('url'));
+        return Inertia::render('Subjects/CreateSubjects', compact('url'));
     }
 
     /**
@@ -189,7 +188,7 @@ class Admin extends Controller
 
         $user->patritions()->attach($subjectT->id);
 
-        return to_route('adminuser.subjects', $user->slug);
+        return to_route('adminuser.Subjects', $user->slug);
     }
 
     /**
@@ -201,6 +200,7 @@ class Admin extends Controller
     {
         $this->authorize('viewAdmin', Auth()->user());
         $this->service->changeRestriction($register);
+
         return redirect()->back()->with(['message' => __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 

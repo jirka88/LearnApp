@@ -47,16 +47,6 @@ class Handler extends ExceptionHandler {
      * @return void
      */
     public function register() {
-        /*$this->reportable(function (NotFound $e, Request $request) {
-            dd($request);
-                if ($request->is('dashboard/*')) {
-                    return redirect('dashboard/404');
-                }
-        });*/
-        /*$this->reportable(function (HttpException $e, $request) {
-            Log::error('Unexpected error: ' . $e->getMessage());
-           return response()->json(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::SUCCESS], 500);
-        });*/
     }
 
     public function render($request, Throwable $e) {
