@@ -13,7 +13,8 @@ return new class extends Migration {
     public function up() {
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('role', 15)->unique();
+            $table->string('role_cs', 15)->unique();
+            $table->string('role_en', 15)->unique();
         });
     }
 

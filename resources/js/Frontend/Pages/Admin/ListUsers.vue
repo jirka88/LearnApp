@@ -62,7 +62,7 @@
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.lastname }}</td>
                         <td>{{ user.email }}</td>
-                        <td>{{ user.roles.role }}</td>
+                        <td>{{ user.roles['role_' + $page.props.user.set_language] }}</td>
                         <td>{{ user.licences.Licence }}</td>
                         <td class="text-uppercase">
                             {{ user.active == 1 ? $t('global.yes') : $t('global.no') }}

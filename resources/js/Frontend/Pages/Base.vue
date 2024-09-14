@@ -6,12 +6,10 @@ import { useDialogDeleteStore } from '../../../states/dialogDeleteData'
 import { usePage } from '@inertiajs/inertia-vue3'
 
 const DialogDelete = defineAsyncComponent(
-    () => import('@/Frontend/Components/UI/AppDialogDelete.vue')
+    () => import('@/Frontend/Components/AppDialogDelete.vue')
 )
 
-const Toastify = defineAsyncComponent(
-    () => import('@/Frontend/Components/UI/Toastify.vue')
-)
+const Toastify = defineAsyncComponent(() => import('@/Frontend/Components/Toastify.vue'))
 const dialogDeleteStore = useDialogDeleteStore()
 setLanguage()
 

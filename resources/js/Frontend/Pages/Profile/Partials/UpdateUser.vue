@@ -39,8 +39,7 @@
                                 v-model="form.email"
                                 :rules="[rules.email, rules.required]"
                                 :disabled="
-                                    ($page.props.permission.view ? false : true) ||
-                                    !usr.user_active
+                                    !$page.props.permission.view || !usr.user_active
                                 "
                                 variant="outlined"
                             ></v-text-field>

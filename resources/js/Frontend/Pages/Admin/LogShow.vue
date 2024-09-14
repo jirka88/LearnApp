@@ -39,9 +39,7 @@ const event = computed(() => {
                     :class="{ 'flex-column': $vuetify.display.smAndDown }"
                 >
                     <v-sheet class="d-flex flex-column data pa-6" elevation="3">
-                        <p class="text-center font-weight-bold">
-                            Starý záznam:
-                        </p>
+                        <p class="text-center font-weight-bold">Starý záznam:</p>
                         <v-table class="text-caption" density="compact">
                             <tbody
                                 v-for="(value, key) in activity.properties.old"
@@ -66,8 +64,7 @@ const event = computed(() => {
                         <p class="text-center font-weight-bold">Nový záznam:</p>
                         <v-table class="text-caption" density="compact">
                             <tbody
-                                v-for="(value, key) in activity.properties
-                                    .attributes"
+                                v-for="(value, key) in activity.properties.attributes"
                                 :key="key"
                             >
                                 <tr>
@@ -101,7 +98,13 @@ const event = computed(() => {
                                 <td>{{ activity.causer.firstname }}</td>
                                 <td>{{ activity.causer.lastname }}</td>
                                 <td>{{ activity.causer.email }}</td>
-                                <td>{{ activity.causer.roles.role }}</td>
+                                <td>
+                                    {{
+                                        activity.causer.roles[
+                                            'role_' + $page.props.user.set_language
+                                        ]
+                                    }}
+                                </td>
                             </tr>
                         </tbody>
                     </v-table>
@@ -142,7 +145,13 @@ const event = computed(() => {
                                 <td>{{ activity.subject.firstname }}</td>
                                 <td>{{ activity.subject.lastname }}</td>
                                 <td>{{ activity.subject.email }}</td>
-                                <td>{{ activity.subject.roles.role }}</td>
+                                <td>
+                                    {{
+                                        activity.subject.roles[
+                                            'role_' + $page.props.user.set_language
+                                        ]
+                                    }}
+                                </td>
                                 <td>
                                     {{ activity.subject.account_types.type }}
                                 </td>
@@ -150,9 +159,7 @@ const event = computed(() => {
                             </tr>
                         </tbody>
                     </v-table>
-                    <Link
-                        :href="route('adminuser.edit', activity.subject.slug)"
-                    >
+                    <Link :href="route('adminuser.edit', activity.subject.slug)">
                         <v-btn
                             class="align-self-start bg-green"
                             :class="{ 'w-100': $vuetify.display.smAndDown }"

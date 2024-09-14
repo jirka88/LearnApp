@@ -63,11 +63,13 @@ class HandleInertiaRequests extends Middleware
                 'image' => auth()->user()->image ?? '',
                 'sharedSubjects' => $this->getActivedShared(),
                 'verified' => auth()->user()?->id ? (auth()->user()->email_verified_at ? true : false) : '',
+                'set_language' => session('locale') ?? app()->getLocale(),
             ],
             'permission' => [
                 'view' => in_array(auth()->user()?->role_id, [1, 2]),
-                'administrator_view' => auth()->user()?->role_id == 1,
-                'operator_view' => auth()->user()?->role_id == 2,
+                'administrator_view' => auth()->user()?->role_id === 1,
+                'operator_view' => auth()->user()?->role_id === 2,
+                'basic_view' => auth()->user()?->role_id === 4
             ],
             'settings' => [
                 'theme' => $this->getCurrentColor(),

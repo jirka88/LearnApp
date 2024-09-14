@@ -57,32 +57,30 @@ Route::group(['middleware' => ['auth', 'verified'], 'prefix' => 'dashboard'], fu
     Route::get('/', [DashboardUserController::class, 'getUserStats'])->name('dashboard');
     Route::get('/user', [DashboardUserController::class, 'view'])->name('user.info');
     Route::get('/report', [DashboardUserController::class, 'report'])->name('user.report');
-    Route::put('/user', [DashboardUserController::class, 'update'])->name('user.update');
-    Route::get('/user/changePassword', function () {
-        return to_route('user.info');
-    });
-    Route::put('/user/changePassword', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
-    Route::put('/user/changeShare', [DashboardUserController::class, 'changeShare'])->name('user.share');
+    Route::put('/user/{user}', [DashboardUserController::class, 'update'])->name('user.update');
+    Route::put('/user/{user}/role', [DashboardUserController::class, 'updateRole'])->name('user.updateRole');
+    Route::put('/user/password', [DashboardUserController::class, 'passwordReset'])->name('user.passwordReset');
+    Route::put('/user/{user}/share', [DashboardUserController::class, 'changeShare'])->name('user.share');
     Route::resource('/manager/subject', SubjectController::class);
-    Route::get('/manager/Subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
+    Route::get('/manager/subjects/sort', [Controller::class, 'sort'])->name('subject.sort');
     Route::get('/manager/subject/{slug}/select', [ChapterController::class, 'selectChapter'])->name('chapter.select');
     Route::resource('/manager/subject/{slug}/chapter', ChapterController::class);
     Route::post('/manager/subject/{slug}/chapter/{chapterSlug}/export', [ChapterController::class, 'exportFile']);
     Route::get('/manager/subject/{slug}/sharing/users', [Controller::class, 'showUsersForSharing'])->name('sharing');
     Route::post('/sharing/users', [SharingController::class, 'store'])->name('share');
-    Route::get('/sharing/Subjects', [SharingController::class, 'showOfferShare'])->name('share.view');
-    Route::post('/sharing/Subjects', [SharingController::class, 'acceptShare'])->name('share.accept');
+    Route::get('/sharing/subjects', [SharingController::class, 'showOfferShare'])->name('share.view');
+    Route::post('/sharing/subjects', [SharingController::class, 'acceptShare'])->name('share.accept');
     Route::get('/sharing/show', [SharingController::class, 'index'])->name('share.show');
     Route::put('/sharing/edit', [SharingController::class, 'update'])->name('share.edit');
-    Route::delete('/sharing/Subjects/{slug}/user/{user}', [SharingController::class, 'delete'])->name('sharing.delete');
-    Route::delete('/sharing/Subjects/{slug}', [SharingController::class, 'refuseShare'])->name('share.delete');
+    Route::delete('/sharing/subjects/{slug}/user/{user}', [SharingController::class, 'delete'])->name('sharing.delete');
+    Route::delete('/sharing/subjects/{slug}', [SharingController::class, 'refuseShare'])->name('share.delete');
     Route::post('/user/changeProfilePicture', [DashboardUserController::class, 'changeProfilePicture'])->name('user.profilePicture');
     Route::delete('/user/deleteProfilePicture/{user}', [DashboardUserController::class, 'deleteProfilePicture'])->name('user.deleteProfilePicture');
     Route::get('/search/user', [Controller::class, 'searchUser'])->name('user.search');
     Route::get('/subject/search', [SubjectController::class, 'searchSubject'])->name('subject.search');
-    Route::get('/404', function (Request $request) {
+    /*Route::get('/404', function (Request $request) {
         return Inertia::render('errors/auth/404')->toResponse($request)->setStatusCode(404);
-    });
+    });*/
     Route::get('/403', function (Request $request) {
         return Inertia::render('errors/auth/403')->toResponse($request)->setStatusCode(403);
     });

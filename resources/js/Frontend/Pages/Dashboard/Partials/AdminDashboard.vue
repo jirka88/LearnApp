@@ -18,7 +18,7 @@
     <div class="py-4 d-flex flex-column">
         <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
         <div
-            class="d-flex w-100 ga-4 py-8 text-center"
+            class="d-flex w-100 ga-4 py-8 text-center boxes"
             :class="{ 'flex-column': $vuetify.display.mdAndDown }"
         >
             <v-card elevation="4">
@@ -55,7 +55,7 @@
             </v-card>
             <v-card elevation="4">
                 <v-card-title class="font-weight-bold text-center">
-                    Počet všech poznámek:
+                    Poznámky:
                 </v-card-title>
                 <v-card-text class="text-center">
                     {{ stats.chapters }}
@@ -161,17 +161,18 @@ const setColorTheme = () => {
 
 <style lang="scss">
 @use 'vuetify/lib/styles/settings/variables' as *;
+.boxes {
+    .v-card {
+        box-sizing: border-box;
+        padding: 3em 0 !important;
+        flex-basis: 100%;
+        @media #{map-get($display-breakpoints, 'md-and-down')} {
+            padding: 2em 0 !important;
+        }
 
-.v-card {
-    box-sizing: border-box;
-    padding: 3em 0 !important;
-    flex-grow: 1;
-    @media #{map-get($display-breakpoints, 'md-and-down')} {
-        padding: 2em 0 !important;
-    }
-
-    .v-card-text {
-        font-size: 1.4em;
+        .v-card-text {
+            font-size: 1.4em;
+        }
     }
 }
 

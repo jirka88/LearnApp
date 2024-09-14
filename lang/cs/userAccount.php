@@ -15,6 +15,6 @@ return [
     'upload_profile_image' => 'Nahraj profilovou fotku',
     'image' => 'Profilovka',
     'share' => 'Sdílení',
-    'shareInfo' => 'Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete přijímat od žádného uživatele sekci zaškrtněte možnost ',
+    'shareInfo' => 'Umožnit přijímat od jiných uživatelů nasdílení jejich sekcí. Pokud nechcete přijímat od žádného uživatele sekci zaškrtněte možnost NE',
     'change_password' => 'Změnit heslo',
 ];

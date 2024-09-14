@@ -9,7 +9,7 @@ use App\Events\ChangeUserInformation;
 use App\Exports\UsersExport;
 use App\Http\Requests\AdminCreateUser;
 use App\Http\Requests\SubjectRequest;
-use App\Http\Requests\UpdateRequest;
+use App\Http\Requests\BasicUserUpdateRequest;
 use App\Models\AccountTypes;
 use App\Models\Licences;
 use App\Models\Partition;
@@ -84,7 +84,7 @@ class Admin extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse**
      */
-    public function update(User $user, UpdateRequest $updateRequest)
+    public function update(User $user, BasicUserUpdateRequest $updateRequest)
     {
         $this->authorize('view', $user);
         User::find($user->id)->update([

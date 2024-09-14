@@ -49,7 +49,7 @@ class Handler extends ExceptionHandler {
     public function register() {
     }
 
-    public function render($request, Throwable $e) {
+    /*public function render($request, Throwable $e) {
         $response = parent::render($request, $e);
         $status = $response->status();
         return match ($status) {
@@ -58,5 +58,5 @@ class Handler extends ExceptionHandler {
             //500 => back()->with(['message' => 'Nastala nečekaná chyba!', 'status' => ToastifyStatus::ERROR]),
             default => $response
         };
-    }
+    }*/
 }

@@ -47,50 +47,7 @@
                         </tr>
                     </thead>
                     <tbody v-if="subjectsShow.length !== 0 && !loading">
-                        <tr
-                            class="pa-8"
-                            v-for="subjectData in subjectsShow"
-                            :key="subjectData.id"
-                        >
-                            <td
-                                class="font-weight-bold"
-                                v-if="$page.props.permission.view"
-                            >
-                                {{ subjectData.id }}
-                            </td>
-                            <td class="font-weight-bold">
-                                {{ subjectData.name }}
-                            </td>
-                            <td>
-                                <v-chip>
-                                    <v-icon>{{ subjectData.icon }}</v-icon>
-                                </v-chip>
-                            </td>
-                            <td class="font-weight-bold">
-                                {{ subjectData.chapter_count }}
-                            </td>
-                            <td>
-                                <Link
-                                    :href="
-                                        route('subject.edit', {
-                                            subject: subjectData.slug
-                                        })
-                                    "
-                                >
-                                    <v-btn color="green" append-icon="mdi-pencil"
-                                        >{{ $t('global.edit') }}
-                                    </v-btn>
-                                </Link>
-                            </td>
-                            <td>
-                                <v-btn
-                                    color="red"
-                                    append-icon="mdi-delete"
-                                    @click="destroySubject(subjectData)"
-                                    >{{ $t('global.delete') }}!
-                                </v-btn>
-                            </td>
-                        </tr>
+                        <SubjectsTableData :subjects="subjectsShow"></SubjectsTableData>
                     </tbody>
                     <tbody v-else-if="loading">
                         <TableSkeleton
@@ -138,9 +95,10 @@ import Breadcrumbs from '@/Frontend/Components/UI/Breadcrumbs.vue'
 import { useUrlSearchParams } from '@vueuse/core'
 import SortSelect from '@/Frontend/Components/SortSelect.vue'
 import SearchSubject from '@/Frontend/Components/SearchSubject.vue'
+import SubjectsTableData from '@/Frontend/Pages/Subjects/Partials/SubjectsTableData.vue'
 
 const TableSkeleton = defineAsyncComponent(
-    () => import('@/Frontend/Components/Loading/AppTableSkeleton.vue')
+    () => import('@/Frontend/Components/AppTableSkeleton.vue')
 )
 const props = defineProps({
     subjects: Object,
@@ -152,13 +110,6 @@ const page = ref(props.subjects.current_page)
 const subjectsShow = ref(props.subjects.data)
 const loading = ref(false)
 const filtrGlobal = ref('')
-
-import { useDialogDeleteStore } from '../../../../states/dialogDeleteData'
-
-const dialogDeleteStore = useDialogDeleteStore()
-const destroySubject = (subject) => {
-    dialogDeleteStore.setDialog(true, subject, 'subject.destroy')
-}
 
 const fetchData = () => {
     Inertia.get(

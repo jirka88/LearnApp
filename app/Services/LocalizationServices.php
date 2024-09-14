@@ -14,6 +14,5 @@ class LocalizationServices {
 
     public function setLocale($language) {
         Session::put('locale', $language);
-        App::setlocale($language);
-    }
-}
+        app()->setLocale($language);
+    }}

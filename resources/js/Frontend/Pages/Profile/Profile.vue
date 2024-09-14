@@ -4,7 +4,39 @@
             <Breadcrumbs
                 :items="[{ title: 'Uživatelský profil', disabled: true }]"
             ></Breadcrumbs>
-            <div
+            <div class="pt-8 setting">
+                <InformationAboutSetting
+                    title="Základní profil"
+                    text="Zde si můžete nastavit základní uživatelské informace"
+                ></InformationAboutSetting>
+                <UserBasicSettings :usr="usr" :accountTypes="accountTypes">
+                </UserBasicSettings>
+            </div>
+            <div class="pt-8 setting">
+                <InformationAboutSetting
+                    title="Uživatelská role"
+                ></InformationAboutSetting>
+                <UserRoleSetting :usr="usr" :roles="roles"> </UserRoleSetting>
+            </div>
+            <div class="pt-8 setting">
+                <InformationAboutSetting title="Licence"></InformationAboutSetting>
+                <UserLicenceSetting :usr="usr" :licences="licences"></UserLicenceSetting>
+            </div>
+            <div class="pt-8 setting" v-if="$page.props.user.id === usr.id">
+                <InformationAboutSetting
+                    title="Resetování hesla"
+                ></InformationAboutSetting>
+                <UserResetPasswordSetting :usr="usr"></UserResetPasswordSetting>
+            </div>
+            <div class="pt-8 setting">
+                <InformationAboutSetting
+                    :title="$t('userAccount.share')"
+                    :text="$t('userAccount.shareInfo')"
+                ></InformationAboutSetting>
+                <UserShareSetting :usr="usr"></UserShareSetting>
+            </div>
+            {{ $page.props.user }}
+            <!--<div
                 class="mt-10 header-info d-flex justify-center pb-4"
                 :class="
                     ({ 'flex-column ga-4': $vuetify.display.smAndDown },
@@ -81,23 +113,26 @@
                     </v-window-item>
                 </v-window>
             </div>
-            <UploadImage v-if="isActive" v-model:active="isActive" />
+            <UploadImage v-if="isActive" v-model:active="isActive" />-->
         </v-container>
     </AdminLayout>
 </template>
 <script></script>
 <script setup>
 import AdminLayout from '../../layouts/DashboardLayout.vue'
-import UpdateUser from './Partials/UpdateUser.vue'
-import ResetPassword from './Partials/ResetPassword.vue'
 import { defineAsyncComponent, ref } from 'vue'
-import ShareOptions from './Partials/ShareOptions.vue'
 import Breadcrumbs from '../../Components/UI/Breadcrumbs.vue'
+import UserBasicSettings from '@/Frontend/Pages/Profile/Partials/UserBasicSettings.vue'
+import InformationAboutSetting from '@/Frontend/Pages/Profile/Partials/InformationAboutSetting.vue'
+import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg'
+import UserRoleSetting from '@/Frontend/Pages/Profile/Partials/UserRoleSetting.vue'
+import UserLicenceSetting from '@/Frontend/Pages/Profile/Partials/UserLicenceSetting.vue'
+import UserShareSetting from '@/Frontend/Pages/Profile/Partials/UserShareSetting.vue'
+import UserResetPasswordSetting from '@/Frontend/Pages/Profile/Partials/UserResetPasswordSetting.vue'
 
 const UploadImage = defineAsyncComponent(
     () => import('@/Frontend/Components/UploadImage.vue')
 )
-import undefinedProfilePicture from './../../../../assets/user/Default_pfp.svg'
 
 const tab = ref(null)
 const isActive = ref(false)
@@ -113,47 +148,21 @@ const showChangeAvatar = () => {
     isActive.value = true
 }
 </script>
-<style scoped lang="scss">
-.header-info {
-    .avatar {
-        display: flex;
-        justify-content: center;
-        position: relative;
-
-        .v-img {
-            &:hover {
-                cursor: pointer;
-                transition: 0.3s ease-in-out !important;
-                filter: brightness(50%);
-            }
-        }
-
-        .v-icon {
-            z-index: 200;
-            color: white;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
+<style lang="scss">
+@use 'vuetify/lib/styles/settings/variables' as *;
+.setting {
+    display: grid;
+    grid-template-columns: 0.3fr 0.7fr;
+    column-gap: 4em;
+    @media #{map-get($display-breakpoints, 'md-and-down')} {
+        grid-template-columns: 1fr;
+        gap: 2em;
+    }
+    .v-text-field {
+        width: min(100%, 40em);
+        @media #{map-get($display-breakpoints, 'md-and-down')} {
+            width: 100%;
         }
     }
-}
-
-.on-hover {
-    cursor: pointer;
-}
-
-.v-window {
-    padding: 2em;
-    width: 600px !important;
-}
-
-fieldset {
-    border-radius: 1em;
-}
-
-:deep(.v-messages__message) {
-    padding-bottom: 1.2em !important;
-    transition: 0.3s;
 }
 </style>

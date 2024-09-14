@@ -69,6 +69,7 @@ const form = useForm({
 
 const login = () => {
     off.value = true
+    console.log('test')
     form.post(route('login'), {
         onError: () => {
             if (form.errors.msg !== undefined) {

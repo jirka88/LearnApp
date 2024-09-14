@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Enums\ToastifyStatus;
 use App\Enums\UserRoles;
 use App\Http\Requests\PasswordResetRequest;
-use App\Http\Requests\UpdateRequest;
+use App\Http\Requests\BasicUserUpdateRequest;
+use App\Http\Requests\RoleUserUpdateRequest;
+use App\Http\Requests\ShareUserUpdateRequest;
 use App\Models\AccountTypes;
 use App\Models\Licences;
 use App\Models\Roles;
@@ -42,29 +44,37 @@ class DashboardUserController extends Controller {
     }
 
     /**
-     * Aktualizace uživatele
+     * Aktualizace základní informací uživatele
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(UpdateRequest $updateRequest): \Illuminate\Http\RedirectResponse
+    public function update(User $user, BasicUserUpdateRequest $updateRequest): \Illuminate\Http\RedirectResponse
     {
-        $this->userService->update(auth()->user(), $updateRequest);
+        $this->userService->updateBasicInfo($user, auth()->user(), $updateRequest);
+
+        return redirect()->back()->with(['message' =>  __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
+    }
+
+    public function updateRole(User $user, RoleUserUpdateRequest $request): \Illuminate\Http\RedirectResponse {
+
+        $this->authorize('viewAny', auth()->user());
+        $this->userService->updateRole($user, $request->role);
 
         return redirect()->back()->with(['message' =>  __('validation.custom.update'), 'status' => ToastifyStatus::SUCCESS]);
     }
 
     /**
-     * Resetování hesla
+     * Resetování hesla přes nastavení
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function passwordReset(PasswordResetRequest $passwordResetRequest): \Illuminate\Http\RedirectResponse
+    public function passwordReset(PasswordResetRequest $passwordResetRequest)
     {
         if (!Hash::check($passwordResetRequest->oldPassword, auth()->user()->password)) {
-            return back()->withErrors(['oldPassword' => 'Staré heslo se liší!']);
+            return redirect()->back()->withErrors(['oldPassword' => 'Staré heslo se liší!']);
         }
         if ($passwordResetRequest->oldPassword == $passwordResetRequest->newPassword) {
-            return back()->withErrors(['newPasswordSameAsOld' => 'Nové heslo nesmí být stejné jako staré!']);
+            return redirect()->back()->withErrors(['newPasswordSameAsOld' => 'Nové heslo nesmí být stejné jako staré!']);
         }
         auth()->user()->update([
             'password' => $passwordResetRequest->newPassword,
@@ -78,17 +88,10 @@ class DashboardUserController extends Controller {
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function changeShare(Request $request) {
-        $customMessages = [
-            'share.required' => 'Je nutné zadat sdílení',
-        ];
-        $validated = $request->validate([
-            'share' => 'required',
-        ], $customMessages);
-        auth()->user()->update([
-            'canShare' => $validated['share']['id'],
+    public function changeShare(User $user, ShareUserUpdateRequest $request) {
+        $user->update([
+            'canShare' => $request->share['id'],
         ]);
-
         return redirect()->back()->with(['message' => 'Sdílení bylo změněno!', 'status' => ToastifyStatus::SUCCESS]);
     }
 
